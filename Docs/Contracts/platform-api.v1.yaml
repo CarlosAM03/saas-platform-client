@@ -1,0 +1,981 @@
+openapi: 3.0.3
+info:
+  title: Platform API
+  version: 1.0.0
+  description: |
+    Contrato HTTP V1 entre Flutter y Platform Backend. Los DTOs son independientes
+    de Prisma; el tenant se resuelve desde el contexto autenticado.
+    F4 implementa Auth, Users y Health. Tenants, Campaigns, Prospects y
+    Prospecting Jobs conservan su contrato objetivo para fases posteriores.
+servers:
+  - url: https://api.example.invalid
+    description: Placeholder; el entorno real se configura fuera del contrato.
+tags:
+  - name: Auth
+  - name: Tenants
+  - name: Users
+  - name: Campaigns
+  - name: Prospects
+  - name: Prospecting Jobs
+paths:
+  /api/v1/health:
+    get:
+      tags: [Health]
+      security: []
+      operationId: health
+      responses:
+        '200': { $ref: '#/components/responses/HealthResponse' }
+  /api/v1/health/live:
+    get:
+      tags: [Health]
+      security: []
+      operationId: liveness
+      responses:
+        '200': { $ref: '#/components/responses/HealthResponse' }
+  /api/v1/health/ready:
+    get:
+      tags: [Health]
+      security: []
+      operationId: readiness
+      responses:
+        '200': { $ref: '#/components/responses/HealthResponse' }
+        '503':
+          description: PostgreSQL no disponible.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      security: []
+      summary: Inicia sesión
+      operationId: login
+      description: JWT HS256 de 8h; máximo 5 intentos/60s/IP. Sin refresh token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200': { $ref: '#/components/responses/LoginResponse' }
+        '429':
+          description: Límite de autenticación excedido.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Cierra la sesión actual
+      operationId: logout
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { $ref: '#/components/responses/EmptySuccess' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/auth/select-tenant:
+    post:
+      tags: [Auth]
+      summary: Selecciona el tenant de la sesión
+      operationId: selectTenant
+      description: Valida membership activa o autoridad global ADMIN. ADMIN conserva tenantRole null.
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SelectTenantRequest' }
+      responses:
+        '200':
+          description: Tenant seleccionado y contexto actualizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessAuthContext'
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/v1/auth/me:
+    get:
+      tags: [Auth]
+      summary: Obtiene la identidad y contexto actuales
+      operationId: getCurrentUser
+      description: Devuelve el token presentado sin renovarlo y el contexto autenticado. No requiere tenant seleccionado.
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Contexto autenticado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessAuthContext'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/tenants:
+    get:
+      tags: [Tenants]
+      summary: Lista los tenants accesibles al usuario
+      operationId: listTenants
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Tenants del usuario autenticado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Tenant' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      tags: [Tenants]
+      summary: Crea un tenant
+      operationId: createTenant
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateTenantRequest' }
+      responses:
+        '201':
+          description: Tenant creado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/Tenant' } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/tenants/{id}:
+    get:
+      tags: [Tenants]
+      summary: Obtiene un tenant
+      operationId: getTenant
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/EntityId' }]
+      responses:
+        '200':
+          description: Tenant encontrado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/Tenant' } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/v1/users:
+    get:
+      tags: [Users]
+      summary: Lista usuarios del tenant autenticado
+      operationId: listUsers
+      description: Requiere tenant seleccionado incluso para ADMIN. sortBy admite name, email, status, createdAt y updatedAt.
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/Page' }, { $ref: '#/components/parameters/Limit' }, { $ref: '#/components/parameters/Search' }, { $ref: '#/components/parameters/SortBy' }, { $ref: '#/components/parameters/SortOrder' }]
+      responses:
+        '200': { $ref: '#/components/responses/UserPage' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      tags: [Users]
+      summary: Crea un usuario y lo asocia al contexto actual
+      operationId: createUser
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateUserRequest' }
+      responses:
+        '201':
+          description: Usuario creado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/User' } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/users/{id}:
+    get:
+      tags: [Users]
+      summary: Obtiene un usuario
+      operationId: getUser
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/EntityId' }]
+      responses:
+        '200':
+          description: Usuario encontrado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/User' } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [Users]
+      summary: Actualiza parcialmente un usuario
+      description: Campo omitido no se modifica; null solo es válido para campos anulables.
+      operationId: updateUser
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/EntityId' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateUserRequest' }
+      responses:
+        '200':
+          description: Usuario actualizado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/User' } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+    delete:
+      tags: [Users]
+      summary: ADMIN desactiva un usuario del tenant seleccionado estableciendo INACTIVO. No realiza borrado físico.
+      operationId: deleteUser
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/EntityId' }]
+      responses:
+        '200': { $ref: '#/components/responses/EmptySuccess' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/v1/campaigns:
+    get:
+      tags: [Campaigns]
+      summary: Lista campañas del tenant autenticado
+      operationId: listCampaigns
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/Page' }, { $ref: '#/components/parameters/Limit' }, { $ref: '#/components/parameters/Search' }, { $ref: '#/components/parameters/SortBy' }, { $ref: '#/components/parameters/SortOrder' }]
+      responses:
+        '200': { $ref: '#/components/responses/CampaignPage' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      tags: [Campaigns]
+      summary: Crea una campaña en el tenant actual
+      operationId: createCampaign
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateCampaignRequest' }
+      responses:
+        '201':
+          description: Campaña creada.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/Campaign' } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/campaigns/{id}:
+    parameters: [{ $ref: '#/components/parameters/EntityId' }]
+    get:
+      tags: [Campaigns]
+      summary: Obtiene una campaña
+      operationId: getCampaign
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Campaña encontrada.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/Campaign' } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [Campaigns]
+      summary: Actualiza parcialmente una campaña
+      description: Campo omitido no se modifica; null solo es válido para description.
+      operationId: updateCampaign
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateCampaignRequest' }
+      responses:
+        '200':
+          description: Campaña actualizada.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/Campaign' } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Campaigns]
+      summary: Archiva o elimina físicamente una campaña
+      description: Sin permanent archiva; permanent=true queda reservado a ADMIN para borrado físico.
+      operationId: deleteCampaign
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: permanent
+          in: query
+          required: false
+          schema: { type: boolean, default: false }
+      responses:
+        '200': { $ref: '#/components/responses/EmptySuccess' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/campaigns/{id}/prospects:
+    get:
+      tags: [Campaigns, Prospects]
+      summary: Lista prospectos de una campaña
+      operationId: listCampaignProspects
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { $ref: '#/components/parameters/EntityId' }
+        - { $ref: '#/components/parameters/Page' }
+        - { $ref: '#/components/parameters/Limit' }
+        - { $ref: '#/components/parameters/Search' }
+        - { $ref: '#/components/parameters/SortBy' }
+        - { $ref: '#/components/parameters/SortOrder' }
+      responses:
+        '200': { $ref: '#/components/responses/ProspectPage' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/v1/prospects:
+    get:
+      tags: [Prospects]
+      summary: Lista prospectos del tenant autenticado
+      operationId: listProspects
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/Page' }, { $ref: '#/components/parameters/Limit' }, { $ref: '#/components/parameters/Search' }, { $ref: '#/components/parameters/SortBy' }, { $ref: '#/components/parameters/SortOrder' }]
+      responses:
+        '200': { $ref: '#/components/responses/ProspectPage' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/prospects/{id}:
+    parameters: [{ $ref: '#/components/parameters/EntityId' }]
+    get:
+      tags: [Prospects]
+      summary: Obtiene un prospecto
+      operationId: getProspect
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Prospecto encontrado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/Prospect' } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [Prospects]
+      summary: Actualiza parcialmente un prospecto
+      description: Campo omitido no se modifica; null es válido en campos nullable.
+      operationId: updateProspect
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateProspectRequest' }
+      responses:
+        '200':
+          description: Prospecto actualizado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/Prospect' } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/prospecting-jobs:
+    post:
+      tags: [Prospecting Jobs]
+      summary: Crea y encola un Job de prospección
+      description: El tenant se obtiene del contexto JWT. La operación es idempotente por Idempotency-Key.
+      operationId: createProspectingJob
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateProspectingJobRequest' }
+      responses:
+        '201':
+          description: Job creado con estado QUEUED.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/ProspectingJobDetail' } }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+    get:
+      tags: [Prospecting Jobs]
+      summary: Lista Jobs del tenant autenticado
+      operationId: listProspectingJobs
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/Page' }, { $ref: '#/components/parameters/Limit' }, { $ref: '#/components/parameters/SortBy' }, { $ref: '#/components/parameters/SortOrder' }]
+      responses:
+        '200': { $ref: '#/components/responses/JobPage' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/prospecting-jobs/{id}:
+    get:
+      tags: [Prospecting Jobs]
+      summary: Obtiene el detalle de un Job
+      operationId: getProspectingJob
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/EntityId' }]
+      responses:
+        '200':
+          description: Detalle del Job, incluyendo datos temporales cuando existan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/ProspectingJobDetail' } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /api/v1/prospecting-jobs/{id}/cancel:
+    post:
+      tags: [Prospecting Jobs]
+      summary: Solicita la cancelación de un Job
+      operationId: cancelProspectingJob
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/EntityId' }]
+      responses:
+        '200':
+          description: Job cancelado o solicitud de cancelación aceptada.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/ProspectingJobDetail' } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/prospecting-jobs/{id}/persist:
+    post:
+      tags: [Prospecting Jobs]
+      summary: Persiste los resultados temporales de un Job
+      description: Mapea BusinessResult a Prospect y CampaignProspect aplicando la deduplicación definida por Platform.
+      operationId: persistProspectingJob
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/EntityId' }]
+      responses:
+        '200':
+          description: Resultados persistidos.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties: { data: { $ref: '#/components/schemas/PersistResultsResult' } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /api/v1/prospecting-jobs/{id}/export:
+    get:
+      tags: [Prospecting Jobs]
+      summary: Exporta resultados en CSV o XLSX
+      description: Respuesta binaria; no utiliza el wrapper JSON estándar. ADR-002 define GET para esta operación.
+      operationId: exportProspectingJob
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { $ref: '#/components/parameters/EntityId' }
+        - name: format
+          in: query
+          required: true
+          schema: { $ref: '#/components/schemas/ExportFormat' }
+      responses:
+        '200':
+          description: Archivo de exportación.
+          content:
+            text/csv:
+              schema: { type: string, format: binary }
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    EntityId:
+      name: id
+      in: path
+      required: true
+      description: Identificador persistente CUID.
+      schema: { type: string, pattern: '^c[a-z0-9]{20,}$' }
+    Page:
+      name: page
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, default: 1 }
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    Search:
+      name: search
+      in: query
+      required: false
+      schema: { type: string }
+    SortBy:
+      name: sortBy
+      in: query
+      required: false
+      schema: { type: string }
+    SortOrder:
+      name: sortOrder
+      in: query
+      required: false
+      schema: { type: string, enum: [asc, desc], default: asc }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: Misma key y mismo payload devuelve el mismo Job; misma key con payload distinto responde 409.
+      schema: { type: string, minLength: 1 }
+  responses:
+    HealthResponse:
+      description: Proceso disponible; readiness incluye database up tras consultar PostgreSQL.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SuccessResponse'
+              - type: object
+                properties:
+                  data:
+                    type: object
+                    required: [status]
+                    properties:
+                      status: { type: string, enum: [ok] }
+                      database: { type: string, enum: [up] }
+    BadRequest:
+      description: Solicitud inválida.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
+    Unauthorized:
+      description: Credenciales ausentes o inválidas.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
+    Forbidden:
+      description: Operación no permitida para el rol o tenant actual.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
+    NotFound:
+      description: Recurso no encontrado en el tenant actual.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
+    Conflict:
+      description: Conflicto de estado, unicidad o idempotencia.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
+    ServiceUnavailable:
+      description: Prospector Service no pudo aceptar el Job.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
+    EmptySuccess:
+      description: Operación completada.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SuccessResponse'
+              - type: object
+                properties:
+                  data: { type: object, maxProperties: 0 }
+    LoginResponse:
+      description: Sesión iniciada.
+      content: { application/json: { schema: { $ref: '#/components/schemas/SuccessAuthContext' } } }
+    UserPage:
+      description: Usuarios paginados.
+      content: { application/json: { schema: { $ref: '#/components/schemas/UserPageResponse' } } }
+    CampaignPage:
+      description: Campañas paginadas.
+      content: { application/json: { schema: { $ref: '#/components/schemas/CampaignPageResponse' } } }
+    ProspectPage:
+      description: Prospectos paginados.
+      content: { application/json: { schema: { $ref: '#/components/schemas/ProspectPageResponse' } } }
+    JobPage:
+      description: Jobs paginados.
+      content: { application/json: { schema: { $ref: '#/components/schemas/JobPageResponse' } } }
+  schemas:
+    SuccessResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, enum: [true] }
+        data: {}
+        meta: { $ref: '#/components/schemas/Meta' }
+    Meta:
+      type: object
+      additionalProperties: true
+    PaginationMeta:
+      type: object
+      required: [page, limit, total, totalPages]
+      properties:
+        page: { type: integer, minimum: 1 }
+        limit: { type: integer, minimum: 1, maximum: 100 }
+        total: { type: integer, minimum: 0 }
+        totalPages: { type: integer, minimum: 0 }
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success: { type: boolean, enum: [false] }
+        error: { $ref: '#/components/schemas/ErrorBody' }
+    ErrorBody:
+      type: object
+      required: [code, message, details, timestamp]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        details: { type: object, additionalProperties: true }
+        timestamp: { type: string, format: date-time, description: ISO 8601 UTC. }
+    Id:
+      type: string
+      pattern: '^c[a-z0-9]{20,}$'
+      description: CUID persistente.
+    DateTime:
+      type: string
+      format: date-time
+      description: ISO 8601 UTC.
+    TenantStatus: { type: string, enum: [ACTIVO, SUSPENDIDO] }
+    UserStatus: { type: string, enum: [ACTIVO, INACTIVO] }
+    RoleName: { type: string, enum: [OWNER, MEMBER] }
+    CampaignStatus: { type: string, enum: [ACTIVA, PAUSADA, COMPLETADA, ARCHIVADA] }
+    ProspectStatus: { type: string, enum: [ACTIVO, INACTIVO] }
+    ProspectingJobStatus: { type: string, enum: [QUEUED, RUNNING, COMPLETED, FAILED, CANCELLED] }
+    Tenant:
+      type: object
+      required: [id, name, slug, status, createdAt, updatedAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        slug: { type: string }
+        status: { $ref: '#/components/schemas/TenantStatus' }
+        createdAt: { $ref: '#/components/schemas/DateTime' }
+        updatedAt: { $ref: '#/components/schemas/DateTime' }
+    Role:
+      type: object
+      required: [id, name]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { $ref: '#/components/schemas/RoleName' }
+        tenantId: { $ref: '#/components/schemas/Id' }
+        description: { type: string, nullable: true }
+    User:
+      type: object
+      required: [id, name, email, role, status, createdAt, updatedAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        email: { type: string, format: email }
+        platformRole: { type: string, enum: [ADMIN, null], nullable: true }
+        tenants:
+          type: array
+          description: Memberships visibles limitadas al tenant operativo.
+          items:
+            type: object
+            required: [tenantId, tenantName, tenantSlug, role]
+            properties:
+              tenantId: { $ref: '#/components/schemas/Id' }
+              tenantName: { type: string }
+              tenantSlug: { type: string }
+              role: { $ref: '#/components/schemas/Role' }
+        role: { $ref: '#/components/schemas/Role' }
+        status: { $ref: '#/components/schemas/UserStatus' }
+        createdAt: { $ref: '#/components/schemas/DateTime' }
+        updatedAt: { $ref: '#/components/schemas/DateTime' }
+      description: passwordHash nunca se expone.
+    Campaign:
+      type: object
+      required: [id, name, status, createdAt, updatedAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        status: { $ref: '#/components/schemas/CampaignStatus' }
+        createdBy: { $ref: '#/components/schemas/Id' }
+        createdAt: { $ref: '#/components/schemas/DateTime' }
+        updatedAt: { $ref: '#/components/schemas/DateTime' }
+    Prospect:
+      type: object
+      required: [id, campaignId, name, source, status, createdAt, updatedAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        campaignId: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        category: { type: string, nullable: true }
+        address: { type: string, nullable: true }
+        phone: { type: string, nullable: true }
+        email: { type: string, format: email, nullable: true }
+        website: { type: string, format: uri, nullable: true }
+        source: { type: string, enum: [google_maps] }
+        sourceIdentifier: { type: string, nullable: true }
+        language: { type: string, nullable: true }
+        status: { $ref: '#/components/schemas/ProspectStatus' }
+        metadata: { type: object, nullable: true, additionalProperties: true }
+        createdAt: { $ref: '#/components/schemas/DateTime' }
+        updatedAt: { $ref: '#/components/schemas/DateTime' }
+    ProspectingQuery:
+      type: object
+      required: [keyword, location, source, limit]
+      properties:
+        keyword: { type: string }
+        location: { type: string }
+        source: { type: string, enum: [google_maps] }
+        limit: { type: integer, minimum: 1 }
+    PipelineProgress:
+      type: object
+      nullable: true
+      required: [source, stage, message, percentage]
+      properties:
+        source: { type: string, enum: [google_maps] }
+        stage: { type: string }
+        message: { type: string }
+        percentage: { type: number, minimum: 0, maximum: 100 }
+      description: DTO de integración; no es persistencia.
+    BusinessResult:
+      type: object
+      required: [name, source]
+      properties:
+        name: { type: string }
+        category: { type: string, nullable: true }
+        address: { type: string, nullable: true }
+        phone: { type: string, nullable: true }
+        email: { type: string, format: email, nullable: true }
+        website: { type: string, format: uri, nullable: true }
+        source: { type: string, enum: [google_maps] }
+        sourceIdentifier: { type: string, nullable: true }
+        language: { type: string, nullable: true }
+        metadata: { type: object, nullable: true, additionalProperties: true }
+      description: DTO temporal de integración, no tabla ProspectingResult.
+    ProspectingJobSummary:
+      type: object
+      required: [id, campaignId, status, createdAt, startedAt, completedAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        campaignId: { $ref: '#/components/schemas/Id' }
+        status: { $ref: '#/components/schemas/ProspectingJobStatus' }
+        createdAt: { $ref: '#/components/schemas/DateTime' }
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+    ProspectingJobDetail:
+      allOf:
+        - $ref: '#/components/schemas/ProspectingJobSummary'
+        - type: object
+          required: [tenantId, requestedBy, query, requestedLimit, error, updatedAt, resultsAvailable, results, progress]
+          properties:
+            tenantId: { $ref: '#/components/schemas/Id' }
+            requestedBy: { $ref: '#/components/schemas/Id' }
+            query: { $ref: '#/components/schemas/ProspectingQuery' }
+            requestedLimit: { type: integer, nullable: true }
+            error: { type: string, nullable: true }
+            updatedAt: { $ref: '#/components/schemas/DateTime' }
+            resultsAvailable: { type: boolean, description: Computed/cache-only. }
+            results:
+              type: array
+              nullable: true
+              items: { $ref: '#/components/schemas/BusinessResult' }
+              description: Temporal/cache-only; no es una relación Prisma.
+            progress: { $ref: '#/components/schemas/PipelineProgress' }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+    SelectTenantRequest:
+      type: object
+      required: [tenantId]
+      properties: { tenantId: { $ref: '#/components/schemas/Id' } }
+    AuthContext:
+      type: object
+      required: [accessToken, user, tenants, currentTenantId]
+      properties:
+        accessToken: { type: string }
+        user: { $ref: '#/components/schemas/AuthUser' }
+        tenants:
+          type: array
+          items: { $ref: '#/components/schemas/AuthTenant' }
+        currentTenantId: { type: string, pattern: '^c[a-z0-9]{20,}$', nullable: true }
+    SuccessAuthContext:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties: { data: { $ref: '#/components/schemas/AuthContext' } }
+    AuthUser:
+      type: object
+      required: [id, name, email, platformRole, status, createdAt, updatedAt]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        email: { type: string, format: email }
+        platformRole: { type: string, enum: [ADMIN, null], nullable: true }
+        status: { $ref: '#/components/schemas/UserStatus' }
+        createdAt: { $ref: '#/components/schemas/DateTime' }
+        updatedAt: { $ref: '#/components/schemas/DateTime' }
+    AuthTenant:
+      type: object
+      required: [id, name, slug, status]
+      properties:
+        id: { $ref: '#/components/schemas/Id' }
+        name: { type: string }
+        slug: { type: string }
+        status: { $ref: '#/components/schemas/TenantStatus' }
+    CreateTenantRequest:
+      type: object
+      required: [name, slug]
+      properties: { name: { type: string }, slug: { type: string } }
+    CreateUserRequest:
+      type: object
+      description: roleId es opcional; se utiliza MEMBER del tenant autenticado si se omite (plan F4, bloque 5).
+      required: [name, email, password]
+      properties:
+        name: { type: string }
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+        roleId: { $ref: '#/components/schemas/Id' }
+    UpdateUserRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name: { type: string }
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+        roleId: { $ref: '#/components/schemas/Id' }
+        status: { $ref: '#/components/schemas/UserStatus' }
+    CreateCampaignRequest:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+    UpdateCampaignRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name: { type: string }
+        description: { type: string, nullable: true }
+        status: { $ref: '#/components/schemas/CampaignStatus' }
+    UpdateProspectRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name: { type: string }
+        category: { type: string, nullable: true }
+        address: { type: string, nullable: true }
+        phone: { type: string, nullable: true }
+        email: { type: string, format: email, nullable: true }
+        website: { type: string, format: uri, nullable: true }
+        language: { type: string, nullable: true }
+        status: { $ref: '#/components/schemas/ProspectStatus' }
+        metadata: { type: object, nullable: true, additionalProperties: true }
+    CreateProspectingJobRequest:
+      type: object
+      required: [campaignId, query]
+      properties:
+        campaignId: { $ref: '#/components/schemas/Id' }
+        query: { $ref: '#/components/schemas/ProspectingQuery' }
+    PersistResultsResult:
+      type: object
+      required: [persisted, skipped]
+      properties:
+        persisted: { type: integer, minimum: 0 }
+        skipped: { type: integer, minimum: 0 }
+    ExportFormat: { type: string, enum: [csv, xlsx] }
+    UserPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data: { type: array, items: { $ref: '#/components/schemas/User' } }
+            meta: { $ref: '#/components/schemas/PaginationMeta' }
+    CampaignPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data: { type: array, items: { $ref: '#/components/schemas/Campaign' } }
+            meta: { $ref: '#/components/schemas/PaginationMeta' }
+    ProspectPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data: { type: array, items: { $ref: '#/components/schemas/Prospect' } }
+            meta: { $ref: '#/components/schemas/PaginationMeta' }
+    JobPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data: { type: array, items: { $ref: '#/components/schemas/ProspectingJobSummary' } }
+            meta: { $ref: '#/components/schemas/PaginationMeta' }
