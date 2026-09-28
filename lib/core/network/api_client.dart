@@ -9,9 +9,11 @@ class ApiClient {
   ApiClient({
     required AppConfig config,
     required SecureTokenStorage storage,
+    Future<void> Function()? onUnauthorized,
     Dio? dio,
     Logger? logger,
   })  : _storage = storage,
+        _onUnauthorized = onUnauthorized,
         _logger = logger ?? Logger(),
         _dio = dio ?? Dio(BaseOptions(
           baseUrl: config.apiBaseUrl,
@@ -31,6 +33,9 @@ class ApiClient {
       onError: (error, handler) async {
         if (error.response?.statusCode == 401) {
           await _storage.clearToken();
+          if (error.requestOptions.headers['Authorization'] != null) {
+            await _onUnauthorized?.call();
+          }
           _logger.w('API returned 401 for ${error.requestOptions.method} ${error.requestOptions.path}');
         }
         handler.next(error);
@@ -40,6 +45,7 @@ class ApiClient {
 
   final Dio _dio;
   final SecureTokenStorage _storage;
+  final Future<void> Function()? _onUnauthorized;
   final Logger _logger;
 
   Future<Object?> get(String path, {Map<String, dynamic>? queryParameters}) async {

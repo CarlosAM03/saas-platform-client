@@ -28,6 +28,10 @@ class AuthState {
 }
 
 class AuthController extends Notifier<AuthState> {
+  void sessionExpired() {
+    state = const AuthState(status: AuthStatus.sessionExpired);
+  }
+
   @override
   AuthState build() {
     Future<void>.microtask(restoreSession);
@@ -46,11 +50,17 @@ class AuthController extends Notifier<AuthState> {
       final context = await ref.read(authRepositoryProvider).me();
       state = AuthState(status: AuthStatus.authenticated, context: context);
     } on ApiException catch (error) {
-      await ref.read(secureTokenStorageProvider).clearToken();
-      final status = error.kind == ApiErrorKind.serviceUnavailable || error.kind == ApiErrorKind.network
-          ? AuthStatus.backendUnavailable
-          : AuthStatus.sessionExpired;
+      final status = switch (error.kind) {
+        ApiErrorKind.unauthorized => AuthStatus.sessionExpired,
+        ApiErrorKind.serviceUnavailable || ApiErrorKind.network => AuthStatus.backendUnavailable,
+        _ => AuthStatus.failure,
+      };
+      if (status == AuthStatus.sessionExpired) {
+        await ref.read(secureTokenStorageProvider).clearToken();
+      }
       state = AuthState(status: status, error: error);
+    } catch (error) {
+      state = AuthState(status: AuthStatus.failure, error: error);
     }
   }
 
@@ -83,6 +93,8 @@ class AuthController extends Notifier<AuthState> {
   Future<void> logout() async {
     try {
       if (state.context != null) await ref.read(authRepositoryProvider).logout();
+    } on ApiException {
+      // The local session must end even when the backend cannot be reached.
     } finally {
       await ref.read(secureTokenStorageProvider).clearToken();
       state = const AuthState(status: AuthStatus.unauthenticated);

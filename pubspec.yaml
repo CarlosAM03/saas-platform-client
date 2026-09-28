@@ -26,5 +26,10 @@ dev_dependencies:
   json_serializable: ^6.9.5
   mockito: ^5.4.5
 
+# 2.6.0 introduces an Objective-C native build hook that fails on this
+# Windows workspace path before Flutter tests can start.
+dependency_overrides:
+  path_provider_foundation: 2.5.1
+
 flutter:
   uses-material-design: true

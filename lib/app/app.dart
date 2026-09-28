@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/theme/app_theme.dart';
 import '../routes/app_router.dart';
-import 'app_providers.dart';
 
 class SaasPlatformApp extends ConsumerWidget {
   const SaasPlatformApp({super.key});

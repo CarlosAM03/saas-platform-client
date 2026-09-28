@@ -59,7 +59,7 @@ La administracion completa de usuarios no bloquea Fase 5. La administracion de t
 - Riverpod gestiona estado.
 - `go_router` gestiona rutas.
 - `json_serializable` modela DTOs.
-- `envied` gestiona configuracion.
+- `API_BASE_URL` se configura con `--dart-define`; `.env.example` es referencia documental y no se carga automaticamente. La dependencia `envied` permanece instalada, pero no se usa para esta configuracion F5.
 - `logger` se usa para logs seguros.
 - No hay refresh token, OAuth ni self-register publico.
 - Jobs son asincronos y el MVP usa polling de 3 a 5 segundos.
@@ -119,3 +119,37 @@ Los documentos conceptuales e historicos no sustituyen estas fuentes.
 
 Para reglas de trabajo consultar `CONTRIBUTING.md` y `FEATURE-DEVELOPMENT.md`.
 
+## Reproducir F5 en VS Code (Windows)
+
+Abrir este repositorio en VS Code y usar una terminal PowerShell. En esta maquina existen dos alias de ruta corta: `C:\w` apunta a este checkout y `C:\f` al SDK de `.flutter-sdk` (Flutter 3.47.5, Dart 3.13.4). Son enlaces al mismo contenido, no copias. Edge se usa como destino `chrome` porque Chrome no esta instalado.
+
+```powershell
+Set-Location C:\w
+$env:Path = "C:\f\bin;C:\Windows\System32;C:\Windows\System32\WindowsPowerShell\v1.0;$env:Path"
+$env:CHROME_EXECUTABLE = 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
+flutter --version
+dart --version
+flutter doctor -v
+flutter devices
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+flutter analyze
+flutter test
+flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000
+```
+
+Tras `flutter clean`, este Windows requiere recrear el enlace de `.dart_tool` a la caché corta antes de `flutter pub get` (el comando `clean` retira el enlace):
+
+```powershell
+Set-Location C:\w
+flutter clean
+New-Item -ItemType Junction -Path .dart_tool -Target C:\f5-dart-tool | Out-Null
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs
+flutter analyze
+flutter test
+```
+
+Si `.dart_tool` ya existe, no recrear el enlace. `lib/shared/models/api_models.g.dart` es salida ignorada de `build_runner`, nunca un archivo escrito a mano. Para cambiar de backend, sustituir la URL en `--dart-define`. El backend NestJS debe estar disponible por separado para probar login real; sin backend, el cliente Web aun debe compilar y arrancar.
+
+El alcance implementado es Auth Foundation y navegacion base. Dashboard, Admin, Campaigns, Prospects y ProspectingJobs siguen siendo placeholders; no hay CRUD ni integracion funcional de esas areas. La discrepancia documental del rol MEMBER queda **PENDIENTE DE RECONCILIACIÓN ANTES DE FEATURES FUNCIONALES**.
