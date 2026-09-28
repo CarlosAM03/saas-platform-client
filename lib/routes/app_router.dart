@@ -11,6 +11,8 @@ import '../features/profile/presentation/profile_page.dart';
 import '../features/prospects/presentation/prospects_page.dart';
 import '../features/prospecting_jobs/presentation/generate_page.dart';
 
+ import '../features/dashboard/presentation/dashboard_page.dart';
+
 final appRouterProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authControllerProvider);
   return GoRouter(
@@ -106,8 +108,4 @@ class AppShell extends ConsumerWidget {
   }
 }
 
-class DashboardPage extends StatelessWidget {
-  const DashboardPage({super.key});
-  @override
-  Widget build(BuildContext context) => const Center(child: Text('Dashboard'));
-}
+
