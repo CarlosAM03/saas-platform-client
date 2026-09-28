@@ -15,27 +15,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authControllerProvider);
   return GoRouter(
     initialLocation: '/splash',
-    redirect: (context, state) {
-      final path = state.uri.path;
-      if (auth.status == AuthStatus.unknown || auth.status == AuthStatus.loading) {
-        return path == '/splash' ? null : '/splash';
-      }
-      if (auth.status == AuthStatus.sessionExpired) {
-        return path == '/session-expired' ? null : '/session-expired';
-      }
-      if (auth.status == AuthStatus.backendUnavailable) {
-        return path == '/backend-unavailable' ? null : '/backend-unavailable';
-      }
-      if (auth.status != AuthStatus.authenticated) {
-        return path == '/login' || path == '/session-expired' || path == '/backend-unavailable' ? null : '/login';
-      }
-      if (path == '/login' || path == '/splash') {
-        final currentTenantId = auth.context?.currentTenantId;
-        return currentTenantId == null && auth.context!.user.platformRole != 'ADMIN' ? '/select-tenant' : '/dashboard';
-      }
-      if (auth.context?.currentTenantId == null && _requiresTenant(path)) return '/select-tenant';
-      return null;
-    },
+    redirect: (context, state) => redirectForAuth(auth, state.uri.path),
     routes: [
       GoRoute(path: '/splash', builder: (_, __) => const SplashPage()),
       GoRoute(path: '/login', builder: (_, __) => const LoginPage()),
@@ -54,7 +34,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   );
 });
 
-bool _requiresTenant(String path) => !{'/profile', '/admin'}.contains(path);
+String? redirectForAuth(AuthState auth, String path) {
+  if (auth.status == AuthStatus.unknown || auth.status == AuthStatus.loading) {
+    return path == '/splash' ? null : '/splash';
+  }
+  if (auth.status == AuthStatus.sessionExpired) {
+    return path == '/session-expired' ? null : '/session-expired';
+  }
+  if (auth.status == AuthStatus.backendUnavailable) {
+    return path == '/backend-unavailable' ? null : '/backend-unavailable';
+  }
+  if (auth.status != AuthStatus.authenticated) {
+    return path == '/login' ? null : '/login';
+  }
+  final hasTenant = auth.context?.currentTenantId != null;
+  if (path == '/login' || path == '/splash' || path == '/session-expired' || path == '/backend-unavailable') {
+    return !hasTenant && auth.context?.user.platformRole != 'ADMIN' ? '/select-tenant' : '/dashboard';
+  }
+  if (path == '/select-tenant' && hasTenant) return '/dashboard';
+  if (!hasTenant && _requiresTenant(path)) return '/select-tenant';
+  return null;
+}
+
+bool _requiresTenant(String path) => {'/campaigns', '/prospects', '/generate'}.contains(path);
 
 class AppShell extends ConsumerWidget {
   const AppShell({required this.child, super.key});

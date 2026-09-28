@@ -12,7 +12,13 @@ final appConfigProvider = Provider<AppConfig>((ref) => AppConfig.fromEnvironment
 final apiClientProvider = Provider<ApiClient>((ref) {
   final config = ref.watch(appConfigProvider);
   final storage = ref.watch(secureTokenStorageProvider);
-  return ApiClient(config: config, storage: storage);
+  return ApiClient(
+    config: config,
+    storage: storage,
+    onUnauthorized: () async {
+      ref.read(authControllerProvider.notifier).sessionExpired();
+    },
+  );
 });
 
 final errorMapperProvider = Provider<ErrorMapper>((ref) => const ErrorMapper());
