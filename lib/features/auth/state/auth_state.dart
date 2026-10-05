@@ -5,6 +5,10 @@ import '../../../core/storage/secure_token_storage.dart';
 import '../../../shared/models/api_models.dart';
 import '../../../app/app_providers.dart';
 
+
+//PROVICIONAL SOLO PARA PASAR EL LOGIN PROVICIONAL
+import '../data/dev_user.dart';
+
 enum AuthStatus {
   unknown,
   loading,
@@ -47,6 +51,11 @@ class AuthController extends Notifier<AuthState> {
         state = const AuthState(status: AuthStatus.unauthenticated);
         return;
       }
+      //REMOVER CUANDO YA SE HAYAN CONECTADO EL BACKEND Y EL FRONTEND, ES PROVISIONAL
+            if (DevUser.isToken(token)) {
+        state = AuthState(status: AuthStatus.authenticated, context: DevUser.context());
+        return;
+      }
       final context = await ref.read(authRepositoryProvider).me();
       state = AuthState(status: AuthStatus.authenticated, context: context);
     } on ApiException catch (error) {
@@ -67,6 +76,15 @@ class AuthController extends Notifier<AuthState> {
   Future<void> login(String email, String password) async {
     state = state.copyWith(status: AuthStatus.loading, clearError: true);
     try {
+      //PROVISIONAAAAAAAAAAL , 
+      if (DevUser.matches(email, password)) {
+        final dev = DevUser.context();
+        await ref.read(secureTokenStorageProvider).writeToken(dev.accessToken);
+        state = AuthState(status: AuthStatus.authenticated, context: dev);
+        return;
+      }
+
+
       final context = await ref.read(authRepositoryProvider).login(email: email, password: password);
       await ref.read(secureTokenStorageProvider).writeToken(context.accessToken);
       state = AuthState(status: AuthStatus.authenticated, context: context);
@@ -91,13 +109,23 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> logout() async {
-    try {
+     
+     //PROVICIONAAAAAAAAAAAAAAAAL
+      final ctx = state.context;
+      if (ctx != null && !DevUser.isToken(ctx.accessToken)) {
+        await ref.read(authRepositoryProvider).logout();
+      }
+   
+   //Este es el original para conectar con el backend 
+    /*try 
+    {
+      
       if (state.context != null) await ref.read(authRepositoryProvider).logout();
     } on ApiException {
       // The local session must end even when the backend cannot be reached.
     } finally {
       await ref.read(secureTokenStorageProvider).clearToken();
       state = const AuthState(status: AuthStatus.unauthenticated);
-    }
+    }*/
   }
 }

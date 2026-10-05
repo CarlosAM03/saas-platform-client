@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+
 import '../../../app/app_providers.dart';
 import '../state/auth_state.dart';
+
+import 'register_dialog.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -42,7 +45,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           if (auth.error != null) Padding(padding: const EdgeInsets.only(top: 12), child: Text('No se pudo iniciar sesión.', style: TextStyle(color: Theme.of(context).colorScheme.error))),
           const SizedBox(height: 20),
           FilledButton(onPressed: auth.status == AuthStatus.loading ? null : () => ref.read(authControllerProvider.notifier).login(email.text.trim(), password.text), child: auth.status == AuthStatus.loading ? const CircularProgressIndicator() : const Text('Entrar')),
-        ]),
+
+          const SizedBox(height: 12),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+  const Text('¿No tienes cuenta?'),
+  TextButton(
+    onPressed: () => showRegisterDialog(context),
+    child: const Text('Regístrate', style: TextStyle(decoration: TextDecoration.underline)),
+  ),
+]),
+            ]),
       ))),
     );
   }
