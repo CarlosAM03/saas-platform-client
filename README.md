@@ -153,3 +153,25 @@ flutter test
 Si `.dart_tool` ya existe, no recrear el enlace. `lib/shared/models/api_models.g.dart` es salida ignorada de `build_runner`, nunca un archivo escrito a mano. Para cambiar de backend, sustituir la URL en `--dart-define`. El backend NestJS debe estar disponible por separado para probar login real; sin backend, el cliente Web aun debe compilar y arrancar.
 
 El alcance implementado es Auth Foundation y navegacion base. Dashboard, Admin, Campaigns, Prospects y ProspectingJobs siguen siendo placeholders; no hay CRUD ni integracion funcional de esas areas. La discrepancia documental del rol MEMBER queda **PENDIENTE DE RECONCILIACIÓN ANTES DE FEATURES FUNCIONALES**.
+## Inicio con Docker
+
+Requisitos en host: Git, Docker y Docker Compose. El SDK Linux oficial está fijado en Flutter 3.47.5 / Dart 3.13.4 y se verifica mediante SHA-256 dentro de la imagen.
+
+```powershell
+git clone https://github.com/CarlosAM03/saas-platform-client.git
+cd saas-platform-client
+git switch dev
+docker compose up --build
+```
+
+Abrir `http://localhost:4200`. El build resuelve dependencias, genera código y compila Flutter Web; Nginx sirve los archivos. Para aplicar cambios de código se vuelve a ejecutar `docker compose up --build`; no se promete hot reload.
+
+El backend se levanta por separado desde su repositorio con `docker compose up --build`. Por defecto la app usa `http://localhost:3000`, accesible desde el navegador. Para cambiarlo:
+
+```powershell
+$env:API_BASE_URL='http://localhost:3001'
+docker compose up --build
+```
+
+`API_BASE_URL` es un argumento de compilación; requiere reconstrucción. El backend debe permitir CORS para `http://localhost:4200`. Para detener el frontend: `docker compose down`.
+

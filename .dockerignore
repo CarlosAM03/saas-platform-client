@@ -1,0 +1,13 @@
+**
+!Dockerfile.dev
+!pubspec.yaml
+!pubspec.lock
+!analysis_options.yaml
+!lib/
+!lib/**
+!web/
+!web/**
+!docker/
+!docker/nginx.conf
+lib/**/*.g.dart
+lib/**/*.freezed.dart

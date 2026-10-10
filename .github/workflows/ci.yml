@@ -22,3 +22,11 @@ jobs:
       - name: Foundation, Platform API and contract tests
         run: flutter test
       - run: flutter build web --no-wasm-dry-run
+
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose config --quiet
+      - run: docker compose build

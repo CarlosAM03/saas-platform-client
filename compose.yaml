@@ -1,0 +1,12 @@
+services:
+  flutter-web:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        API_BASE_URL: ${API_BASE_URL:-http://localhost:3000}
+    image: saas-platform-client-web:dev
+    ports:
+      - "4200:4200"
+    restart: unless-stopped
