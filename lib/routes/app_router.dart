@@ -11,7 +11,7 @@ import '../features/profile/presentation/profile_page.dart';
 import '../features/prospects/presentation/prospects_page.dart';
 import '../features/prospecting_jobs/presentation/generate_page.dart';
 
- import '../features/dashboard/presentation/dashboard_page.dart';
+import '../features/dashboard/presentation/dashboard_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authControllerProvider);
@@ -21,7 +21,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: '/splash', builder: (_, __) => const SplashPage()),
       GoRoute(path: '/login', builder: (_, __) => const LoginPage()),
-      GoRoute(path: '/select-tenant', builder: (_, __) => const SelectTenantPage()),
+      GoRoute(
+          path: '/select-tenant', builder: (_, __) => const SelectTenantPage()),
       ShellRoute(builder: (_, __, child) => AppShell(child: child), routes: [
         GoRoute(path: '/dashboard', builder: (_, __) => const DashboardPage()),
         GoRoute(path: '/campaigns', builder: (_, __) => const CampaignsPage()),
@@ -30,8 +31,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         GoRoute(path: '/profile', builder: (_, __) => const ProfilePage()),
         GoRoute(path: '/admin', builder: (_, __) => const AdminPage()),
       ]),
-      GoRoute(path: '/session-expired', builder: (_, __) => const SessionExpiredPage()),
-      GoRoute(path: '/backend-unavailable', builder: (_, __) => const BackendUnavailablePage()),
+      GoRoute(
+          path: '/session-expired',
+          builder: (_, __) => const SessionExpiredPage()),
+      GoRoute(
+          path: '/backend-unavailable',
+          builder: (_, __) => const BackendUnavailablePage()),
     ],
   );
 });
@@ -50,15 +55,25 @@ String? redirectForAuth(AuthState auth, String path) {
     return path == '/login' ? null : '/login';
   }
   final hasTenant = auth.context?.currentTenantId != null;
-  if (path == '/login' || path == '/splash' || path == '/session-expired' || path == '/backend-unavailable') {
-    return !hasTenant && auth.context?.user.platformRole != 'ADMIN' ? '/select-tenant' : '/dashboard';
+  if (path == '/login' ||
+      path == '/splash' ||
+      path == '/session-expired' ||
+      path == '/backend-unavailable') {
+    return hasTenant ? '/dashboard' : '/select-tenant';
   }
   if (path == '/select-tenant' && hasTenant) return '/dashboard';
   if (!hasTenant && _requiresTenant(path)) return '/select-tenant';
   return null;
 }
 
-bool _requiresTenant(String path) => {'/campaigns', '/prospects', '/generate'}.contains(path);
+bool _requiresTenant(String path) => {
+      '/dashboard',
+      '/campaigns',
+      '/prospects',
+      '/generate',
+      '/jobs',
+      '/users',
+    }.contains(path);
 
 class AppShell extends ConsumerWidget {
   const AppShell({required this.child, super.key});
@@ -67,7 +82,7 @@ class AppShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.path;
-    final destinations = const ['/dashboard', '/campaigns', '/prospects', '/generate'];
+    final destinations = const ['/dashboard', '/campaigns', '/prospects'];
     final rawIndex = destinations.indexOf(location);
     final index = rawIndex < 0 ? 0 : rawIndex;
     final wideLayout = MediaQuery.sizeOf(context).width >= 700;
@@ -77,35 +92,46 @@ class AppShell extends ConsumerWidget {
           ? Row(children: [
               NavigationRail(
                 selectedIndex: index,
-                onDestinationSelected: (value) => context.go(destinations[value]),
+                onDestinationSelected: (value) =>
+                    context.go(destinations[value]),
                 destinations: const [
-                  NavigationRailDestination(icon: Icon(Icons.dashboard_outlined), label: Text('Dashboard')),
-                  NavigationRailDestination(icon: Icon(Icons.campaign_outlined), label: Text('Campañas')),
-                  NavigationRailDestination(icon: Icon(Icons.people_outline), label: Text('Prospectos')),
-                  NavigationRailDestination(icon: Icon(Icons.auto_awesome_outlined), label: Text('Generar')),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.dashboard_outlined),
+                      label: Text('Dashboard')),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.campaign_outlined),
+                      label: Text('Campañas')),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.people_outline),
+                      label: Text('Prospectos')),
                 ],
               ),
               Expanded(child: child),
             ])
           : child,
-      drawer: Drawer(child: ListView(children: [
+      drawer: Drawer(
+          child: ListView(children: [
         const DrawerHeader(child: Text('Cuenta')),
-        ListTile(title: const Text('Perfil'), onTap: () => context.go('/profile')),
-        ListTile(title: const Text('Administración'), onTap: () => context.go('/admin')),
-        ListTile(title: const Text('Cerrar sesión'), onTap: () => ref.read(authControllerProvider.notifier).logout()),
+        ListTile(
+            title: const Text('Perfil'), onTap: () => context.go('/profile')),
+        ListTile(
+            title: const Text('Cerrar sesión'),
+            onTap: () => ref.read(authControllerProvider.notifier).logout()),
       ])),
-      bottomNavigationBar: wideLayout ? null : NavigationBar(
-        selectedIndex: index,
-        onDestinationSelected: (value) => context.go(destinations[value]),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.dashboard_outlined), label: 'Dashboard'),
-          NavigationDestination(icon: Icon(Icons.campaign_outlined), label: 'Campañas'),
-          NavigationDestination(icon: Icon(Icons.people_outline), label: 'Prospectos'),
-          NavigationDestination(icon: Icon(Icons.auto_awesome_outlined), label: 'Generar'),
-        ],
-      ),
+      bottomNavigationBar: wideLayout
+          ? null
+          : NavigationBar(
+              selectedIndex: index,
+              onDestinationSelected: (value) => context.go(destinations[value]),
+              destinations: const [
+                NavigationDestination(
+                    icon: Icon(Icons.dashboard_outlined), label: 'Dashboard'),
+                NavigationDestination(
+                    icon: Icon(Icons.campaign_outlined), label: 'Campañas'),
+                NavigationDestination(
+                    icon: Icon(Icons.people_outline), label: 'Prospectos'),
+              ],
+            ),
     );
   }
 }
-
-

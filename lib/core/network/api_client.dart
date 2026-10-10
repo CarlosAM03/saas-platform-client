@@ -15,13 +15,14 @@ class ApiClient {
   })  : _storage = storage,
         _onUnauthorized = onUnauthorized,
         _logger = logger ?? Logger(),
-        _dio = dio ?? Dio(BaseOptions(
-          baseUrl: config.apiBaseUrl,
-          connectTimeout: const Duration(seconds: 10),
-          receiveTimeout: const Duration(seconds: 30),
-          sendTimeout: const Duration(seconds: 30),
-          headers: {'Accept': 'application/json'},
-        )) {
+        _dio = dio ??
+            Dio(BaseOptions(
+              baseUrl: config.apiBaseUrl,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 30),
+              sendTimeout: const Duration(seconds: 30),
+              headers: {'Accept': 'application/json'},
+            )) {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         final token = await _storage.readToken();
@@ -36,7 +37,8 @@ class ApiClient {
           if (error.requestOptions.headers['Authorization'] != null) {
             await _onUnauthorized?.call();
           }
-          _logger.w('API returned 401 for ${error.requestOptions.method} ${error.requestOptions.path}');
+          _logger.w(
+              'API returned 401 for ${error.requestOptions.method} ${error.requestOptions.path}');
         }
         handler.next(error);
       },
@@ -48,8 +50,10 @@ class ApiClient {
   final Future<void> Function()? _onUnauthorized;
   final Logger _logger;
 
-  Future<Object?> get(String path, {Map<String, dynamic>? queryParameters}) async {
-    final response = await _request(() => _dio.get<Object?>(path, queryParameters: queryParameters));
+  Future<Object?> get(String path,
+      {Map<String, dynamic>? queryParameters}) async {
+    final response = await _request(
+        () => _dio.get<Object?>(path, queryParameters: queryParameters));
     return response.data;
   }
 
@@ -59,20 +63,25 @@ class ApiClient {
   }
 
   Future<Object?> patch(String path, {Object? data}) async {
-    final response = await _request(() => _dio.patch<Object?>(path, data: data));
+    final response =
+        await _request(() => _dio.patch<Object?>(path, data: data));
     return response.data;
   }
 
-  Future<Object?> delete(String path) async {
-    final response = await _request(() => _dio.delete<Object?>(path));
+  Future<Object?> delete(String path,
+      {Map<String, dynamic>? queryParameters}) async {
+    final response = await _request(
+        () => _dio.delete<Object?>(path, queryParameters: queryParameters));
     return response.data;
   }
 
   Future<Response<Object?>> download(String path) {
-    return _request(() => _dio.get<Object?>(path, options: Options(responseType: ResponseType.bytes)));
+    return _request(() => _dio.get<Object?>(path,
+        options: Options(responseType: ResponseType.bytes)));
   }
 
-  Future<Response<Object?>> _request(Future<Response<Object?>> Function() request) async {
+  Future<Response<Object?>> _request(
+      Future<Response<Object?>> Function() request) async {
     try {
       return await request();
     } on DioException catch (error) {
@@ -83,9 +92,11 @@ class ApiClient {
   ApiException _mapError(DioException error) {
     final status = error.response?.statusCode;
     final body = error.response?.data;
-    final message = body is Map && body['error'] is Map
-        ? ((body['error'] as Map)['message']?.toString() ?? 'Error de API')
-        : 'Error de comunicación con el backend.';
+    final errorBody =
+        body is Map && body['error'] is Map ? body['error'] as Map : null;
+    final code = errorBody?['code'];
+    final message = errorBody?['message'];
+    final details = errorBody?['details'];
     final kind = switch (status) {
       400 => ApiErrorKind.badRequest,
       401 => ApiErrorKind.unauthorized,
@@ -94,9 +105,22 @@ class ApiClient {
       409 => ApiErrorKind.conflict,
       429 => ApiErrorKind.rateLimited,
       503 => ApiErrorKind.serviceUnavailable,
-      _ when error.type == DioExceptionType.connectionError || error.type == DioExceptionType.connectionTimeout => ApiErrorKind.network,
+      _
+          when error.type == DioExceptionType.connectionError ||
+              error.type == DioExceptionType.connectionTimeout ||
+              error.type == DioExceptionType.receiveTimeout ||
+              error.type == DioExceptionType.sendTimeout =>
+        ApiErrorKind.network,
       _ => ApiErrorKind.unknown,
     };
-    return ApiException(kind: kind, statusCode: status, message: message, details: body);
+    return ApiException(
+      kind: kind,
+      statusCode: status,
+      code: code is String ? code : null,
+      message: message is String && message.isNotEmpty
+          ? message
+          : 'Error de comunicación con el backend.',
+      details: details,
+    );
   }
 }

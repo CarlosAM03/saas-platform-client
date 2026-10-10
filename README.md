@@ -104,7 +104,7 @@ La documentacion vigente del cliente vive dentro de `Docs/`:
 - `Docs/ADRs/ADR-005-FlutterFoundation.md`
 - `Docs/DocsTeam/FormularioDeDecisiones/FormularioDecisionesFase5.md`
 - `Docs/Flutter-Foundation.md`
-- `Docs/LineamientosUI-UX.md`
+- `Docs/DocsTeam/Documentacion UIUX/LineamientosUI-UX.md`
 
 La fuente contractual HTTP es `platform-api.v1.yaml` del backend. La autoridad de las decisiones de F4 es `ADR-004-CommonBaseline.md` del backend.
 
@@ -132,10 +132,10 @@ dart --version
 flutter doctor -v
 flutter devices
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 flutter analyze
 flutter test
-flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:3000
+flutter run -d edge --web-port=4200 --dart-define=API_BASE_URL=http://localhost:3000
 ```
 
 Tras `flutter clean`, este Windows requiere recrear el enlace de `.dart_tool` a la caché corta antes de `flutter pub get` (el comando `clean` retira el enlace):
@@ -145,7 +145,7 @@ Set-Location C:\w
 flutter clean
 New-Item -ItemType Junction -Path .dart_tool -Target C:\f5-dart-tool | Out-Null
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 flutter analyze
 flutter test
 ```

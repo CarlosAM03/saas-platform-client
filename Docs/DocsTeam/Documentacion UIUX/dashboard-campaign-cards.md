@@ -1,7 +1,7 @@
 # Dashboard: cards de campañas
 
 > **Alcance:** solo front end y UI/UX. No se modificó backend, OpenAPI ni infraestructura.
-> **Referencia de diseño:** [`Docs/LineamientosUI-UX.md`](../LineamientosUI-UX.md), sección 16 (Cards) y sección 17 (Badges / Status).
+> **Referencia de diseño:** [`LineamientosUI-UX.md`](LineamientosUI-UX.md), sección 16 (Cards) y sección 17 (Badges / Status).
 
 ## Resumen
 
