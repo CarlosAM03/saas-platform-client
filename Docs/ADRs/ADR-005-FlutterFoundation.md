@@ -939,7 +939,7 @@ analysis_options.yaml.
 
 Docs/Flutter-Foundation.md.
 
-Docs/LineamientosUI-UX.md.
+Docs/DocsTeam/Documentacion UIUX/LineamientosUI-UX.md.
 
 Docs/DocsTeam/FormularioDeDecisiones/FormularioDecisionesFase5.md.
 

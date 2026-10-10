@@ -172,6 +172,8 @@ Repository interface
   ↓
 Repository implementation
   ↓
+Platform API Client tipado
+  ↓
 ApiClient
   ↓
 SaaS Backend NestJS
@@ -636,7 +638,7 @@ No debe saber si los datos vienen de API real o mock.
 
 ## API repository
 
-Consume ApiClient.
+Consume `PlatformApi` mediante `platformApiProvider`. Paths, métodos, queries, requests y parsing pertenecen a `lib/platform_api`; la feature adapta DTOs a su modelo visual. Ver `Docs/Contracts/Platform_API_Client.md` para uso y P2C.
 
 Debe respetar OpenAPI.
 
