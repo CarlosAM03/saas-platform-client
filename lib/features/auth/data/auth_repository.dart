@@ -1,26 +1,26 @@
 import '../../../core/network/api_client.dart';
 import '../../../shared/models/api_models.dart';
+import '../../../platform_api/auth_api.dart';
+import '../../../platform_api/requests.dart';
 
 class AuthRepository {
-  const AuthRepository(this._apiClient);
-  final ApiClient _apiClient;
+  AuthRepository(ApiClient client) : _api = AuthApi(client);
+  final AuthApi _api;
 
-  Future<AuthContext> login({required String email, required String password}) async {
-    final response = await _apiClient.post('/api/v1/auth/login', data: {'email': email, 'password': password});
-    return AuthContext.fromJson(unwrapData(response));
+  Future<AuthContext> login(
+      {required String email, required String password}) async {
+    return _api.login(LoginRequest(email: email, password: password));
   }
 
   Future<AuthContext> me() async {
-    final response = await _apiClient.get('/api/v1/auth/me');
-    return AuthContext.fromJson(unwrapData(response));
+    return _api.me();
   }
 
   Future<AuthContext> selectTenant(String tenantId) async {
-    final response = await _apiClient.post('/api/v1/auth/select-tenant', data: {'tenantId': tenantId});
-    return AuthContext.fromJson(unwrapData(response));
+    return _api.selectTenant(SelectTenantRequest(tenantId: tenantId));
   }
 
   Future<void> logout() async {
-    await _apiClient.post('/api/v1/auth/logout');
+    await _api.logout();
   }
 }

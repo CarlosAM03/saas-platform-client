@@ -39,7 +39,7 @@ Los cambios deben integrarse mediante pull request hacia `dev`. La rama `main` r
 - No hay acceso directo a PostgreSQL, Prospector Service o Prospector Engine.
 - Dio vive unicamente dentro de `lib/core/network`, encapsulado por `ApiClient`.
 - Features, providers y widgets no usan Dio ni hacen HTTP directo.
-- Los repositories consumen `ApiClient`.
+- Los repositories de features consumen `PlatformApi` tipado; `ApiClient` es su transporte interno. La guía de uso y P2C está en `Docs/Contracts/Platform_API_Client.md`.
 - Riverpod gestiona estado y `go_router` gestiona rutas.
 - El JWT se guarda unicamente en `flutter_secure_storage`.
 - No se imprimen tokens ni secretos en logs.

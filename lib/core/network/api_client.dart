@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 
 import '../config/app_config.dart';
 import '../errors/api_exception.dart';
 import '../storage/secure_token_storage.dart';
+import 'api_download.dart';
 
 class ApiClient {
   ApiClient({
@@ -57,8 +60,10 @@ class ApiClient {
     return response.data;
   }
 
-  Future<Object?> post(String path, {Object? data}) async {
-    final response = await _request(() => _dio.post<Object?>(path, data: data));
+  Future<Object?> post(String path,
+      {Object? data, Map<String, String>? headers}) async {
+    final response = await _request(() => _dio.post<Object?>(path,
+        data: data, options: Options(headers: headers)));
     return response.data;
   }
 
@@ -80,6 +85,21 @@ class ApiClient {
         options: Options(responseType: ResponseType.bytes)));
   }
 
+  Future<ApiDownload> downloadBytes(String path,
+      {Map<String, dynamic>? queryParameters}) async {
+    final response = await _request(() => _dio.get<Object?>(path,
+        queryParameters: queryParameters,
+        options: Options(responseType: ResponseType.bytes)));
+    final data = response.data;
+    if (data is! List<int>) {
+      throw const FormatException('Expected binary response');
+    }
+    return ApiDownload(
+        bytes: List<int>.unmodifiable(data),
+        contentType: response.headers.value('content-type'),
+        contentDisposition: response.headers.value('content-disposition'));
+  }
+
   Future<Response<Object?>> _request(
       Future<Response<Object?>> Function() request) async {
     try {
@@ -91,7 +111,15 @@ class ApiClient {
 
   ApiException _mapError(DioException error) {
     final status = error.response?.statusCode;
-    final body = error.response?.data;
+    Object? body = error.response?.data;
+    // Binary endpoints can still return the contractual JSON error envelope.
+    if (body is List<int>) {
+      try {
+        body = jsonDecode(utf8.decode(body));
+      } catch (_) {
+        body = null;
+      }
+    }
     final errorBody =
         body is Map && body['error'] is Map ? body['error'] as Map : null;
     final code = errorBody?['code'];

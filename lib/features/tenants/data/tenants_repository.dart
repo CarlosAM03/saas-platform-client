@@ -1,13 +1,19 @@
 import '../../../core/network/api_client.dart';
 import '../../../shared/models/api_models.dart';
+import '../../../platform_api/tenants_api.dart';
 
 class TenantsRepository {
-  const TenantsRepository(this._apiClient);
+  TenantsRepository(ApiClient client) : _api = TenantsApi(client);
 
-  final ApiClient _apiClient;
+  final TenantsApi _api;
 
   Future<List<AuthTenant>> discover() async {
-    final response = await _apiClient.get('/api/v1/tenants');
-    return unwrapList(response, AuthTenant.fromJson);
+    return (await _api.list())
+        .map((tenant) => AuthTenant(
+            id: tenant.id,
+            name: tenant.name,
+            slug: tenant.slug,
+            status: tenant.status.name))
+        .toList(growable: false);
   }
 }

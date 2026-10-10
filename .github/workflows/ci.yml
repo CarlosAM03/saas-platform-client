@@ -19,5 +19,6 @@ jobs:
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter analyze
-      - run: flutter test
+      - name: Foundation, Platform API and contract tests
+        run: flutter test
       - run: flutter build web --no-wasm-dry-run

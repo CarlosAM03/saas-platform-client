@@ -173,7 +173,7 @@ void main() {
       () async {
     final adapter = RecordingAdapter()
       ..body =
-          '{"success":true,"data":[{"id":"tenant-1","name":"Demo Norte","slug":"demo-norte","status":"ACTIVO"}]}';
+          '{"success":true,"data":[{"id":"tenant-1","name":"Demo Norte","slug":"demo-norte","status":"ACTIVO","createdAt":"2026-01-01T00:00:00Z","updatedAt":"2026-01-01T00:00:00Z"}]}';
     final repository = TenantsRepository(
         clientFor(adapter, MemoryStorage(token: 'admin-token')));
     final tenants = await repository.discover();

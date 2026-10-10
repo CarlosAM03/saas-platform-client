@@ -8,6 +8,10 @@ import '../features/auth/data/auth_repository.dart';
 import '../features/auth/state/auth_state.dart';
 import '../features/tenants/data/tenants_repository.dart';
 import '../shared/models/api_models.dart';
+import '../platform_api/platform_api.dart' show PlatformApi;
+
+final platformApiProvider =
+    Provider<PlatformApi>((ref) => PlatformApi(ref.watch(apiClientProvider)));
 
 final appConfigProvider =
     Provider<AppConfig>((ref) => AppConfig.fromEnvironment());
