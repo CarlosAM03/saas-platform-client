@@ -175,3 +175,58 @@ docker compose up --build
 
 `API_BASE_URL` es un argumento de compilación; requiere reconstrucción. El backend debe permitir CORS para `http://localhost:4200`. Para detener el frontend: `docker compose down`.
 
+---
+
+### Credenciales locales de desarrollo
+
+El entorno Docker local utiliza credenciales deliberadamente exclusivas de
+desarrollo. No corresponden a producción ni a shared-dev.
+
+#### Usuarios demo
+
+Todas las cuentas utilizan:
+
+Password: `DevOnlyPass123!`
+
+| Rol | Email |
+| --- | --- |
+| ADMIN | `admin@demo.example` |
+| OWNER Demo Norte | `owner.demo-norte@demo.example` |
+| MEMBER Demo Norte | `member.demo-norte@demo.example` |
+| OWNER Demo Sur | `owner.demo-sur@demo.example` |
+| MEMBER Demo Sur | `member.demo-sur@demo.example` |
+
+Para una prueba rápida del frontend se recomienda:
+
+`owner.demo-norte@demo.example` / `DevOnlyPass123!`
+
+#### PostgreSQL local
+
+- Database: `saas_local`
+- User: `saas_local`
+- Password: `local-dev-only-password`
+- Host dentro de Compose: `db`
+- Port: `5432`
+
+PostgreSQL no se publica al host. Para abrir psql:
+
+`docker compose exec db psql -U saas_local -d saas_local`
+
+#### Restaurar el dataset demo
+
+Compose ejecuta migraciones y `Prisma/seed_dev.ts` mediante `db-init`.
+
+Reejecutar migraciones + seed sin eliminar el volumen:
+
+`docker compose run --rm db-init`
+
+Reejecutar únicamente el seed:
+
+`docker compose run --rm db-init npm run prisma:seed:dev`
+
+Reset completo y destructivo:
+
+`docker compose down -v`
+`docker compose up --build`
+
+---
