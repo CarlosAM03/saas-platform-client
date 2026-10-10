@@ -111,6 +111,12 @@ class AuthController extends Notifier<AuthState> {
           .writeToken(context.accessToken);
       state = AuthState(status: AuthStatus.authenticated, context: context);
     } catch (error) {
+      if ((error is ApiException && error.kind == ApiErrorKind.unauthorized) ||
+          state.status == AuthStatus.sessionExpired) {
+        await ref.read(secureTokenStorageProvider).clearToken();
+        state = AuthState(status: AuthStatus.sessionExpired, error: error);
+        return;
+      }
       state = AuthState(
         status: previousContext == null
             ? AuthStatus.failure

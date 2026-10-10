@@ -97,7 +97,7 @@ Los servidores de inyección 401/403 eran temporales, locales y se retiraron; no
 | BLOCKER | Ninguno para Foundation. |
 | P1 | Ninguno dentro del alcance cerrado. |
 | P2 | Warnings de `build_runner` por restricciones de `json_annotation` y SDK mínimo; revisar en una actualización controlada. Aviso de fuente Cupertino en build Web. El launcher Edge falló en este entorno; validación UI se hizo con `web-server` y navegador integrado. |
-| DEFERRED | Ejecución remota de GitHub Actions: **NOT VERIFIED** porque el usuario prohibió push/PR; se ejecutó localmente la secuencia completa de la workflow. UI de Dashboard y features de negocio siguen siendo prototipos por alcance. |
+| DEFERRED | UI de Dashboard y features de negocio siguen siendo prototipos por alcance. `/generate` y `/admin` son placeholders internos sin entradas en navegación normal. |
 
 ## H. Alcance explícitamente no implementado
 
@@ -110,4 +110,10 @@ FLUTTER FOUNDATION HARDENED
 READY FOR FEATURE DEVELOPMENT
 ```
 
-Las gates locales (`analyze`, `test`, `build web`) y los flujos runtime requeridos se verificaron. La ejecución remota de CI queda **NOT VERIFIED** hasta que se publique una rama por instrucción posterior; el repositorio permanece sin commit ni push para revisión humana.
+Las gates locales (`analyze`, `test`, `build web`) y los flujos runtime requeridos se verificaron. GitHub Actions **Flutter Foundation CI** finalizó **SUCCESS** para `d4c846fa7494a98d74e3fcfb36c7517a8dbecb4d`: [run 38060741100](https://github.com/CarlosAM03/saas-platform-client/actions/runs/38060741100).
+
+### Cierre residual — plan de tres bloques
+
+Se corrigió `selectTenant + 401`: el catch ya no restaura el contexto previo después de una expiración; limpia defensivamente el token y deja contexto nulo y `sessionExpired`. Tests específicos cubren 200, 401, 403 y network; errores no-401 conservan la sesión anterior.
+
+Protección de `main` pendiente: GitHub devuelve `protected=false` y el conector devuelve 403 `Resource not accessible by integration` al consultar administración. La herramienta disponible no permite modificar branch protection. Configuración exacta: Require pull request before merging; Require status checks (`foundation`, workflow **Flutter Foundation CI**, mostrado como `Flutter Foundation CI / foundation`); Require branches to be up to date; aplicar a administradores; desactivar force pushes y deletions. Así se bloquea el push directo sin PR/check. No se simula esta configuración mediante código.

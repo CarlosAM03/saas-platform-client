@@ -37,10 +37,14 @@ class StubAuthRepository extends AuthRepository {
 
   AuthContext? result;
   Object? error;
+  void Function()? beforeError;
   bool logoutCalled = false;
 
   Future<AuthContext> _answer() async {
-    if (error != null) throw error!;
+    if (error != null) {
+      beforeError?.call();
+      throw error!;
+    }
     return result!;
   }
 
@@ -222,7 +226,35 @@ void main() {
       expect(storage.token, 'tenant-token');
     });
 
-    test('failed tenant selection preserves prior context and JWT', () async {
+    for (final kind in [ApiErrorKind.forbidden, ApiErrorKind.network]) {
+      test('select tenant $kind preserves prior context and JWT', () async {
+        final storage = MemoryTokenStorage();
+        final repository = StubAuthRepository(storage)..result = contextFor();
+        final container = containerFor(storage, repository);
+        addTearDown(container.dispose);
+        container.read(authControllerProvider);
+        await settleRestore();
+        await container
+            .read(authControllerProvider.notifier)
+            .login('user@example.com', 'password');
+        final previous = container.read(authControllerProvider).context;
+        repository.error = ApiException(
+            kind: kind,
+            statusCode: kind == ApiErrorKind.forbidden ? 403 : null,
+            message: 'Rejected');
+        await container
+            .read(authControllerProvider.notifier)
+            .selectTenant('foreign-tenant');
+        expect(container.read(authControllerProvider).status,
+            AuthStatus.authenticated);
+        expect(container.read(authControllerProvider).context?.currentTenantId,
+            isNull);
+        expect(storage.token, 'new-token');
+        expect(container.read(authControllerProvider).context, same(previous));
+      });
+    }
+
+    test('select tenant 401 cannot resurrect the expired session', () async {
       final storage = MemoryTokenStorage();
       final repository = StubAuthRepository(storage)..result = contextFor();
       final container = containerFor(storage, repository);
@@ -232,16 +264,19 @@ void main() {
       await container
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
+      // Reproduce the interceptor callback before the repository future throws.
+      repository.beforeError = () => container.read(authControllerProvider.notifier).sessionExpired();
       repository.error = const ApiException(
-          kind: ApiErrorKind.forbidden, statusCode: 403, message: 'Forbidden');
+          kind: ApiErrorKind.unauthorized,
+          statusCode: 401,
+          message: 'Unauthorized');
       await container
           .read(authControllerProvider.notifier)
-          .selectTenant('foreign-tenant');
+          .selectTenant('tenant-1');
+      expect(storage.token, isNull);
+      expect(container.read(authControllerProvider).context, isNull);
       expect(container.read(authControllerProvider).status,
-          AuthStatus.authenticated);
-      expect(container.read(authControllerProvider).context?.currentTenantId,
-          isNull);
-      expect(storage.token, 'new-token');
+          AuthStatus.sessionExpired);
     });
 
     test('successful logout clears token, context and state', () async {
