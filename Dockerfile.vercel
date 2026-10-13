@@ -16,7 +16,7 @@ RUN flutter pub get
 COPY analysis_options.yaml ./
 COPY lib ./lib
 COPY web ./web
-ARG API_BASE_URL
+ARG API_BASE_URL=https://saas-platform-backend-l55n.onrender.com
 RUN case "$API_BASE_URL" in https://?*) ;; *) echo "ERROR: API_BASE_URL is required and must use HTTPS" >&2; exit 1 ;; esac \
     && dart run build_runner build \
     && flutter build web --release --no-pub --no-wasm-dry-run --dart-define=API_BASE_URL="${API_BASE_URL}"

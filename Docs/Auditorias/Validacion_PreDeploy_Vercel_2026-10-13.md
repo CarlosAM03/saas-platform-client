@@ -25,7 +25,7 @@
 - `README.md`: sección breve de producción y enlace al plan operativo.
 - Este informe y el plan del usuario.
 
-## Gates ejecutadas
+## Gates ejecutadas originalmente (antes del fix del default productivo)
 
 | Comando / comprobación | Evidencia / resultado |
 | --- | --- |
@@ -39,7 +39,7 @@
 | `docker compose build` | PASS |
 | `docker compose up -d`; GET localhost:4200 | PASS, HTTP 200; luego compose down |
 | `docker build -f Dockerfile.vercel --build-arg API_BASE_URL=https://api.example.invalid -t saas-platform-client:prod .` | PASS, exit 0 |
-| `docker build -f Dockerfile.vercel -t saas-platform-client:missing-url .` | PASS negativo, exit 1: ERROR: API_BASE_URL is required and must use HTTPS |
+| `docker build -f Dockerfile.vercel -t saas-platform-client:missing-url .` | Resultado histórico: exit 1; sustituido por el default productivo descrito abajo |
 | `docker run -d --name saas-predeploy-smoke -e PORT=8080 -p 8080:8080 saas-platform-client:prod` | PASS |
 | GET localhost:8080/ y /dashboard | PASS, HTTP 200, HTML idéntico |
 | `docker exec saas-predeploy-smoke nginx -t` | PASS, syntax ok |
@@ -87,19 +87,22 @@ constraints json_annotation/SDK y fuente CupertinoIcons; sin upgrades.
 No se agregó `vercel.json`: la documentación oficial describe autodetección
 de Dockerfile.vercel en raíz y routing al contenedor para un único servicio:
 [Running Docker on Vercel](https://vercel.com/kb/guide/docker).
-El builder oficial pasa el environment de build del proyecto como build args:
-[implementación Vercel](https://github.com/vercel/vercel/blob/main/packages/container/src/index.ts).
-Configurar únicamente API_BASE_URL para Preview/Production. Flujo:
-`Vercel project build env → ARG API_BASE_URL → flutter --dart-define → bundle`.
-No confiar sólo en una variable runtime ni asumir que `--build-env` de CLI
-equivale a la configuración del proyecto; validar propagación en Preview.
-El guard obligatorio impide una caída silenciosa a localhost.
+El deployment real reportado detectó Dockerfile.vercel pero ejecutó buildah
+sin `--build-arg API_BASE_URL`, con el warning `missing "API_BASE_URL" build argument`.
+Project Environment no se propagó automáticamente al ARG en ese deployment.
+El Dockerfile ahora usa por defecto `https://saas-platform-backend-l55n.onrender.com`,
+endpoint HTTPS público, no una credencial. Un build sin argumento ya no debe
+fallar: utiliza ese default. Un argumento explícito sobrescribe el valor;
+vacío o no HTTPS sigue rechazado por el guard existente. Flujo:
+`Docker ARG (default u override) → flutter --dart-define → bundle Web`.
+Las variables runtime de Nginx no cambian la URL compilada.
 
 Todos los siguientes puntos están **NOT VERIFIED / externos**, sin ejecutar:
 
 1. Crear/conectar proyecto Vercel.
-2. Configurar API_BASE_URL con el backend Render HTTPS.
-3. Realizar Preview y confirmar propagación del argumento durante build.
+2. Confirmar que el default público corresponde al backend deseado; para otra
+   URL, pasar un build arg explícito mediante un mecanismo compatible.
+3. Realizar Preview y confirmar la URL compilada durante build.
 4. Obtener dominio Vercel.
 5. Agregar dominio a CORS_ORIGINS en Render.
 6. Redeploy Render.
@@ -108,6 +111,31 @@ Todos los siguientes puntos están **NOT VERIFIED / externos**, sin ejecutar:
 9. Smoke test productivo.
 
 ## Veredicto
+
+### Validación del fix de API_BASE_URL
+
+Baseline del fix: `cab6c7a0ecb8b74455af1c4fd57b60a4a84d05c0` (`origin/main`).
+Rama: `fix/vercel-api-base-url-build`. Sólo cambian Dockerfile.vercel,
+README y este informe. Guard HTTPS, Nginx y arquitectura sin cambios.
+
+| Comando / comprobación del fix | Resultado |
+| --- | --- |
+| `flutter analyze` | PASS, No issues found |
+| `flutter test` | PASS, 96 tests |
+| `docker build -f Dockerfile.vercel --build-arg API_BASE_URL=https://api.example.invalid -t saas-platform-client:prod-override .` | PASS, exit 0 |
+| `docker build -f Dockerfile.vercel -t saas-platform-client:prod-default .` | PASS, exit 0, sin build argument |
+| Override explícito HTTP y override vacío | Ambos rechazados por el guard, exit 1 |
+| `docker run -d --name vercel-default-smoke -e PORT=8080 -p 8080:8080 saas-platform-client:prod-default` | PASS |
+| GET localhost:8080/ y /dashboard | PASS, HTTP 200, HTML idéntico |
+| `nginx -t` en el contenedor default | PASS |
+| `grep` en /usr/share/nginx/html/main.dart.js del default | URL Render pública presente; endpoint dummy ausente |
+| `grep` en main.dart.js de prod-override | Endpoint dummy presente; URL Render ausente |
+| Revisión del diff y escaneo de adiciones | PASS, sin secretos nuevos |
+
+CI conserva `production-container` con el override dummy; no se duplica
+el build Flutter en CI. El default se validó localmente. El contenedor
+`vercel-default-smoke` se eliminó tras validar. No hubo requests al backend
+Render, deployments Vercel, PR ni merge.
 
 Preparación local de contenedor: PASS. READY FOR PR.
 Deployment, HTTPS/CORS E2E y CI remoto siguen pendientes; este documento
