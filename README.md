@@ -5,9 +5,13 @@ Cliente Flutter multiplataforma de la Plataforma SaaS universitaria para gestion
 ## Despliegue productivo en Vercel
 
 Producción usa `Dockerfile.vercel`; desarrollo conserva `Dockerfile.dev` y
-`docker compose up --build` en el puerto 4200. `API_BASE_URL` es obligatorio,
-debe apuntar al backend Render HTTPS y se compila en el bundle con
-`--dart-define`: variable Vercel → build argument → Flutter build → bundle Web.
+`docker compose up --build` en el puerto 4200. `Dockerfile.vercel` usa por defecto
+`API_BASE_URL=https://saas-platform-backend-l55n.onrender.com`: una URL pública,
+no una credencial. `--build-arg API_BASE_URL=...` permite sobrescribirla;
+un valor explícito vacío o no HTTPS se rechaza. El deployment observado de
+Vercel no propaga automáticamente Project Environment como Docker build arg,
+por lo que omitir el argumento usa el default productivo. Flujo:
+`ARG API_BASE_URL → flutter build --dart-define → bundle Web`.
 Cambiar una variable runtime de Nginx no cambia esa URL: requiere reconstruir.
 El frontend no necesita credenciales de base de datos.
 
