@@ -2,6 +2,21 @@
 
 Cliente Flutter multiplataforma de la Plataforma SaaS universitaria para gestion de campanas y prospeccion automatizada.
 
+## Despliegue productivo en Vercel
+
+Producción usa `Dockerfile.vercel`; desarrollo conserva `Dockerfile.dev` y
+`docker compose up --build` en el puerto 4200. `API_BASE_URL` es obligatorio,
+debe apuntar al backend Render HTTPS y se compila en el bundle con
+`--dart-define`: variable Vercel → build argument → Flutter build → bundle Web.
+Cambiar una variable runtime de Nginx no cambia esa URL: requiere reconstruir.
+El frontend no necesita credenciales de base de datos.
+
+El backend debe permitir el dominio Vercel en su configuración CORS.
+`.vercel/` no se versiona. Las instrucciones operativas están en
+[PlanDeployVercel](Docs/Planeacion/PlanDeployVercel.md); Preview, CORS y Production
+se configuran manualmente después de integrar. HSTS supone HTTPS gestionado
+por Vercel; CSP queda pendiente de evaluar scripts y CanvasKit de Flutter.
+
 ## Estado
 
 Este repositorio corresponde a Fase 5 - Flutter Foundation.

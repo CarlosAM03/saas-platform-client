@@ -1,0 +1,28 @@
+# HTTPS terminates at Vercel. HSTS assumes that production HTTPS boundary.
+map $uri $frontend_cache {
+    default "no-cache, must-revalidate";
+    # Only filenames with a content hash are safe across deployments.
+    "~*^/.+[.-][0-9a-f]{16,}[.][a-z0-9]+$" "public, max-age=31536000, immutable";
+}
+
+server {
+    listen ${PORT};
+    listen [::]:${PORT};
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+    server_tokens off;
+    autoindex off;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Strict-Transport-Security "max-age=31536000" always;
+    add_header Cache-Control $frontend_cache always;
+
+    # Flutter's current stable filenames, including JS/WASM, must revalidate.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}

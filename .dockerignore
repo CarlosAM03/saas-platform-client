@@ -1,5 +1,6 @@
 **
 !Dockerfile.dev
+!Dockerfile.vercel
 !pubspec.yaml
 !pubspec.lock
 !analysis_options.yaml
@@ -9,5 +10,12 @@
 !web/**
 !docker/
 !docker/nginx.conf
+!docker/nginx.vercel.conf.template
 lib/**/*.g.dart
 lib/**/*.freezed.dart
+# Explicit deny rules also apply within the allowed source directories.
+**/.env*
+**/.vercel
+**/.git
+**/*.pem
+**/*.key
