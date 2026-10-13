@@ -30,3 +30,37 @@ jobs:
       - uses: actions/checkout@v4
       - run: docker compose config --quiet
       - run: docker compose build
+
+  production-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build production image
+        run: >-
+          docker build -f Dockerfile.vercel
+          --build-arg API_BASE_URL=https://api.example.invalid
+          -t saas-platform-client:prod .
+      - name: Smoke test production container
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name production-smoke -e PORT=8080 -p 8080:8080 saas-platform-client:prod
+          ready=false
+          for attempt in $(seq 1 30); do
+            if [ "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/ || true)" = 200 ]; then
+              ready=true
+              break
+            fi
+            sleep 2
+          done
+          [ "$ready" = true ]
+          curl --fail -sS -D /tmp/frontend-headers http://localhost:8080/ -o /tmp/frontend-index
+          curl --fail -sS http://localhost:8080/dashboard -o /tmp/frontend-spa
+          cmp /tmp/frontend-index /tmp/frontend-spa
+          grep -qi 'X-Content-Type-Options: nosniff' /tmp/frontend-headers
+          grep -qi 'Cache-Control: no-cache' /tmp/frontend-headers
+          docker exec production-smoke sh -c '! command -v flutter && ! command -v dart'
+      - name: Clean up
+        if: always()
+        run: docker rm -f production-smoke || true

@@ -1,11 +1,11 @@
 {
-    "name": "saas_platform_client",
-    "short_name": "saas_platform_client",
+    "name": "Prospector SaaS",
+    "short_name": "Prospector SaaS",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Plataforma SaaS para gestión de campañas y prospección automatizada.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
