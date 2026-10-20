@@ -104,7 +104,7 @@ void main() {
       try {
         final job = await api.prospectingJobs.get(jobId);
         expect(job.resultsAvailable, isFalse);
-        expect(job.query.source, ProspectSource.google_maps);
+        expect(job.query.source, ProspectingSource.google_maps);
       } finally {
         await localSql(
             'DELETE FROM prospecting_jobs WHERE id=${sqlValue(jobId)}');

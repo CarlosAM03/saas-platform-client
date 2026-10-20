@@ -134,10 +134,14 @@ class ContractAdapter implements HttpClientAdapter {
   int status = 200;
   RequestOptions? request;
   bool binary = false;
+  List<int> sentBytes = [];
   @override
   Future<ResponseBody> fetch(RequestOptions options,
       Stream<Uint8List>? requestStream, Future<void>? cancelFuture) async {
     request = options;
+    if (requestStream != null) {
+      sentBytes = (await requestStream.toList()).expand((v) => v).toList();
+    }
     return ResponseBody.fromString(
         binary && status == 200 ? 'name\nBusiness' : jsonEncode(response),
         status,
@@ -152,3 +156,31 @@ class ContractAdapter implements HttpClientAdapter {
   @override
   void close({bool force = false}) {}
 }
+
+final importPreviewJson = {
+  'previewReference': 'signed-reference',
+  'expiresAt': stamp,
+  'summary': {'total': 1, 'new': 1, 'matches': 0, 'invalid': 0, 'conflicts': 0},
+  'rows': [
+    {
+      'record': 1,
+      'classification': 'NEW',
+      'values': {'name': 'CSV Café'},
+      'errors': [],
+      'matches': []
+    }
+  ]
+};
+final importResultJson = {
+  'summary': {
+    'total': 1,
+    'created': 1,
+    'linked': 0,
+    'updated': 0,
+    'skipped': 0,
+    'rejected': 0
+  },
+  'rows': [
+    {'record': 1, 'action': 'CREATE', 'prospectId': entityId}
+  ]
+};

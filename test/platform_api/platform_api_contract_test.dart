@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,12 +20,17 @@ const jobQuery = PaginationQuery(
 const prospectingQuery = ProspectingQuery(
     keyword: 'coffee',
     location: 'Tijuana',
-    source: ProspectSource.google_maps,
+    source: ProspectingSource.google_maps,
     limit: 10);
 
 class Operation {
   const Operation(this.name, this.method, this.path, this.response, this.call,
-      {this.body, this.query = const {}, this.schema, this.header});
+      {this.body,
+      this.multipart = false,
+      this.query = const {},
+      this.schema,
+      this.header});
+  final bool multipart;
   final String name, method, path;
   final Object response;
   final Future<Object?> Function(PlatformApi) call;
@@ -84,7 +90,46 @@ void main() {
     }
   }
 
+  final upload = ApiUploadFile(
+      filename: 'prospects.csv', bytes: utf8.encode('name\nCSV Café\n'));
   final operations = <Operation>[
+    Operation(
+        'prospects create',
+        'POST',
+        '/api/v1/prospects',
+        envelope({...prospectJson, 'source': 'manual'}),
+        (api) => api.prospects.create(const CreateProspectRequest(
+            campaignId: entityId, name: 'Business')),
+        body: {'campaignId': entityId, 'name': 'Business'},
+        schema: 'CreateProspectRequest'),
+    Operation(
+        'CSV preview',
+        'POST',
+        '/api/v1/prospects/import/preview',
+        envelope(importPreviewJson),
+        (api) =>
+            api.prospects.previewImport(campaignId: entityId, upload: upload),
+        multipart: true,
+        body: {'campaignId': entityId}),
+    Operation(
+        'CSV confirm',
+        'POST',
+        '/api/v1/prospects/import/confirm',
+        envelope(importResultJson),
+        (api) => api.prospects.confirmImport(
+                campaignId: entityId,
+                upload: upload,
+                previewReference: 'signed-reference',
+                decisions: const [
+                  ProspectImportDecision(
+                      record: 1, action: ProspectImportAction.CREATE)
+                ]),
+        multipart: true,
+        body: {
+          'campaignId': entityId,
+          'previewReference': 'signed-reference',
+          'decisions': '[{"record":1,"action":"CREATE"}]'
+        }),
     Operation('health', 'GET', '/api/v1/health', envelope({'status': 'ok'}),
         (api) => api.health.health()),
     Operation('liveness', 'GET', '/api/v1/health/live',
@@ -337,7 +382,16 @@ void main() {
       expect(request.method, op.method);
       expect(request.path, op.path);
       expect(request.queryParameters, op.query);
-      expect(request.data, op.body);
+      if (op.multipart) {
+        final form = request.data as FormData;
+        expect(Map.fromEntries(form.fields), op.body);
+        expect(form.files.single.key, 'file');
+        expect(form.files.single.value.filename, upload.filename);
+        expect(utf8.decode(adapter.sentBytes),
+            contains(utf8.decode(upload.bytes)));
+      } else {
+        expect(request.data, op.body);
+      }
       expect(request.headers['Authorization'], 'Bearer token');
       if (op.header != null) {
         expect(request.headers['Idempotency-Key'], op.header);
@@ -360,6 +414,11 @@ void main() {
         validate(requestSchema, op.body);
         expect((resolve(requestSchema)['properties'] as Map).keys,
             containsAll(op.body!.keys));
+      } else if (op.multipart) {
+        final schema = definition['requestBody']['content']
+            ['multipart/form-data']['schema'];
+        expect(
+            schema['properties'].keys, containsAll([...op.body!.keys, 'file']));
       } else {
         expect(definition['requestBody'], isNull);
       }
@@ -380,7 +439,12 @@ void main() {
       if (result is Health) expect(result.status, HealthStatus.ok);
       if (result is Campaign) expect(result.createdBy, entityId);
       if (result is User) expect(result.role!.name, RoleName.OWNER);
-      if (result is Prospect) expect(result.source, ProspectSource.google_maps);
+      if (result is Prospect)
+        expect(
+            result.source,
+            op.name == 'prospects create'
+                ? PersistedProspectSource.manual
+                : PersistedProspectSource.google_maps);
       if (result is ProspectingJobDetail) {
         expect(result.status, ProspectingJobStatus.COMPLETED);
         expect(result.resultsAvailable, isFalse);
@@ -407,6 +471,9 @@ void main() {
     expect(exercised, declared);
   });
   for (final op in operations.where((op) => [
+        'CSV preview',
+        'CSV confirm',
+        'prospects create',
         'readiness',
         'tenants create',
         'users create',
@@ -419,7 +486,7 @@ void main() {
       ].contains(op.name))) {
     for (final status in op.name.startsWith('jobs') || op.name == 'readiness'
         ? [503]
-        : [400, 401, 403, 404, 409]) {
+        : [400, 401, 403, 404, 409, 413, 429, 503]) {
       test('${op.name}: HTTP $status propagates code/details', () async {
         final adapter = ContractAdapter()
           ..status = status
@@ -475,7 +542,7 @@ void main() {
         'percentage': 100
       }
     });
-    expect(detail.results!.single.source, ProspectSource.google_maps);
+    expect(detail.results!.single.source, ProspectingSource.google_maps);
     expect(detail.progress!.percentage, 100);
     expect(User.fromJson({...userJson, 'role': null}).role, isNull);
   });

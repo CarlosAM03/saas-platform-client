@@ -17,7 +17,9 @@ enum CampaignStatus { ACTIVA, PAUSADA, COMPLETADA, ARCHIVADA }
 
 enum ProspectStatus { ACTIVO, INACTIVO }
 
-enum ProspectSource { google_maps }
+enum ProspectingSource { google_maps }
+
+enum PersistedProspectSource { google_maps, manual, csv }
 
 enum ProspectingJobStatus { QUEUED, RUNNING, COMPLETED, FAILED, CANCELLED }
 
@@ -170,13 +172,13 @@ class ProspectingQuery {
       required this.limit});
   final String keyword;
   final String location;
-  final ProspectSource source;
+  final ProspectingSource source;
   final int limit;
   factory ProspectingQuery.fromJson(Map<String, dynamic> json) =>
       ProspectingQuery(
         keyword: requiredValue<String>(json, 'keyword'),
         location: requiredValue<String>(json, 'location'),
-        source: enumValue(json['source'], ProspectSource.values),
+        source: enumValue(json['source'], ProspectingSource.values),
         limit: requiredValue<int>(json, 'limit'),
       );
   Map<String, dynamic> toJson() => {
@@ -193,13 +195,13 @@ class PipelineProgress {
       required this.stage,
       required this.message,
       required this.percentage});
-  final ProspectSource source;
+  final ProspectingSource source;
   final String stage;
   final String message;
   final num percentage;
   factory PipelineProgress.fromJson(Map<String, dynamic> json) =>
       PipelineProgress(
-        source: enumValue(json['source'], ProspectSource.values),
+        source: enumValue(json['source'], ProspectingSource.values),
         stage: requiredValue<String>(json, 'stage'),
         message: requiredValue<String>(json, 'message'),
         percentage: requiredValue<num>(json, 'percentage'),
@@ -235,7 +237,7 @@ class BusinessResult {
   final String? phone;
   final String? email;
   final String? website;
-  final ProspectSource source;
+  final ProspectingSource source;
   final String? sourceIdentifier;
   final String? language;
   final Map<String, dynamic>? metadata;
@@ -246,7 +248,7 @@ class BusinessResult {
         phone: optionalValue<String>(json, 'phone'),
         email: optionalValue<String>(json, 'email'),
         website: optionalValue<String>(json, 'website'),
-        source: enumValue(json['source'], ProspectSource.values),
+        source: enumValue(json['source'], ProspectingSource.values),
         sourceIdentifier: optionalValue<String>(json, 'sourceIdentifier'),
         language: optionalValue<String>(json, 'language'),
         metadata:
@@ -279,7 +281,7 @@ class Prospect {
   final String? phone;
   final String? email;
   final String? website;
-  final ProspectSource source;
+  final PersistedProspectSource source;
   final String? sourceIdentifier;
   final String? language;
   final Map<String, dynamic>? metadata;
@@ -295,7 +297,7 @@ class Prospect {
         phone: optionalValue<String>(json, 'phone'),
         email: optionalValue<String>(json, 'email'),
         website: optionalValue<String>(json, 'website'),
-        source: enumValue(json['source'], ProspectSource.values),
+        source: enumValue(json['source'], PersistedProspectSource.values),
         sourceIdentifier: optionalValue<String>(json, 'sourceIdentifier'),
         language: optionalValue<String>(json, 'language'),
         metadata:

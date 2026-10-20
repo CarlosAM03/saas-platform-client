@@ -146,3 +146,38 @@ class CreateProspectingJobRequest {
         'query': query.toJson(),
       };
 }
+
+class CreateProspectRequest {
+  const CreateProspectRequest(
+      {required this.campaignId,
+      required this.name,
+      this.category = const FieldUpdate.omitted(),
+      this.address = const FieldUpdate.omitted(),
+      this.phone = const FieldUpdate.omitted(),
+      this.email = const FieldUpdate.omitted(),
+      this.website = const FieldUpdate.omitted(),
+      this.language = const FieldUpdate.omitted(),
+      this.metadata = const FieldUpdate.omitted(),
+      this.status});
+  final String campaignId, name;
+  final ProspectStatus? status;
+  final FieldUpdate<String> category;
+  final FieldUpdate<String> address;
+  final FieldUpdate<String> phone;
+  final FieldUpdate<String> email;
+  final FieldUpdate<String> website;
+  final FieldUpdate<String> language;
+  final FieldUpdate<Map<String, dynamic>> metadata;
+  Map<String, dynamic> toJson() => {
+        'campaignId': campaignId,
+        'name': name,
+        if (status != null) 'status': status!.name,
+        if (category.isPresent) 'category': category.value,
+        if (address.isPresent) 'address': address.value,
+        if (phone.isPresent) 'phone': phone.value,
+        if (email.isPresent) 'email': email.value,
+        if (website.isPresent) 'website': website.value,
+        if (language.isPresent) 'language': language.value,
+        if (metadata.isPresent) 'metadata': metadata.value,
+      };
+}

@@ -15,6 +15,8 @@ export 'prospects_api.dart';
 export 'prospecting_jobs_api.dart';
 export 'models.dart';
 export 'requests.dart';
+export 'prospect_import_models.dart';
+export '../core/network/api_upload_file.dart';
 export 'pagination_query.dart';
 export '../core/network/api_download.dart';
 

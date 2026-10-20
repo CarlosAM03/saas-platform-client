@@ -304,7 +304,7 @@ paths:
         '401': { $ref: '#/components/responses/Unauthorized' }
         '409': { $ref: '#/components/responses/Conflict' }
   /api/v1/campaigns/{id}:
-    parameters: [{ $ref: '#/components/parameters/EntityId' }]
+    parameters: [{ $ref: '#/components/parameters/CampaignId' }]
     get:
       tags: [Campaigns]
       summary: Obtiene una campaña
@@ -371,7 +371,7 @@ paths:
       operationId: listCampaignProspects
       security: [{ bearerAuth: [] }]
       parameters:
-        - { $ref: '#/components/parameters/EntityId' }
+        - { $ref: '#/components/parameters/CampaignId' }
         - { $ref: '#/components/parameters/Page' }
         - { $ref: '#/components/parameters/Limit' }
         - { $ref: '#/components/parameters/Search' }
@@ -382,6 +382,38 @@ paths:
         '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
   /api/v1/prospects:
+    post:
+      tags: [Prospects]
+      summary: Crea un prospecto manual
+      description: |
+        Disponible para ADMIN y OWNER con una organización seleccionada.
+        La campaña debe pertenecer a esa organización.
+        El backend asigna source=manual y sourceIdentifier=null.
+      operationId: createProspect
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProspectRequest'
+      responses:
+        '201':
+          description: Prospecto creado y asociado a la campaña.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Prospect'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
     get:
       tags: [Prospects]
       summary: Lista prospectos del tenant autenticado
@@ -391,6 +423,107 @@ paths:
       responses:
         '200': { $ref: '#/components/responses/ProspectPage' }
         '401': { $ref: '#/components/responses/Unauthorized' }
+  /api/v1/prospects/import/preview:
+    post:
+      tags: [Prospects]
+      operationId: previewProspectImport
+      summary: Previsualiza una importación CSV sin escrituras
+      description: |
+        ADMIN y OWNER con tenant seleccionado. UTF-8 con/sin BOM, coma o punto y coma;
+        encabezados exactos name,category,address,phone,email,website,language,status.
+        name obligatorio. Máximo 5 MB, 1000 registros y 2000 caracteres por celda.
+        Máximo 5 MB de resultados de preview; dividir el archivo si se supera.
+        No admite metadata ni campos controlados por el backend. Las filas completamente
+        vacías se ignoran. Registro lógico desde 1 después del encabezado; saltos dentro
+        de comillas no crean registros. Columna nullable vacía equivale a null; ausente
+        se conserva al actualizar. status vacío es inválido y ausente usa ACTIVO al crear.
+        Candidatos por nombre en todo el tenant, ignorando mayúsculas y espacios sobrantes,
+        conservando acentos y signos; no sustituye la identidad del baseline.
+        Todos los nombres repetidos en el archivo son inválidos; varias coincidencias
+        existentes son conflicto. La referencia firmada vence en 15 minutos.
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [campaignId, file]
+              properties:
+                campaignId: { type: string, pattern: '^\S+$', maxLength: 200 }
+                file: { type: string, format: binary }
+      responses:
+        '200':
+          description: Previsualización; no guarda datos.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/ProspectImportPreview' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '413':
+          description: El archivo supera 5 MB.
+  /api/v1/prospects/import/confirm:
+    post:
+      tags: [Prospects]
+      operationId: confirmProspectImport
+      summary: Confirma una importación CSV atómica
+      description: |
+        ADMIN y OWNER con tenant seleccionado. Reenviar el mismo archivo del preview.
+        decisions es un array JSON codificado como texto multipart, con exactamente una
+        decisión por registro NEW o MATCH; no incluir registros INVALID ni CONFLICT.
+        NEW admite CREATE o SKIP. MATCH admite LINK_EXISTING, UPDATE_EXISTING o SKIP.
+        LINK_EXISTING solo asegura la asociación, sin editar ni reactivar una asociación
+        existente. UPDATE_EXISTING edita los campos importables presentes y asegura la
+        asociación; requiere selección explícita y afecta a todas las campañas que
+        comparten el prospecto. Conserva metadata, origen e identificadores protegidos.
+        SKIP no cambia atributos ni asociaciones. Todo se guarda en una transacción
+        Serializable, hasta tres intentos ante conflictos de serialización.
+        Cambios en coincidencias, atributos o asociaciones desde el preview devuelven 409.
+        No existe idempotencia durable: repetir la confirmación reevalúa la base actual,
+        no recupera el resultado anterior. Errores de infraestructura revierten todo el lote.
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [campaignId, file, previewReference, decisions]
+              properties:
+                campaignId: { type: string, pattern: '^\S+$', maxLength: 200 }
+                file: { type: string, format: binary }
+                previewReference: { type: string, maxLength: 4096 }
+                decisions:
+                  type: string
+                  maxLength: 100000
+                  example: '[{"record":1,"action":"CREATE"},{"record":2,"action":"LINK_EXISTING"}]'
+      responses:
+        '200':
+          description: Resultado del lote confirmado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/ProspectImportResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '413':
+          description: El archivo supera 5 MB.
   /api/v1/prospects/{id}:
     parameters: [{ $ref: '#/components/parameters/EntityId' }]
     get:
@@ -563,6 +696,12 @@ components:
       scheme: bearer
       bearerFormat: JWT
   parameters:
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      description: Identificador de campaña; admite CUID e identificadores del dataset local. La campaña debe pertenecer al tenant autenticado.
+      schema: { type: string, pattern: '^\S+$' }
     EntityId:
       name: id
       in: path
@@ -771,7 +910,7 @@ components:
         phone: { type: string, nullable: true }
         email: { type: string, format: email, nullable: true }
         website: { type: string, format: uri, nullable: true }
-        source: { type: string, enum: [google_maps] }
+        source: { type: string, enum: [google_maps, manual, csv] }
         sourceIdentifier: { type: string, nullable: true }
         language: { type: string, nullable: true }
         status: { $ref: '#/components/schemas/ProspectStatus' }
@@ -925,6 +1064,131 @@ components:
         name: { type: string }
         description: { type: string, nullable: true }
         status: { $ref: '#/components/schemas/CampaignStatus' }
+    ProspectImportValues:
+      type: object
+      description: Valores leídos del CSV; las filas INVALID pueden conservar celdas de más de 2000 caracteres y reportar el error correspondiente.
+      additionalProperties: false
+      required: [name]
+      properties:
+        name: { type: string }
+        category: { type: string, nullable: true }
+        address: { type: string, nullable: true }
+        phone: { type: string, nullable: true }
+        email: { type: string, nullable: true }
+        website: { type: string, nullable: true }
+        language: { type: string, nullable: true }
+        status: { type: string, enum: [ACTIVO, INACTIVO] }
+    ProspectImportErrors:
+      type: array
+      items:
+        type: object
+        required: [field, message]
+        properties:
+          field: { type: string }
+          message: { type: string }
+    ProspectImportPreview:
+      type: object
+      required: [previewReference, expiresAt, summary, rows]
+      properties:
+        previewReference: { type: string }
+        expiresAt: { type: string, format: date-time }
+        summary:
+          type: object
+          properties:
+            total: { type: integer }
+            new: { type: integer }
+            matches: { type: integer }
+            invalid: { type: integer }
+            conflicts: { type: integer }
+        rows:
+          type: array
+          maxItems: 1000
+          items:
+            type: object
+            properties:
+              record: { type: integer, minimum: 1 }
+              classification: { type: string, enum: [NEW, MATCH, INVALID, CONFLICT] }
+              values: { $ref: '#/components/schemas/ProspectImportValues' }
+              errors: { $ref: '#/components/schemas/ProspectImportErrors' }
+              matches:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    campaignIds: { type: array, items: { type: string } }
+                    sharedWithOtherCampaigns: { type: boolean }
+                    differences:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          field: { type: string }
+                          existing: { type: string, nullable: true }
+                          imported: { type: string, nullable: true }
+    ProspectImportResult:
+      type: object
+      properties:
+        summary:
+          type: object
+          properties:
+            total: { type: integer }
+            created: { type: integer }
+            linked: { type: integer }
+            updated: { type: integer }
+            skipped: { type: integer }
+            rejected: { type: integer }
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              record: { type: integer }
+              action: { type: string, enum: [CREATE, LINK_EXISTING, UPDATE_EXISTING, SKIP, REJECTED] }
+              prospectId: { type: string }
+              errors: { $ref: '#/components/schemas/ProspectImportErrors' }
+    CreateProspectRequest:
+      type: object
+      additionalProperties: false
+      required: [campaignId, name]
+      properties:
+        campaignId:
+          type: string
+          pattern: '^\S+$'
+          description: Identificador de campaña; debe existir en el tenant actual.
+        name:
+          type: string
+          pattern: '\S'
+          description: Nombre obligatorio; no puede contener solamente espacios.
+        category:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        website:
+          type: string
+          format: uri
+          nullable: true
+          description: URL con protocolo, por ejemplo https://ejemplo.com.
+        language:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [ACTIVO, INACTIVO]
+          default: ACTIVO
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
     UpdateProspectRequest:
       type: object
       minProperties: 1
