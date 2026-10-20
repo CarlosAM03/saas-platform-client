@@ -3,14 +3,18 @@ import '../../../app/app_providers.dart';
 import '../../../platform_api/platform_api.dart';
 import 'auth_state.dart';
 
-typedef SessionScope = ({String userId, String? tenantId});
+typedef SessionScope = ({String userId, String? tenantId, Object session});
 
 /// A loading/expired/logged-out session has no readable feature state.
 final sessionScopeProvider = Provider<SessionScope?>((ref) {
   final auth = ref.watch(authControllerProvider);
   final context = auth.context;
   if (auth.status != AuthStatus.authenticated || context == null) return null;
-  return (userId: context.user.id, tenantId: context.currentTenantId);
+  return (
+    userId: context.user.id,
+    tenantId: context.currentTenantId,
+    session: context
+  );
 });
 
 class TenantPermissions {

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../app/app_providers.dart';
 import '../features/admin/presentation/admin_page.dart';
 import '../features/tenants/presentation/tenants_pages.dart';
+import '../features/users/presentation/users_pages.dart';
 import '../features/auth/state/tenant_permissions.dart';
 import '../features/auth/presentation/auth_pages.dart';
 import '../features/auth/state/auth_state.dart';
@@ -33,7 +34,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ShellRoute(builder: (_, __, child) => AppShell(child: child), routes: [
         GoRoute(path: '/dashboard', builder: (_, __) => const DashboardPage()),
         GoRoute(path: '/campaigns', builder: (_, __) => const CampaignsPage()),
+        GoRoute(
+            path: '/campaigns/new',
+            builder: (_, __) => const CampaignFormPage()),
+        GoRoute(
+            path: '/campaigns/:id',
+            builder: (_, s) => CampaignDetailPage(s.pathParameters['id']!)),
+        GoRoute(
+            path: '/campaigns/:id/edit',
+            builder: (_, s) => CampaignFormPage(id: s.pathParameters['id']!)),
+        GoRoute(path: '/users', builder: (_, __) => const UsersPage()),
+        GoRoute(path: '/users/new', builder: (_, __) => const UserFormPage()),
+        GoRoute(
+            path: '/users/:id',
+            builder: (_, s) => UserDetailPage(s.pathParameters['id']!)),
+        GoRoute(
+            path: '/users/:id/edit',
+            builder: (_, s) => UserFormPage(id: s.pathParameters['id']!)),
         GoRoute(path: '/prospects', builder: (_, __) => const ProspectsPage()),
+        GoRoute(
+            path: '/prospects/new',
+            builder: (_, __) => const ProspectFormPage()),
+        GoRoute(
+            path: '/prospects/:id',
+            builder: (_, s) => ProspectDetailPage(s.pathParameters['id']!)),
+        GoRoute(
+            path: '/prospects/:id/edit',
+            builder: (_, s) => ProspectFormPage(id: s.pathParameters['id']!)),
         GoRoute(path: '/generate', builder: (_, __) => const GeneratePage()),
         GoRoute(path: '/profile', builder: (_, __) => const ProfilePage()),
         GoRoute(path: '/admin', builder: (_, __) => const AdminPage()),
