@@ -1,6 +1,7 @@
 import 'package:saas_platform_client/platform_api/platform_api.dart';
 import 'package:saas_platform_client/features/users/data/users_repository.dart';
 import 'feature_fixtures.dart';
+
 class FakeUsers implements UsersRepository {
   int creates = 0, updates = 0, removals = 0;
   Object? error;
@@ -49,4 +50,3 @@ class FakeUsers implements UsersRepository {
     if (error != null) throw error!;
   }
 }
-

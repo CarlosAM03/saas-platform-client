@@ -1,25 +1,48 @@
 # Platform API Client
 
-Backend de autoridad: `ab53272f531d15e6c4dcc9df8c1d6dca8601e87a`.
+Backend de autoridad: `main@3a3309398458ab333d7b00f16e9c2df6a09ef734`. La copia `platform-api.v1.yaml` es idéntica al backend. Las pruebas contractuales recorren todos sus paths/métodos públicos; al actualizar backend hay que sincronizar esta copia y volver a ejecutar los tests.
 
-Las features reciben `ref.watch(platformApiProvider)` y usan un repository/adaptador de feature encima de `PlatformApi`. Endpoints, queries y parsing están en `lib/platform_api`; Dio sigue encapsulado en transporte. Los modelos visuales no son DTOs HTTP.
+## Arquitectura
 
-Ejemplo: `api.campaigns.list(query: const PaginationQuery(page: 1, limit: 20, sortBy: SortField.createdAt, sortOrder: SortOrder.desc))`.
+Widget → provider/estado → interfaz de repository → API repository → PlatformApi → ApiClient → NestJS.
 
-Los PATCH anulables usan `FieldUpdate.omitted()` (conservar) o `FieldUpdate.set(null)` (limpiar); un valor se envía con `FieldUpdate.set(valor)`. Requests de actualización vacíos se rechazan. Enum desconocido, tipo incorrecto o wrapper inválido produce error detectable. El backend actual puede devolver `User.role = null`, aunque el OpenAPI no marca esa propiedad nullable; el DTO acepta explícitamente ese resultado real sin modificar OpenAPI.
+Dio permanece en `lib/core/network`. Los repositories reciben `PlatformApi` mediante providers. Cada lista/detalle depende de la sesión y tenant actual; un contexto nuevo, logout o 401 invalida el estado. Los formularios también se reinician al cambiar contexto.
 
-Health, Auth, Tenants, Users, Campaigns, Prospects y Jobs list/detail están representados. Jobs create/cancel/persist/export son sólo contrato: el backend actual responde 503 y conserva `error.code` y `error.details.reason=PROSPECTOR_INTEGRATION_PENDING`. Persist no envía body; create requiere Idempotency-Key; export devuelve bytes y metadata HTTP sin exponer Dio. No existe cliente para callbacks internos de Prospector.
+Health, Auth, Tenants, Users, Campaigns, Prospects y ProspectingJobs están representados. Jobs create/cancel/persist/export conservan el contrato y propagan `503`, `error.code` y `error.details.reason=PROSPECTOR_INTEGRATION_PENDING`; no hay éxito simulado. Persist no envía body; create requiere Idempotency-Key; export devuelve bytes y metadata HTTP sin exponer Dio.
 
-## Pruebas
+## Prospectos y CSV
 
-`flutter test` incluye Foundation, clientes API y pruebas directas contra el YAML versionado (todos los paths/métodos públicos, queries, cuerpos, wrappers y DTOs). `yaml` es dependencia de desarrollo exclusiva de estas pruebas; no se actualizaron dependencias de runtime.
+`Prospect.source` usa `PersistedProspectSource` (`google_maps`, `manual`, `csv`). `ProspectingQuery`, `PipelineProgress` y `BusinessResult` usan `ProspectingSource` (`google_maps`). Los tipos impiden construir una query de motor con manual/csv y los parsers rechazan sources no contractuales.
 
-P2C es manual y usa únicamente backend Docker local con su seed demo. Desde el checkout del backend, ejecutar `docker compose up --build -d`. Desde el cliente:
+`CreateProspectRequest` acepta campaignId, name y los opcionales contractuales; nunca tenantId/source/sourceIdentifier. Los PATCH nullable usan `FieldUpdate.omitted()` para conservar y `FieldUpdate.set(null)` para limpiar. La UI de edición sólo envía campos modificados; metadata conserva soporte completo en PlatformApi y se muestra como lectura simple en detalle.
+
+```dart
+final upload = ApiUploadFile(filename: 'prospects.csv', bytes: originalBytes);
+final preview = await api.prospects.previewImport(campaignId: id, upload: upload);
+final result = await api.prospects.confirmImport(
+  campaignId: id, upload: upload, previewReference: preview.previewReference,
+  decisions: const [ProspectImportDecision(record: 1, action: ProspectImportAction.CREATE)],
+);
+```
+
+`ApiUploadFile` conserva una copia inmutable de bytes. Cada request crea multipart nuevo dentro de ApiClient; preview y confirm reutilizan exactamente los bytes. Los modelos tipan summary, rows, errors, matches, campaignIds, sharedWithOtherCampaigns y differences, así como resultados/rechazos. Las decisiones admiten CREATE/LINK_EXISTING/UPDATE_EXISTING/SKIP. Backend valida clasificación, expiración, concurrencia y deduplicación.
+
+HTTP 413 tiene `ApiErrorKind.payloadTooLarge` y mensaje específico de 5 MB. Se preservan 400/401/403/404/409/429/503 y sus detalles. Un 400 por preview inválido/expirado y 409 por snapshot obsoleto deben provocar nuevo preview en la futura UI.
+
+CSV PlatformApi está implementado. CSV UI/file picker/wizard se difieren deliberadamente. No se agregó dependencia de selección de archivo.
+
+## Validación
+
+`flutter test` cubre contratos, requests/responses, wrappers, pagination, multipart, enum split, omission/null, permisos y features.
+
+P2C usa exclusivamente el backend Docker local y su seed oficial. Desde backend: `docker compose up --build -d`. Desde el cliente:
 
 ```powershell
 flutter test tool/platform_api_p2c_test.dart --dart-define=P2C_BASE_URL=http://localhost:3000 --dart-define=P2C_PASSWORD=DevOnlyPass123!
 ```
 
-El password del comando corresponde exclusivamente al seed local de Compose. P2C rechaza hosts no locales. Usa almacenamiento de test en memoria y HTTP real; no usa mocks de backend. Crea una campaña con nombre único, lee, actualiza y archiva; verifica lectura persistida y consulta prospects/users/jobs. Deja únicamente la campaña de prueba archivada para evidencia de PostgreSQL. No se ejecuta como parte de CI estándar ni contra producción.
+Rechaza hosts no locales y HTTPS; no se ejecuta contra Render, shared-dev o producción. Verifica health/Auth, tenants list/detail/create/switch, Users create/read/update/deactivate, Campaign CRUD/archive, manual source, CSV preview/confirm y consulta persistida source=csv, así como Jobs list/detail. El archivo CSV se crea en memoria y se reutiliza sin transformación.
 
-El seed actual de Jobs guarda `query.source="demo"`, fuera del enum contractual `google_maps`; P2C comprueba que ese drift produce `FormatException`. Para verificar también un detalle válido, inserta un Job temporal contractual en PostgreSQL local mediante `docker compose exec db psql` y lo elimina en `finally`. No altera los Jobs existentes ni archivos del backend. El checkout backend se encuentra por defecto en `../../Backend_Nestjs/saas-platform-backend` desde el path real del cliente; puede sobrescribirse con `--dart-define=P2C_BACKEND_DIR=<ruta>`. Corregir el seed queda pendiente para el owner del backend.
+El seed heredado guarda `query.source="demo"` en algunos Jobs; P2C conserva la comprobación de `FormatException` y usa una fixture contractual temporal para leer un detalle válido. No modifica el seed ni archivos backend. El `finally` borra sólo IDs creados por esa ejecución mediante el mecanismo SQL local existente; no deja campañas demo nuevas ni borra datos ajenos.
+
+El backend se localiza por defecto en `../../Backend_Nestjs/saas-platform-backend` desde el path real del cliente; `P2C_BACKEND_DIR` permite indicar el checkout local.

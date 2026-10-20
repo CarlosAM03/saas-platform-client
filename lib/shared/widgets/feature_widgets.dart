@@ -200,8 +200,10 @@ class _PagedListState<T> extends ConsumerState<PagedList<T>> {
                       ))
                   : null,
               icon: const Icon(Icons.chevron_left)),
-          Text(
-              'Página ${query.page} · ${value.asData!.value.meta.total} registros'),
+          Expanded(
+              child: Text(
+                  'Página ${query.page} · ${value.asData!.value.meta.total} registros',
+                  textAlign: TextAlign.center)),
           IconButton(
               tooltip: 'Página siguiente',
               onPressed: query.page < value.asData!.value.meta.totalPages

@@ -60,12 +60,20 @@ class TenantDetailPage extends ConsumerWidget {
                 EntityAction(
                     label: 'Usar organización',
                     run: () async {
-                      await ref
-                          .read(authControllerProvider.notifier)
-                          .selectTenant(t.id);
-                      final auth = ref.read(authControllerProvider);
-                      if (auth.error != null) throw auth.error!;
-                      if (context.mounted) context.go('/dashboard');
+                      final controller =
+                          ref.read(authControllerProvider.notifier);
+                      final container =
+                          ProviderScope.containerOf(context, listen: false);
+                      final router = GoRouter.of(context);
+                      await controller.selectTenant(t.id);
+                      final auth = container.read(authControllerProvider);
+                      if (auth.error != null) {
+                        router.go('/change-tenant');
+                        return;
+                      }
+                      if (auth.context?.currentTenantId == t.id) {
+                        router.go('/dashboard');
+                      }
                     })
               ])));
 }

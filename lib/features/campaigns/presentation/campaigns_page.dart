@@ -71,28 +71,32 @@ class CampaignDetailPage extends ConsumerWidget {
         child: AsyncPanel(
             value: ref.watch(campaignsDetailProvider(id)),
             retry: () => ref.invalidate(campaignsDetailProvider(id)),
-            data: (c) =>
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(c.name),
-                  if (c.description != null) Text(c.description!),
-                  Text(c.status.name),
-                  Text('Creada: ${c.createdAt.toLocal()}'),
-                  Text('Actualizada: ${c.updatedAt.toLocal()}'),
-                  const SizedBox(height: 12),
-                  Text('Prospectos de la campaña',
-                      style: Theme.of(context).textTheme.titleMedium),
+            data: (c) => DefaultTabController(
+                length: 2,
+                child: Column(children: [
+                  const TabBar(
+                      tabs: [Tab(text: 'Detalle'), Tab(text: 'Prospectos')]),
                   Expanded(
-                      child: PagedList<Prospect>(
-                          load: (ref, key) => ref.watch(
-                              campaignProspectsProvider((id: id, query: key))),
-                          refresh: () =>
-                              ref.invalidate(campaignProspectsProvider),
-                          item: (p) => ListTile(
-                              title: Text(p.name),
-                              subtitle:
-                                  Text('${p.source.name} · ${p.status.name}'),
-                              onTap: () => context.go('/prospects/${p.id}'))))
-                ])));
+                      child: TabBarView(children: [
+                    ListView(children: [
+                      Text(c.name),
+                      if (c.description != null) Text(c.description!),
+                      Text(c.status.name),
+                      Text('Creada: ${c.createdAt.toLocal()}'),
+                      Text('Actualizada: ${c.updatedAt.toLocal()}')
+                    ]),
+                    PagedList<Prospect>(
+                        load: (ref, key) => ref.watch(
+                            campaignProspectsProvider((id: id, query: key))),
+                        refresh: () =>
+                            ref.invalidate(campaignProspectsProvider),
+                        item: (p) => ListTile(
+                            title: Text(p.name),
+                            subtitle:
+                                Text('${p.source.name} · ${p.status.name}'),
+                            onTap: () => context.go('/prospects/${p.id}')))
+                  ]))
+                ]))));
   }
 }
 

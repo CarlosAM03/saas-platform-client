@@ -1,6 +1,7 @@
 import 'package:saas_platform_client/platform_api/platform_api.dart';
 import 'package:saas_platform_client/features/prospects/data/prospects_repository.dart';
 import 'feature_fixtures.dart';
+
 class FakeProspects implements ProspectsRepository {
   int creates = 0, updates = 0, removals = 0;
   Object? error;
@@ -8,7 +9,8 @@ class FakeProspects implements ProspectsRepository {
   PaginationQuery? lastQuery;
   Future<PaginatedResult<Prospect>>? pending;
   List<Prospect> items = [Prospect.fromJson(prospectJson)];
-  Prospect get entity => Prospect.fromJson(prospectJson);
+  Prospect? detail;
+  Prospect get entity => detail ?? Prospect.fromJson(prospectJson);
   @override
   Future<PaginatedResult<Prospect>> list(
       {PaginationQuery query = const PaginationQuery()}) async {

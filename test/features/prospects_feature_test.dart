@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 import 'package:saas_platform_client/app/app_providers.dart';
 import 'package:saas_platform_client/core/errors/api_exception.dart';
 import 'package:saas_platform_client/platform_api/platform_api.dart';
@@ -69,12 +68,14 @@ void main() {
   for (final mode in ['loading', 'empty', 'error', 'success']) {
     testWidgets('prospects list $mode', (tester) async {
       final repo = FakeProspects();
-      if (mode == 'loading')
+      if (mode == 'loading') {
         repo.pending = Completer<PaginatedResult<Prospect>>().future;
+      }
       if (mode == 'empty') repo.items = [];
-      if (mode == 'error')
+      if (mode == 'error') {
         repo.error =
             const ApiException(kind: ApiErrorKind.forbidden, message: 'denied');
+      }
       await tester.pumpWidget(ProviderScope(overrides: [
         authControllerProvider.overrideWith(FeatureAuthController.new),
         prospectsRepositoryProvider.overrideWithValue(repo),
@@ -82,13 +83,16 @@ void main() {
             const TenantPermissions(role: RoleName.OWNER, hasTenant: true))
       ], child: const MaterialApp(home: Scaffold(body: ProspectsPage()))));
       await tester.pump();
-      if (mode == 'loading')
+      if (mode == 'loading') {
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      if (mode == 'empty')
+      }
+      if (mode == 'empty') {
         expect(find.text('No hay información disponible.'), findsOneWidget);
-      if (mode == 'error')
+      }
+      if (mode == 'error') {
         expect(find.text('No tienes permisos para realizar esta acción.'),
             findsOneWidget);
+      }
       if (mode == 'success') {
         expect(find.text('Business'), findsOneWidget);
         await tester.enterText(find.byType(TextField).first, 'coffee');
