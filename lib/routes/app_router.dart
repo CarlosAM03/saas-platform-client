@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../app/app_providers.dart';
 import '../features/admin/presentation/admin_page.dart';
+import '../features/tenants/presentation/tenants_pages.dart';
+import '../features/auth/state/tenant_permissions.dart';
 import '../features/auth/presentation/auth_pages.dart';
 import '../features/auth/state/auth_state.dart';
 import '../features/campaigns/presentation/campaigns_page.dart';
@@ -14,15 +16,20 @@ import '../features/prospecting_jobs/presentation/generate_page.dart';
 import '../features/dashboard/presentation/dashboard_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final auth = ref.watch(authControllerProvider);
-  return GoRouter(
+  final refresh = ValueNotifier(0);
+  ref.listen(authControllerProvider, (_, __) => refresh.value++);
+  final router = GoRouter(
+    refreshListenable: refresh,
     initialLocation: '/splash',
-    redirect: (context, state) => redirectForAuth(auth, state.uri.path),
+    redirect: (context, state) =>
+        redirectForAuth(ref.read(authControllerProvider), state.uri.path),
     routes: [
       GoRoute(path: '/splash', builder: (_, __) => const SplashPage()),
       GoRoute(path: '/login', builder: (_, __) => const LoginPage()),
       GoRoute(
           path: '/select-tenant', builder: (_, __) => const SelectTenantPage()),
+      GoRoute(
+          path: '/change-tenant', builder: (_, __) => const SelectTenantPage()),
       ShellRoute(builder: (_, __, child) => AppShell(child: child), routes: [
         GoRoute(path: '/dashboard', builder: (_, __) => const DashboardPage()),
         GoRoute(path: '/campaigns', builder: (_, __) => const CampaignsPage()),
@@ -30,6 +37,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         GoRoute(path: '/generate', builder: (_, __) => const GeneratePage()),
         GoRoute(path: '/profile', builder: (_, __) => const ProfilePage()),
         GoRoute(path: '/admin', builder: (_, __) => const AdminPage()),
+        GoRoute(path: '/tenants', builder: (_, __) => const TenantsPage()),
+        GoRoute(
+            path: '/tenants/new', builder: (_, __) => const TenantCreatePage()),
+        GoRoute(
+            path: '/tenants/:id',
+            builder: (_, s) => TenantDetailPage(s.pathParameters['id']!)),
       ]),
       GoRoute(
           path: '/session-expired',
@@ -39,6 +52,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           builder: (_, __) => const BackendUnavailablePage()),
     ],
   );
+  ref.onDispose(() {
+    router.dispose();
+    refresh.dispose();
+  });
+  return router;
 });
 
 String? redirectForAuth(AuthState auth, String path) {
@@ -73,7 +91,7 @@ bool _requiresTenant(String path) => {
       '/generate',
       '/jobs',
       '/users',
-    }.contains(path);
+    }.any((root) => path == root || path.startsWith('$root/'));
 
 class AppShell extends ConsumerWidget {
   const AppShell({required this.child, super.key});
@@ -81,9 +99,12 @@ class AppShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final scope = ref.watch(sessionScopeProvider);
+    final scopedChild = KeyedSubtree(key: ValueKey(scope), child: child);
     final location = GoRouterState.of(context).uri.path;
     final destinations = const ['/dashboard', '/campaigns', '/prospects'];
-    final rawIndex = destinations.indexOf(location);
+    final rawIndex = destinations.indexWhere(
+        (root) => location == root || location.startsWith('$root/'));
     final index = rawIndex < 0 ? 0 : rawIndex;
     final wideLayout = MediaQuery.sizeOf(context).width >= 700;
     return Scaffold(
@@ -106,12 +127,17 @@ class AppShell extends ConsumerWidget {
                       label: Text('Prospectos')),
                 ],
               ),
-              Expanded(child: child),
+              Expanded(child: scopedChild),
             ])
-          : child,
+          : scopedChild,
       drawer: Drawer(
           child: ListView(children: [
         const DrawerHeader(child: Text('Cuenta')),
+        ListTile(
+            title: const Text('Organizaciones'),
+            onTap: () => context.go('/tenants')),
+        ListTile(
+            title: const Text('Usuarios'), onTap: () => context.go('/users')),
         ListTile(
             title: const Text('Perfil'), onTap: () => context.go('/profile')),
         ListTile(

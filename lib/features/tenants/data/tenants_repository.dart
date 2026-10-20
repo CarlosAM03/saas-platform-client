@@ -1,19 +1,27 @@
 import '../../../core/network/api_client.dart';
-import '../../../shared/models/api_models.dart';
-import '../../../platform_api/tenants_api.dart';
+import '../../../platform_api/platform_api.dart';
 
-class TenantsRepository {
-  TenantsRepository(ApiClient client) : _api = TenantsApi(client);
+abstract class TenantsRepository {
+  factory TenantsRepository(ApiClient client) = ApiTenantsRepository.fromClient;
+  Future<List<Tenant>> list();
+  Future<Tenant> get(String id);
+  Future<Tenant> create(CreateTenantRequest request);
+  Future<List<AuthTenant>> discover();
+}
 
+class ApiTenantsRepository implements TenantsRepository {
+  ApiTenantsRepository(PlatformApi api) : _api = api.tenants;
+  ApiTenantsRepository.fromClient(ApiClient client) : _api = TenantsApi(client);
   final TenantsApi _api;
-
-  Future<List<AuthTenant>> discover() async {
-    return (await _api.list())
-        .map((tenant) => AuthTenant(
-            id: tenant.id,
-            name: tenant.name,
-            slug: tenant.slug,
-            status: tenant.status.name))
-        .toList(growable: false);
-  }
+  @override
+  Future<List<Tenant>> list() => _api.list();
+  @override
+  Future<Tenant> get(String id) => _api.get(id);
+  @override
+  Future<Tenant> create(CreateTenantRequest request) => _api.create(request);
+  @override
+  Future<List<AuthTenant>> discover() async => (await list())
+      .map((t) => AuthTenant(
+          id: t.id, name: t.name, slug: t.slug, status: t.status.name))
+      .toList(growable: false);
 }

@@ -439,12 +439,13 @@ void main() {
       if (result is Health) expect(result.status, HealthStatus.ok);
       if (result is Campaign) expect(result.createdBy, entityId);
       if (result is User) expect(result.role!.name, RoleName.OWNER);
-      if (result is Prospect)
+      if (result is Prospect) {
         expect(
             result.source,
             op.name == 'prospects create'
                 ? PersistedProspectSource.manual
                 : PersistedProspectSource.google_maps);
+      }
       if (result is ProspectingJobDetail) {
         expect(result.status, ProspectingJobStatus.COMPLETED);
         expect(result.resultsAvailable, isFalse);
