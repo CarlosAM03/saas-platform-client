@@ -14,6 +14,7 @@ class ErrorMapper {
         ApiErrorKind.notFound => 'No se encontró la información solicitada.',
         ApiErrorKind.conflict =>
           'La operación entra en conflicto con el estado actual.',
+        ApiErrorKind.payloadTooLarge => 'El archivo supera el límite de 5 MB.',
         ApiErrorKind.rateLimited =>
           'Demasiadas solicitudes. Intenta nuevamente.',
         ApiErrorKind.serviceUnavailable =>

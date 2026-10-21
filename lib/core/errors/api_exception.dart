@@ -4,6 +4,7 @@ enum ApiErrorKind {
   forbidden,
   notFound,
   conflict,
+  payloadTooLarge,
   rateLimited,
   serviceUnavailable,
   network,
