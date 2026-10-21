@@ -35,11 +35,12 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 });
 
 final tenantsRepositoryProvider = Provider<TenantsRepository>((ref) {
-  return TenantsRepository(ref.watch(apiClientProvider));
+  return ApiTenantsRepository(ref.watch(platformApiProvider));
 });
 
 final tenantDiscoveryProvider =
     FutureProvider.autoDispose<List<AuthTenant>>((ref) {
+  ref.watch(authControllerProvider);
   return ref.watch(tenantsRepositoryProvider).discover();
 });
 

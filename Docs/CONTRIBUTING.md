@@ -2,17 +2,16 @@
 
 ## Alcance
 
-Este repositorio implementa el cliente Flutter de la Plataforma SaaS universitaria. Fase 5 entrega el foundation; no declara el frontend completo ni el MVP completo.
+Este repositorio implementa el cliente Flutter de la Plataforma SaaS universitaria. Foundation se conserva y el sprint de paridad core implementa Tenants, Users, Campaigns y Prospects no-CSV; CSV UI, Jobs y Dashboard real quedan diferidos.
 
 ## Fuentes de verdad
 
 En orden de autoridad:
 
-1. ADR-004 del backend.
-2. `platform-api.v1.yaml`.
-3. `Docs/DocsTeam/FormularioDeDecisiones/FormularioDecisionesFase5.md`.
-4. `Docs/ADRs/ADR-005-FlutterFoundation.md`.
-5. `FEATURE-DEVELOPMENT.md`.
+1. Código real de backend/main.
+2. `platform-api.v1.yaml` sincronizado desde backend/main.
+3. ADR-004 del backend.
+4. Código frontend, ADR-005, este documento y `FEATURE-DEVELOPMENT.md`.
 
 Los documentos historicos o conceptuales solo aportan contexto.
 
@@ -76,3 +75,9 @@ Fase 5 usa unicamente los codigos definidos por OpenAPI.
 ## Cambios de contrato
 
 Si una feature requiere un campo, endpoint, permiso o codigo HTTP que no existe en OpenAPI, detener la implementacion de ese punto y reportarlo a Carlos y Angel. No modificar el contrato desde Flutter.
+
+## Estado de paridad core
+
+PlatformApi incluye creación manual y CSV multipart preview/confirm. PersistedProspectSource admite google_maps/manual/csv; ProspectingSource sólo google_maps. CSV UI y selección de archivo quedan diferidos.
+
+Tenants/Users/Campaigns/Prospects productivos usan API real y estado invalidado por sesión/tenant. OWNER/MEMBER se derivan del usuario actual en UsersApi; no decodificar JWT. MEMBER puede gestionar campañas y editar prospectos. Ver la matriz vigente y rutas en `FEATURE-DEVELOPMENT.md`.

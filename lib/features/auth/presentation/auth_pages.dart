@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/app_providers.dart';
 import '../state/auth_state.dart';
@@ -114,9 +115,18 @@ class SelectTenantPage extends ConsumerWidget {
                       subtitle: Text(tenant.slug),
                       onTap: auth.status == AuthStatus.loading
                           ? null
-                          : () => ref
-                              .read(authControllerProvider.notifier)
-                              .selectTenant(tenant.id),
+                          : () async {
+                              await ref
+                                  .read(authControllerProvider.notifier)
+                                  .selectTenant(tenant.id);
+                              if (!context.mounted) return;
+                              final state = ref.read(authControllerProvider);
+                              if (state.status == AuthStatus.authenticated &&
+                                  state.context?.currentTenantId == tenant.id &&
+                                  state.error == null) {
+                                GoRouter.maybeOf(context)?.go('/dashboard');
+                              }
+                            },
                     );
                   })),
         ]));

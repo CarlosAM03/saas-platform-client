@@ -23,15 +23,9 @@ por Vercel; CSP queda pendiente de evaluar scripts y CanvasKit de Flutter.
 
 ## Estado
 
-Este repositorio corresponde a Fase 5 - Flutter Foundation.
+Foundation y Auth se conservan. Tenants, Users, Campaigns y Prospects no-CSV usan API real, con listados, detalles, formularios, permisos visibles y estado por sesión/tenant.
 
-Fase 5 no es el frontend completo ni el MVP completo. Su objetivo es dejar una base estable para que Andre implemente features y Angeles disene UI/UX sin redisenar la arquitectura transversal.
-
-El cierre esperado es:
-
-```text
-F5 CLOSED AS FLUTTER FOUNDATION / READY FOR FEATURE DEVELOPMENT
-```
+PlatformApi representa las operaciones públicas de backend/main `3a3309398458ab333d7b00f16e9c2df6a09ef734`, incluida creación manual y CSV preview/confirm. La UI CSV, Jobs, Prospector, polling/caché de resultados y Dashboard real quedan deliberadamente postergados. El Dashboard conserva temporalmente datos demo.
 
 ## Papel de Flutter
 
@@ -52,41 +46,35 @@ Flutter no se conecta directamente a PostgreSQL, Prospector Service ni Prospecto
 
 El backend es la autoridad para tenant context, autorizacion, persistencia, reglas de negocio, exportaciones y deduplicacion definitiva.
 
-## Alcance funcional de Fase 5
+## Alcance funcional
 
-La unica funcionalidad completa obligatoria es Auth Foundation:
+- Auth: login, restauración, sesión expirada, logout y JWT en `flutter_secure_storage`.
+- Tenants: listado, detalle, creación ADMIN y cambio de organización desde Perfil.
+- Users: listado/búsqueda/paginación/orden, detalle, creación, edición y desactivación ADMIN. La creación omite `roleId`; backend asigna MEMBER. Sin selector de roles inventado.
+- Campaigns: listado/búsqueda/paginación/orden, creación, detalle, edición/estado, archivo, eliminación permanente ADMIN confirmada y prospectos por campaña.
+- Prospects: listado/búsqueda/paginación, detalle, edición y creación manual ADMIN/OWNER. Sources persistidos: `google_maps`, `manual`, `csv`.
+- CSV: sólo PlatformApi multipart tipado; sin file picker, wizard ni ruta de importación visible.
 
-- Login mediante `POST /api/v1/auth/login`.
-- Restauracion mediante `GET /api/v1/auth/me`.
-- Seleccion y cambio de tenant mediante `POST /api/v1/auth/select-tenant`.
-- Logout mediante `POST /api/v1/auth/logout`.
-- JWT en `flutter_secure_storage`.
-- AuthState con Riverpod.
-- Rutas protegidas con `go_router`.
-- Estados de carga, vacio, error y exito.
-
-Campaigns, Prospects y ProspectingJobs pueden existir como placeholders o mocks alineados al OpenAPI. No se consideran features completas de Fase 5.
-
-La administracion completa de usuarios no bloquea Fase 5. La administracion de tenants permanece como placeholder o postergada hasta que exista un endpoint operativo suficiente.
+Las rutas CRUD manejan carga, vacíos, errores y permisos. Los datos y formularios se reinician al cambiar sesión o tenant. Backend sigue autorizando cada operación.
 
 ## Decisiones tecnicas vigentes
 
 - Dio es el motor HTTP interno, encapsulado en `ApiClient`.
 - Solo `lib/core/network` puede usar Dio.
 - Features, providers y widgets no usan Dio ni hacen HTTP directo.
-- Los repositories consumen `ApiClient`.
+- Los repositories de features consumen `PlatformApi`; éste encapsula `ApiClient`.
 - Riverpod gestiona estado.
 - `go_router` gestiona rutas.
 - `json_serializable` modela DTOs.
 - `API_BASE_URL` se configura con `--dart-define`; `.env.example` es referencia documental y no se carga automaticamente. La dependencia `envied` permanece instalada, pero no se usa para esta configuracion F5.
 - `logger` se usa para logs seguros.
 - No hay refresh token, OAuth ni self-register publico.
-- Jobs son asincronos y el MVP usa polling de 3 a 5 segundos.
+- Jobs/Prospector y polling/caché quedan postergados; PlatformApi conserva el contrato y sus errores 503.
 - No hay WebSocket, SSE, workers Flutter, background tasks u offline avanzado.
 
 ## Tenant y roles
 
-`currentTenantId` puede ser `null`. ADMIN puede autenticarse sin tenant seleccionado y no entra automaticamente a rutas tenant-aware. OWNER opera dentro de su tenant. MEMBER es un rol operativo limitado para el MVP inicial.
+`currentTenantId` puede ser `null`. ADMIN puede autenticarse sin tenant seleccionado y no entra automaticamente a rutas tenant-aware. OWNER opera dentro de su tenant. MEMBER puede gestionar campañas y editar prospectos; creación manual/import CSV y gestión de usuarios requieren OWNER/ADMIN. La matriz completa está en `FEATURE-DEVELOPMENT.md`.
 
 La UI solo controla visibilidad y experiencia. El backend conserva la autorizacion real y puede responder 403 aunque una accion haya sido visible.
 
@@ -136,7 +124,7 @@ Los documentos conceptuales e historicos no sustituyen estas fuentes.
 - Angeles: UI/UX, wireframes, componentes, estados visuales y documentacion visual/academica.
 - Angel: backend NestJS, Prisma, PostgreSQL, OpenAPI y endpoints funcionales.
 
-Para reglas de trabajo consultar `CONTRIBUTING.md` y `FEATURE-DEVELOPMENT.md`.
+Para reglas de trabajo consultar `Docs/CONTRIBUTING.md` y `FEATURE-DEVELOPMENT.md`.
 
 ## Reproducir F5 en VS Code (Windows)
 
@@ -171,7 +159,7 @@ flutter test
 
 Si `.dart_tool` ya existe, no recrear el enlace. `lib/shared/models/api_models.g.dart` es salida ignorada de `build_runner`, nunca un archivo escrito a mano. Para cambiar de backend, sustituir la URL en `--dart-define`. El backend NestJS debe estar disponible por separado para probar login real; sin backend, el cliente Web aun debe compilar y arrancar.
 
-El alcance implementado es Auth Foundation y navegacion base. Dashboard, Admin, Campaigns, Prospects y ProspectingJobs siguen siendo placeholders; no hay CRUD ni integracion funcional de esas areas. La discrepancia documental del rol MEMBER queda **PENDIENTE DE RECONCILIACIÓN ANTES DE FEATURES FUNCIONALES**.
+El alcance funcional y la matriz MEMBER vigente están descritos arriba y en `FEATURE-DEVELOPMENT.md`. Dashboard y Jobs siguen fuera del sprint de paridad core.
 ## Inicio con Docker
 
 Requisitos en host: Git, Docker y Docker Compose. El SDK Linux oficial está fijado en Flutter 3.47.5 / Dart 3.13.4 y se verifica mediante SHA-256 dentro de la imagen.
@@ -219,33 +207,4 @@ Para una prueba rápida del frontend se recomienda:
 
 `owner.demo-norte@demo.example` / `DevOnlyPass123!`
 
-#### PostgreSQL local
-
-- Database: `saas_local`
-- User: `saas_local`
-- Password: `local-dev-only-password`
-- Host dentro de Compose: `db`
-- Port: `5432`
-
-PostgreSQL no se publica al host. Para abrir psql:
-
-`docker compose exec db psql -U saas_local -d saas_local`
-
-#### Restaurar el dataset demo
-
-Compose ejecuta migraciones y `Prisma/seed_dev.ts` mediante `db-init`.
-
-Reejecutar migraciones + seed sin eliminar el volumen:
-
-`docker compose run --rm db-init`
-
-Reejecutar únicamente el seed:
-
-`docker compose run --rm db-init npm run prisma:seed:dev`
-
-Reset completo y destructivo:
-
-`docker compose down -v`
-`docker compose up --build`
-
----
+La operación de PostgreSQL, migraciones y restauración del dataset pertenece al [backend](https://github.com/CarlosAM03/saas-platform-backend/blob/main/Docs/DevelopmentEnvironment.md). El cliente no necesita credenciales de base de datos.

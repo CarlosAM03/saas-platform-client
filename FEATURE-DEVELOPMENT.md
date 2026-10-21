@@ -2,6 +2,9 @@
 
 ## Plataforma SaaS — Cliente Flutter
 
+> Estado vigente: Foundation/Auth preservados; Tenants, Users, Campaigns y Prospects no-CSV implementados con API real. CSV PlatformApi está completo; CSV UI/file picker, Jobs UI, Prospector, polling/results cache y Dashboard real están diferidos deliberadamente. Autoridad: código de backend/main, su OpenAPI sincronizado y ADR-004; después código/ADRs frontend. El encargo de paridad core autoriza los cambios transversales del sprint.
+
+
 Guía para desarrollo de features sobre el baseline Flutter Foundation.
 
 ---
@@ -409,6 +412,8 @@ Si /auth/me responde 401, limpiar sesión e ir a Login.
 
 # 11. Tenant context
 
+Los providers de listas/detalles observan sesión/tenant y se invalidan durante loading, logout, 401, selección/cambio y nueva sesión, incluso para el mismo tenant. Las respuestas tardías no repueblan el estado. ScopedFeaturePage aplica una clave por contexto dentro del Navigator, reiniciando formularios y filtros locales. No basta con cambiar la clave alrededor del Navigator, porque su GlobalKey puede preservar páginas.
+
 El tenant actual vive en AuthState.
 
 `currentTenantId` puede ser null.
@@ -431,66 +436,23 @@ Después de seleccionar tenant, Flutter debe reemplazar el contexto anterior por
 
 # 12. Reglas para ADMIN, OWNER y MEMBER
 
-La UI puede ocultar o deshabilitar acciones según rol.
+La matriz sigue los controllers de backend/main `3a3309398458ab333d7b00f16e9c2df6a09ef734`, y reemplaza la política MEMBER inicial.
 
-Pero la autorización real siempre la decide el backend.
+| Acción | ADMIN | OWNER | MEMBER |
+|---|---|---|---|
+| Tenants list/detail/select | Sí | Accesibles | Accesibles |
+| Tenant create | Sí | No | No |
+| Users list/detail | Sí | Sí | Sí |
+| Users create/update | Sí | Sí | No |
+| User deactivate | Sí | No | No |
+| Campaign list/detail/create/update/archive | Sí | Sí | Sí |
+| Campaign permanent delete | Sí | No | No |
+| Prospects list/detail/update | Sí | Sí | Sí |
+| Prospect manual create / CSV API | Sí | Sí | No |
 
-## ADMIN
+Las operaciones tenant-scoped requieren organización seleccionada, incluido ADMIN. ADMIN sin tenant es válido para discovery, tenant create y Perfil.
 
-Puede:
-
-* Iniciar sesión.
-* Seleccionar tenant.
-* Cambiar tenant.
-* Operar dentro de cualquier tenant autorizado.
-* Administrar usuarios con tenant seleccionado.
-* Administrar tenants cuando el endpoint esté operativo.
-
-ADMIN sin tenant es un estado válido.
-
-ADMIN sin tenant no debe entrar automáticamente a rutas tenant-aware como campañas, prospectos, users o jobs.
-
-## OWNER
-
-Puede operar funcionalmente dentro de su tenant.
-
-Puede:
-
-* Ver dashboard.
-* Gestionar campañas.
-* Gestionar prospectos.
-* Generar jobs.
-* Cancelar jobs.
-* Persistir resultados.
-* Exportar resultados.
-* Descartar resultados.
-* Administrar usuarios del tenant si backend lo permite.
-
-## MEMBER
-
-Para MVP inicial, MEMBER es rol operativo limitado.
-
-Puede:
-
-* Ver dashboard.
-* Ver campañas.
-* Ver prospectos.
-* Filtrar prospectos.
-* Descartar resultados temporales locales.
-
-No puede por default inicial:
-
-* Administrar usuarios.
-* Administrar tenants.
-* Crear campañas.
-* Editar campañas.
-* Archivar campañas.
-* Generar jobs.
-* Cancelar jobs.
-* Persistir resultados.
-* Exportar resultados.
-
-Si backend o producto cambia esta regla, debe actualizarse OpenAPI, ADR o formulario correspondiente.
+`currentTenantPermissionsProvider` reconoce ADMIN desde AuthContext. Para OWNER/MEMBER consulta UsersApi.get(currentUserId) y usa sólo el role del tenant actual; no decodifica JWT ni inventa autorización. Una consulta fallida cierra acciones. Los formularios verifican permisos también por ruta directa; backend conserva autoridad y cualquier 403 debe mostrarse.
 
 ---
 
@@ -662,83 +624,48 @@ Debe poder reemplazarse por API repository sin reescribir toda la UI.
 
 # 16. Mocks
 
-Los mocks están permitidos en Fase 5 y desarrollo posterior, pero con límites.
+Tenants, Users, Campaigns y Prospects productivos usan API real. Sus mocks sólo pueden emplearse en tests/previews/estados UI controlados.
 
-Se permiten para:
-
-* Dashboard.
-* Campaigns.
-* Prospects.
-* ProspectingJobs.
-* Admin tenants si el endpoint aún no está operativo.
-* Estados de UI.
-
-No se deben usar para:
-
-* Auth real de Fase 5.
-* Login final.
-* Tenant context real.
-* Autorización real.
-* Deducir reglas de negocio no documentadas.
-* Inventar datos fuera del contrato.
-
-## Regla
-
-Si el mock contradice OpenAPI, el mock está mal.
-
-Si la UI necesita datos que OpenAPI no tiene, se reporta.
+Dashboard demo y ProspectingJobsMockRepository pueden permanecer temporalmente porque sus features reales están fuera de este sprint. No usar mocks para autenticación, tenant context, autorización o reglas de negocio. Si un mock contradice OpenAPI, el mock está mal.
 
 ---
 
 # 17. Campaigns
 
-Campaigns será feature posterior al foundation.
+Implementado con CampaignsRepository, ApiCampaignsRepository y providers tenant-aware:
 
-En Fase 5 puede existir como placeholder o mock.
+- List/search/pagination/sort contractual.
+- Create/detail/edit de name, description y status.
+- Archive para ADMIN/OWNER/MEMBER.
+- Permanent delete ADMIN, con confirmación explícita y manejo de 409 por dependencias.
+- Pestañas Detalle/Prospectos; prospectos de campaña mediante API real y lista paginada.
 
-En MVP funcional, Campaigns será el eje del flujo.
-
-Reglas:
-
-* El usuario debe crear o seleccionar campaña antes de generar prospectos.
-* No se debe permitir generación de prospectos sin campaignId si el contrato requiere campaignId.
-* Campaigns debe manejar estados loading, empty, error y success.
-* Campaigns debe respetar paginación si el endpoint la define.
-* Campaigns debe respetar permisos visibles por rol.
-
-Pantallas esperadas:
-
-* Lista de campañas.
-* Crear campaña.
-* Detalle de campaña.
-* Editar campaña.
-* Archivar campaña si backend lo permite.
+Manejar loading/empty/error/success y errores backend. No inventar contacted, conversion rate ni analytics.
 
 ---
 
 # 18. Prospects
 
-Prospects será feature posterior al foundation.
+Implementado con ProspectsRepository, ApiProspectsRepository y providers tenant-aware:
 
-En Fase 5 puede existir como placeholder o mock.
+- List/search/pagination, detail y update.
+- Manual create ADMIN/OWNER con campaña elegida desde lista paginada del tenant actual.
+- Integración de campaign prospects.
+- Badges source google_maps/manual/csv.
 
-En MVP funcional debe permitir:
+CreateProspectRequest acepta únicamente campos contractuales; nunca tenantId/source/sourceIdentifier. Prospect.source usa PersistedProspectSource; ProspectingQuery/PipelineProgress/BusinessResult usan ProspectingSource, que sólo admite google_maps.
 
-* Listar prospectos.
-* Ver detalle de prospecto.
-* Filtrar prospectos.
-* Consultar prospectos por campaña.
-* Mostrar estados vacíos.
-* Mostrar duplicados o advertencias si backend lo informa.
-* Gestionar información permitida por backend.
+PATCH distingue omitted de explicit null. La UI sólo envía campos modificados y usa FieldUpdate.set(null) para vaciar campos nullable; metadata conserva soporte completo en API y visualización simple de sólo lectura en detalle. No agregar editor JSON complejo.
 
-Flutter no decide deduplicación definitiva.
+CSV preview/confirm están completos en PlatformApi con multipart encapsulado y modelos tipados. ApiUploadFile conserva copia inmutable: reutilizar exactamente los mismos bytes entre preview y confirm. Backend decide deduplicación, clasificación, expiración y concurrencia. HTTP 413 tiene error específico de 5 MB.
 
-Flutter no elimina prospectos por considerarlos duplicados sin confirmación/backend.
+CSV UI/file picker/wizard/drag-and-drop no forman parte del sprint. La futura UI deberá regenerar preview en 400 expirado/409 obsoleto y advertir antes de UPDATE_EXISTING compartido. Ver Docs/Contracts/Platform_API_Client.md.
 
 ---
 
 # 19. ProspectingJobs
+
+> Diseño futuro, diferido en el sprint de paridad core. No implementar UI, polling ni caché mientras Prospector siga pendiente. PlatformApi conserva el contrato y propaga 503/PROSPECTOR_INTEGRATION_PENDING.
 
 ProspectingJobs será feature posterior al foundation.
 
@@ -766,6 +693,8 @@ Flutter no llama Prospector Engine.
 ---
 
 # 20. Jobs asíncronos y polling
+
+> Diseño futuro, diferido en el sprint de paridad core. No implementar UI, polling ni caché mientras Prospector siga pendiente. PlatformApi conserva el contrato y propaga 503/PROSPECTOR_INTEGRATION_PENDING.
 
 Los jobs largos pertenecen al backend, Prospector Service y Prospector Engine.
 
@@ -811,6 +740,8 @@ No se usarán background tasks en Flutter.
 ---
 
 # 21. Caché temporal
+
+> Diseño futuro, diferido en el sprint de paridad core. No implementar UI, polling ni caché mientras Prospector siga pendiente. PlatformApi conserva el contrato y propaga 503/PROSPECTOR_INTEGRATION_PENDING.
 
 Los resultados temporales viven en memoria con Riverpod.
 
@@ -934,6 +865,8 @@ Debe evitar:
 
 # 25. Navegación
 
+Rutas actuales: /tenants, /tenants/new, /tenants/:id, /change-tenant, /users, /users/new, /users/:id, /users/:id/edit, /campaigns, /campaigns/new, /campaigns/:id, /campaigns/:id/edit, /prospects, /prospects/new, /prospects/:id, /prospects/:id/edit y /profile. Se preservan splash/login/select-tenant/session-expired/backend-unavailable. Las rutas hijas tenant-scoped también requieren tenant. No agregar Jobs UI ni CSV UI en este sprint.
+
 ## Mobile
 
 Mobile-first.
@@ -944,7 +877,6 @@ Bottom navigation para secciones principales:
 Dashboard
 Campañas
 Prospectos
-Generar
 ```
 
 Acciones secundarias:
@@ -989,8 +921,8 @@ Debe mostrar:
 * Nombre.
 * Email.
 * platformRole si aplica.
-* Tenant actual si aplica.
-* Lista o cambio de tenant si aplica.
+* Tenant actual y rol de tenant cuando apliquen.
+* Acción Cambiar organización y lista de tenants accesibles.
 * Logout.
 * Estado de sesión.
 
@@ -1000,19 +932,11 @@ Cambio de contraseña queda postergado salvo que backend lo implemente y se cier
 
 # 27. Administración
 
-## Administración de usuarios
+Tenants tiene interfaz/API repository, providers, list/detail/create ADMIN y selección/cambio desde Perfil. No existen update/delete de tenant: no inventarlos.
 
-No bloquea Fase 5.
+Users tiene interfaz/API repository, providers, list/search/pagination/sort/detail/create/update y desactivación ADMIN. DELETE se presenta como “Desactivar usuario”. Crear omite roleId para que backend asigne MEMBER, y la UI lo explica. No hay catálogo público de roles: no inventar IDs ni selector OWNER/MEMBER. Update permite campos contractuales y nueva contraseña opcional, siempre vacía inicialmente.
 
-Puede implementarse después como feature.
-
-Aunque backend Users esté operativo, no es requisito de cierre del foundation.
-
-## Administración de tenants
-
-Queda como placeholder o postergada hasta que backend tenga endpoint operativo suficiente.
-
-ADMIN puede tener acceso visual futuro, pero no se debe fingir funcionalidad real si el backend no está disponible.
+Admin es un hub de organizaciones y usuarios. Ocultar botones no sustituye autorización ni manejo de 403.
 
 ---
 

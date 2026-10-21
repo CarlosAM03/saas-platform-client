@@ -7,6 +7,7 @@ import '../config/app_config.dart';
 import '../errors/api_exception.dart';
 import '../storage/secure_token_storage.dart';
 import 'api_download.dart';
+import 'api_upload_file.dart';
 
 class ApiClient {
   ApiClient({
@@ -64,6 +65,17 @@ class ApiClient {
       {Object? data, Map<String, String>? headers}) async {
     final response = await _request(() => _dio.post<Object?>(path,
         data: data, options: Options(headers: headers)));
+    return response.data;
+  }
+
+  Future<Object?> postMultipart(String path,
+      {required Map<String, String> fields,
+      required ApiUploadFile file}) async {
+    final data = FormData.fromMap({
+      ...fields,
+      'file': MultipartFile.fromBytes(file.bytes, filename: file.filename)
+    });
+    final response = await _request(() => _dio.post<Object?>(path, data: data));
     return response.data;
   }
 
@@ -131,6 +143,7 @@ class ApiClient {
       403 => ApiErrorKind.forbidden,
       404 => ApiErrorKind.notFound,
       409 => ApiErrorKind.conflict,
+      413 => ApiErrorKind.payloadTooLarge,
       429 => ApiErrorKind.rateLimited,
       503 => ApiErrorKind.serviceUnavailable,
       _
