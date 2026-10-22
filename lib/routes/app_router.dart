@@ -12,6 +12,8 @@ import '../features/auth/state/auth_state.dart';
 import '../features/campaigns/presentation/campaigns_page.dart';
 import '../features/profile/presentation/profile_page.dart';
 import '../features/prospects/presentation/prospects_page.dart';
+import '../features/prospects/presentation/prospect_import_page.dart';
+import '../features/prospecting_jobs/presentation/jobs_pages.dart';
 import '../features/prospecting_jobs/presentation/generate_page.dart';
 
 import '../features/dashboard/presentation/dashboard_page.dart';
@@ -62,11 +64,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               (s) => UserFormPage(id: s.pathParameters['id']!)),
           featureRoute('/prospects', (s) => const ProspectsPage()),
           featureRoute('/prospects/new', (s) => const ProspectFormPage()),
+          featureRoute('/prospects/import', (s) => const ProspectImportPage()),
           featureRoute('/prospects/:id',
               (s) => ProspectDetailPage(s.pathParameters['id']!)),
           featureRoute('/prospects/:id/edit',
               (s) => ProspectFormPage(id: s.pathParameters['id']!)),
           featureRoute('/generate', (s) => const GeneratePage()),
+          featureRoute('/jobs', (s) => const JobsPage()),
+          featureRoute(
+              '/jobs/:id', (s) => JobDetailPage(s.pathParameters['id']!)),
           featureRoute('/profile', (s) => const ProfilePage()),
           featureRoute('/admin', (s) => const AdminPage()),
           featureRoute('/tenants', (s) => const TenantsPage()),
@@ -132,7 +138,12 @@ class AppShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.path;
-    final destinations = const ['/dashboard', '/campaigns', '/prospects'];
+    final destinations = const [
+      '/dashboard',
+      '/campaigns',
+      '/prospects',
+      '/jobs'
+    ];
     final rawIndex = destinations.indexWhere(
         (root) => location == root || location.startsWith('$root/'));
     final index = rawIndex < 0 ? 0 : rawIndex;
@@ -155,6 +166,8 @@ class AppShell extends ConsumerWidget {
                   NavigationRailDestination(
                       icon: Icon(Icons.people_outline),
                       label: Text('Prospectos')),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.work_outline), label: Text('Trabajos')),
                 ],
               ),
               Expanded(child: child),
@@ -163,6 +176,9 @@ class AppShell extends ConsumerWidget {
       drawer: Drawer(
           child: ListView(children: [
         const DrawerHeader(child: Text('Cuenta')),
+        ListTile(
+            title: const Text('Buscar prospectos'),
+            onTap: () => context.go('/generate')),
         ListTile(
             title: const Text('Organizaciones'),
             onTap: () => context.go('/tenants')),
@@ -186,6 +202,8 @@ class AppShell extends ConsumerWidget {
                     icon: Icon(Icons.campaign_outlined), label: 'Campañas'),
                 NavigationDestination(
                     icon: Icon(Icons.people_outline), label: 'Prospectos'),
+                NavigationDestination(
+                    icon: Icon(Icons.work_outline), label: 'Trabajos'),
               ],
             ),
     );

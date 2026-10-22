@@ -582,8 +582,9 @@ paths:
           application/json:
             schema: { $ref: '#/components/schemas/CreateProspectingJobRequest' }
       responses:
+        '403': { description: Tenant no seleccionado o permisos insuficientes. }
         '201':
-          description: Job creado con estado QUEUED.
+          description: Job creado o recuperado por Idempotency-Key. Puede haber avanzado de estado antes de responder.
           content:
             application/json:
               schema:
@@ -602,6 +603,7 @@ paths:
       security: [{ bearerAuth: [] }]
       parameters: [{ $ref: '#/components/parameters/Page' }, { $ref: '#/components/parameters/Limit' }, { $ref: '#/components/parameters/SortBy' }, { $ref: '#/components/parameters/SortOrder' }]
       responses:
+        '403': { description: Tenant no seleccionado o permisos insuficientes. }
         '200': { $ref: '#/components/responses/JobPage' }
         '401': { $ref: '#/components/responses/Unauthorized' }
   /api/v1/prospecting-jobs/{id}:
@@ -612,6 +614,7 @@ paths:
       security: [{ bearerAuth: [] }]
       parameters: [{ $ref: '#/components/parameters/EntityId' }]
       responses:
+        '403': { description: Tenant no seleccionado o permisos insuficientes. }
         '200':
           description: Detalle del Job, incluyendo datos temporales cuando existan.
           content:
@@ -631,6 +634,8 @@ paths:
       security: [{ bearerAuth: [] }]
       parameters: [{ $ref: '#/components/parameters/EntityId' }]
       responses:
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+        '403': { description: Tenant no seleccionado o permisos insuficientes. }
         '200':
           description: Job cancelado o solicitud de cancelación aceptada.
           content:
@@ -652,6 +657,8 @@ paths:
       security: [{ bearerAuth: [] }]
       parameters: [{ $ref: '#/components/parameters/EntityId' }]
       responses:
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+        '403': { description: Tenant no seleccionado o permisos insuficientes. }
         '200':
           description: Resultados persistidos.
           content:
@@ -678,6 +685,8 @@ paths:
           required: true
           schema: { $ref: '#/components/schemas/ExportFormat' }
       responses:
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+        '403': { description: Tenant no seleccionado o permisos insuficientes. }
         '200':
           description: Archivo de exportación.
           content:
@@ -921,10 +930,10 @@ components:
       type: object
       required: [keyword, location, source, limit]
       properties:
-        keyword: { type: string }
-        location: { type: string }
+        keyword: { type: string, minLength: 1, maxLength: 200, pattern: '\S' }
+        location: { type: string, minLength: 1, maxLength: 200, pattern: '\S' }
         source: { type: string, enum: [google_maps] }
-        limit: { type: integer, minimum: 1 }
+        limit: { type: integer, minimum: 1, maximum: 100 }
     PipelineProgress:
       type: object
       nullable: true
@@ -978,12 +987,12 @@ components:
             requestedLimit: { type: integer, nullable: true }
             error: { type: string, nullable: true }
             updatedAt: { $ref: '#/components/schemas/DateTime' }
-            resultsAvailable: { type: boolean, description: Computed/cache-only. }
+            resultsAvailable: { type: boolean, description: Disponible durante una hora después de recibir COMPLETED; false después de persistir o vencer. }
             results:
               type: array
               nullable: true
               items: { $ref: '#/components/schemas/BusinessResult' }
-              description: Temporal/cache-only; no es una relación Prisma.
+              description: Snapshot temporal en PostgreSQL; se elimina al persistir o al vencer su vigencia de una hora.
             progress: { $ref: '#/components/schemas/PipelineProgress' }
     LoginRequest:
       type: object
@@ -1206,7 +1215,7 @@ components:
       type: object
       required: [campaignId, query]
       properties:
-        campaignId: { $ref: '#/components/schemas/Id' }
+        campaignId: { type: string, minLength: 1, maxLength: 191 }
         query: { $ref: '#/components/schemas/ProspectingQuery' }
     PersistResultsResult:
       type: object

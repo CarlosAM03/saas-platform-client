@@ -1,71 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../shared/widgets/async_state_view.dart';
-import '../../campaigns/widgets/campaign_card.dart';
-import '../data/dashboard_mock_data.dart';
+import '../../../shared/widgets/feature_widgets.dart';
+import '../state/dashboard_providers.dart';
 
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final campaigns = ref.watch(dashboardCampaignsProvider);
-    final items = campaigns.valueOrNull ?? const <CampaignSummaryMock>[];
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Campañas recientes', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600)),
-        const SizedBox(height: 16),
-        SizedBox(
-          // AsyncStateView centra sus estados; damos altura mínima para ellos.
-          child: campaigns.isLoading || campaigns.hasError || items.isEmpty
-              ? SizedBox(
-                  height: 200,
-                  child: AsyncStateView(
-                    loading: campaigns.isLoading,
-                    empty: items.isEmpty,
-                    error: campaigns.hasError ? campaigns.error : null,
-                    success: const SizedBox.shrink(),
-                  ),
-                )
-              : _CampaignGrid(items: items),
-        ),
-      ]),
-    );
-  }
-}
-
-class _CampaignGrid extends StatelessWidget {
-  const _CampaignGrid({required this.items});
-  final List<CampaignSummaryMock> items;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      const gap = 16.0;
-      final w = constraints.maxWidth;
-      final cols = w >= 900 ? 3 : (w >= 560 ? 2 : 1);
-      final cardWidth = (w - gap * (cols - 1)) / cols;
-      return Wrap(
-        spacing: gap,
-        runSpacing: gap,
-        children: [
-          for (final item in items)
-            SizedBox(
-              width: cardWidth,
-              child: CampaignCard(
-                summary: item,
-                // Aún no existe ruta de detalle; por ahora lleva a Campañas.
-                // TODO(backend): aún no existe ruta de detalle de campaña.
-                // Navegar a /campaigns/:id cuando se implemente esa pantalla.
-                onTap: () => context.go('/campaigns'),
-              ),
-            ),
-        ],
-      );
-    });
-  }
+  Widget build(BuildContext context, WidgetRef ref) => FeaturePage(
+      title: 'Dashboard',
+      actions: [
+        IconButton(
+            tooltip: 'Actualizar dashboard',
+            onPressed: () => ref.invalidate(dashboardProvider),
+            icon: const Icon(Icons.refresh)),
+        FilledButton.icon(
+            onPressed: () => context.go('/generate'),
+            icon: const Icon(Icons.travel_explore),
+            label: const Text('Buscar prospectos'))
+      ],
+      child: AsyncPanel(
+          value: ref.watch(dashboardProvider),
+          retry: () => ref.invalidate(dashboardProvider),
+          data: (data) => ListView(children: [
+                const Text('Resumen de la organización actual'),
+                const SizedBox(height: 16),
+                Wrap(spacing: 16, runSpacing: 12, children: [
+                  for (final item in [
+                    (
+                      'Campañas',
+                      data.campaigns.meta.total,
+                      '/campaigns',
+                      Icons.campaign_outlined
+                    ),
+                    (
+                      'Prospectos',
+                      data.prospects.meta.total,
+                      '/prospects',
+                      Icons.people_outline
+                    ),
+                    (
+                      'Trabajos',
+                      data.jobs.meta.total,
+                      '/jobs',
+                      Icons.work_outline
+                    )
+                  ])
+                    SizedBox(
+                        width: 240,
+                        child: Card(
+                            child: ListTile(
+                                leading: Icon(item.$4),
+                                title: Text('${item.$2}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium),
+                                subtitle: Text(item.$1),
+                                onTap: () => context.go(item.$3))))
+                ]),
+                const SizedBox(height: 24),
+                Text('Campañas recientes',
+                    style: Theme.of(context).textTheme.titleLarge),
+                if (data.campaigns.items.isEmpty)
+                  const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text('Aún no hay campañas.')),
+                for (final campaign in data.campaigns.items)
+                  Card(
+                      child: ListTile(
+                          title: Text(campaign.name),
+                          subtitle:
+                              Text(campaign.description ?? 'Sin descripción'),
+                          trailing: Text(campaign.status.name),
+                          onTap: () =>
+                              context.go('/campaigns/${campaign.id}'))),
+                const SizedBox(height: 24),
+                Text('Trabajos recientes',
+                    style: Theme.of(context).textTheme.titleLarge),
+                if (data.jobs.items.isEmpty)
+                  const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text('Aún no hay trabajos de prospección.')),
+                for (final job in data.jobs.items)
+                  ListTile(
+                      title: Text('Trabajo ${job.id}'),
+                      subtitle: Text(job.createdAt.toLocal().toString()),
+                      trailing: Text(job.status.name),
+                      onTap: () => context.go('/jobs/${job.id}')),
+              ])));
 }

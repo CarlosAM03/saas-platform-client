@@ -13,6 +13,7 @@ import 'package:saas_platform_client/features/campaigns/presentation/campaigns_p
 import 'package:saas_platform_client/features/campaigns/state/campaigns_providers.dart';
 import 'package:saas_platform_client/features/prospects/presentation/prospects_page.dart';
 import 'package:saas_platform_client/features/prospects/state/prospects_providers.dart';
+import 'package:saas_platform_client/features/dashboard/state/dashboard_providers.dart';
 import 'package:saas_platform_client/features/tenants/presentation/tenants_pages.dart';
 import 'feature_fixtures.dart';
 import 'users_fixtures.dart';
@@ -81,6 +82,19 @@ void main() {
       usersRepositoryProvider.overrideWithValue(FakeUsers()),
       campaignsRepositoryProvider.overrideWithValue(FakeCampaigns()),
       prospectsRepositoryProvider.overrideWithValue(FakeProspects()),
+      dashboardProvider.overrideWith((ref) async => DashboardData(
+          campaigns: PaginatedResult(
+              items: [],
+              meta: const PaginationMeta(
+                  page: 1, limit: 5, total: 0, totalPages: 0)),
+          prospects: PaginatedResult(
+              items: [],
+              meta: const PaginationMeta(
+                  page: 1, limit: 5, total: 0, totalPages: 0)),
+          jobs: PaginatedResult(
+              items: [],
+              meta: const PaginationMeta(
+                  page: 1, limit: 5, total: 0, totalPages: 0)))),
       currentTenantPermissionsProvider.overrideWith(
           (ref) async => const TenantPermissions(admin: true, hasTenant: true))
     ]);

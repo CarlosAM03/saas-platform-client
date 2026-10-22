@@ -20,7 +20,7 @@ class ProspectingJobsApi {
   Future<ProspectingJobDetail> get(String id) async =>
       ProspectingJobDetail.fromJson(
           unwrapObject(await _client.get(entityPath('prospecting-jobs', id))));
-  // Current backend returns 503 / error.details.reason=PROSPECTOR_INTEGRATION_PENDING.
+  // Disabled/unconfigured deployments return 503; enabled deployments execute Jobs.
   Future<ProspectingJobDetail> create(CreateProspectingJobRequest request,
       {required String idempotencyKey}) async {
     if (idempotencyKey.trim().isEmpty) {

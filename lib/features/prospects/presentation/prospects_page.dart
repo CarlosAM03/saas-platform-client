@@ -18,6 +18,11 @@ class ProspectsPage extends ConsumerWidget {
         title: 'Prospectos',
         actions: [
           if (p?.canCreateProspects == true)
+            OutlinedButton.icon(
+                onPressed: () => context.go('/prospects/import'),
+                icon: const Icon(Icons.upload_file),
+                label: const Text('Importar CSV')),
+          if (p?.canCreateProspects == true)
             FilledButton(
                 onPressed: () => context.go('/prospects/new'),
                 child: const Text('Crear prospecto'))
