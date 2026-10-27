@@ -105,6 +105,7 @@ AuthContext contextFor(
         createdAt: DateTime.utc(2026),
         updatedAt: DateTime.utc(2026),
       ),
+<<<<<<< Updated upstream
       tenants: tenants ??
           const [
             AuthTenant(
@@ -113,6 +114,12 @@ AuthContext contextFor(
                 slug: 'tenant',
                 status: 'ACTIVO')
           ],
+=======
+      tenants: const [
+        AuthTenant(
+            id: 'tenant-1', name: 'Tenant', slug: 'tenant', status: 'ACTIVO')
+      ],
+>>>>>>> Stashed changes
       currentTenantId: tenantId,
     );
 
@@ -214,16 +221,24 @@ void main() {
       await container
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
+<<<<<<< Updated upstream
       repository.result =
           contextFor(tenantId: 'tenant-1', token: 'tenant-token');
+=======
+      repository.result = contextFor(tenantId: 'tenant-1');
+>>>>>>> Stashed changes
       await container
           .read(authControllerProvider.notifier)
           .selectTenant('tenant-1');
       expect(container.read(authControllerProvider).context?.currentTenantId,
           'tenant-1');
+<<<<<<< Updated upstream
       expect(container.read(authControllerProvider).context?.accessToken,
           'tenant-token');
       expect(storage.token, 'tenant-token');
+=======
+      expect(storage.token, 'new-token');
+>>>>>>> Stashed changes
     });
 
     for (final kind in [ApiErrorKind.forbidden, ApiErrorKind.network]) {
@@ -256,7 +271,12 @@ void main() {
 
     test('select tenant 401 cannot resurrect the expired session', () async {
       final storage = MemoryTokenStorage();
+<<<<<<< Updated upstream
       final repository = StubAuthRepository(storage)..result = contextFor();
+=======
+      final repository = StubAuthRepository(storage)
+        ..result = contextFor(tenantId: 'tenant-1');
+>>>>>>> Stashed changes
       final container = containerFor(storage, repository);
       addTearDown(container.dispose);
       container.read(authControllerProvider);
@@ -264,6 +284,7 @@ void main() {
       await container
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
+<<<<<<< Updated upstream
       // Reproduce the interceptor callback before the repository future throws.
       repository.beforeError = () => container.read(authControllerProvider.notifier).sessionExpired();
       repository.error = const ApiException(
@@ -302,6 +323,19 @@ void main() {
     });
 
     test('logout clears local session even if backend fails', () async {
+=======
+      repository.error =
+          const ApiException(kind: ApiErrorKind.network, message: 'Offline');
+      await container.read(authControllerProvider.notifier).logout();
+      expect(repository.logoutCalled, isTrue);
+      expect(storage.token, isNull);
+      expect(container.read(authControllerProvider).status,
+          AuthStatus.unauthenticated);
+    });
+    test(
+        'failed organization switch preserves the current authenticated context',
+        () async {
+>>>>>>> Stashed changes
       final storage = MemoryTokenStorage();
       final repository = StubAuthRepository(storage)
         ..result = contextFor(tenantId: 'tenant-1');
@@ -312,6 +346,7 @@ void main() {
       await container
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
+<<<<<<< Updated upstream
       repository.error =
           const ApiException(kind: ApiErrorKind.network, message: 'Offline');
       await container.read(authControllerProvider.notifier).logout();
@@ -347,6 +382,19 @@ void main() {
           AuthStatus.unauthenticated);
       expect(redirectForAuth(container.read(authControllerProvider), '/login'),
           isNull);
+=======
+      repository.error = const ApiException(
+          kind: ApiErrorKind.forbidden, statusCode: 403, message: 'Rejected');
+      await container
+          .read(authControllerProvider.notifier)
+          .selectTenant('tenant-2');
+      expect(container.read(authControllerProvider).status,
+          AuthStatus.authenticated);
+      expect(container.read(authControllerProvider).context?.currentTenantId,
+          'tenant-1');
+      expect(container.read(authControllerProvider).error, isA<ApiException>());
+      expect(storage.token, 'new-token');
+>>>>>>> Stashed changes
     });
   });
 
@@ -397,9 +445,15 @@ void main() {
       final admin = AuthState(
           status: AuthStatus.authenticated,
           context: contextFor(platformRole: 'ADMIN'));
+<<<<<<< Updated upstream
       expect(redirectForAuth(admin, '/login'), '/select-tenant');
       expect(redirectForAuth(admin, '/dashboard'), '/select-tenant');
+=======
+      expect(redirectForAuth(admin, '/login'), '/dashboard');
+>>>>>>> Stashed changes
       expect(redirectForAuth(admin, '/campaigns'), '/select-tenant');
+      expect(redirectForAuth(admin, '/campaigns/new'), '/select-tenant');
+      expect(redirectForAuth(admin, '/campaigns/c1'), '/select-tenant');
       expect(redirectForAuth(admin, '/prospects'), '/select-tenant');
       expect(redirectForAuth(admin, '/generate'), '/select-tenant');
       expect(redirectForAuth(admin, '/profile'), isNull);

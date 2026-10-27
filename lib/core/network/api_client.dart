@@ -37,8 +37,13 @@ class ApiClient {
       },
       onError: (error, handler) async {
         if (error.response?.statusCode == 401) {
-          await _storage.clearToken();
-          if (error.requestOptions.headers['Authorization'] != null) {
+          final sentAuthorization =
+              error.requestOptions.headers['Authorization'];
+          final currentToken = await _storage.readToken();
+          // A response from the previous organization must not expire a newer JWT.
+          if (currentToken != null &&
+              sentAuthorization == 'Bearer $currentToken') {
+            await _storage.clearToken();
             await _onUnauthorized?.call();
           }
           _logger.w(
@@ -97,6 +102,7 @@ class ApiClient {
         options: Options(responseType: ResponseType.bytes)));
   }
 
+<<<<<<< Updated upstream
   Future<ApiDownload> downloadBytes(String path,
       {Map<String, dynamic>? queryParameters}) async {
     final response = await _request(() => _dio.get<Object?>(path,
@@ -112,6 +118,8 @@ class ApiClient {
         contentDisposition: response.headers.value('content-disposition'));
   }
 
+=======
+>>>>>>> Stashed changes
   Future<Response<Object?>> _request(
       Future<Response<Object?>> Function() request) async {
     try {
@@ -148,13 +156,18 @@ class ApiClient {
       503 => ApiErrorKind.serviceUnavailable,
       _
           when error.type == DioExceptionType.connectionError ||
+<<<<<<< Updated upstream
               error.type == DioExceptionType.connectionTimeout ||
               error.type == DioExceptionType.receiveTimeout ||
               error.type == DioExceptionType.sendTimeout =>
+=======
+              error.type == DioExceptionType.connectionTimeout =>
+>>>>>>> Stashed changes
         ApiErrorKind.network,
       _ => ApiErrorKind.unknown,
     };
     return ApiException(
+<<<<<<< Updated upstream
       kind: kind,
       statusCode: status,
       code: code is String ? code : null,
@@ -163,5 +176,8 @@ class ApiClient {
           : 'Error de comunicación con el backend.',
       details: details,
     );
+=======
+        kind: kind, statusCode: status, message: message, details: body);
+>>>>>>> Stashed changes
   }
 }

@@ -1,7 +1,7 @@
 name: saas_platform_client
 description: Flutter client foundation for the university SaaS platform.
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -35,3 +35,7 @@ dependency_overrides:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf

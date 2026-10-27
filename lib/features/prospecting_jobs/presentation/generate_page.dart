@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+<<<<<<< Updated upstream
 import '../../../core/errors/api_exception.dart';
 import '../../../core/errors/error_mapper.dart';
 import '../../../platform_api/platform_api.dart';
@@ -10,10 +11,15 @@ import '../../../shared/widgets/feature_widgets.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../../dashboard/state/dashboard_providers.dart';
 import '../state/prospecting_jobs_providers.dart';
+=======
+import '../../../shared/widgets/beta_components.dart';
+import '../../workspace/data/platform_repository.dart';
+>>>>>>> Stashed changes
 
 class GeneratePage extends ConsumerStatefulWidget {
   const GeneratePage({super.key});
   @override
+<<<<<<< Updated upstream
   ConsumerState<GeneratePage> createState() => _GenerateState();
 }
 
@@ -163,5 +169,133 @@ class _GenerateState extends ConsumerState<GeneratePage> {
                                       onPressed: busy ? null : submit,
                                       child: const Text('Iniciar búsqueda'))
                                 ])))))));
+=======
+  ConsumerState<GeneratePage> createState() => _GeneratePageState();
+}
+
+class _GeneratePageState extends ConsumerState<GeneratePage> {
+  int page = 1;
+  @override
+  Widget build(BuildContext context) {
+    final data = ref.watch(jobsProvider(page));
+    return PageBody(children: [
+      const PageHeading(
+          'Prospección', 'Consulta los trabajos de tu organización.'),
+      const StatePanel(
+          title: 'Generación automática próximamente',
+          message:
+              'En esta beta puedes consultar trabajos existentes y gestionar los prospectos guardados. La generación, cancelación y exportación estarán disponibles en una próxima versión.',
+          icon: Icons.travel_explore_outlined),
+      const SizedBox(height: 32),
+      Text('Historial de trabajos',
+          style: Theme.of(context).textTheme.titleLarge),
+      const SizedBox(height: 16),
+      data.when(
+          loading: () => const LoadingPanel(),
+          error: (e, _) =>
+              ErrorPanel(e, () => ref.invalidate(jobsProvider(page))),
+          data: (result) => Column(children: [
+                if (result.items.isEmpty)
+                  const StatePanel(
+                      title: 'Todavía no hay trabajos',
+                      message:
+                          'Aquí podrás consultar el historial de prospección.')
+                else
+                  Surface(
+                      padding: 0,
+                      child: Column(children: [
+                        for (final item in result.items)
+                          ListTile(
+                            contentPadding: const EdgeInsets.all(16),
+                            title: Text(
+                                'Trabajo · ${dateLabel(item['createdAt'])}'),
+                            subtitle: const Text('Ver información del trabajo'),
+                            trailing: StatusBadge(item['status'] as String),
+                            onTap: () => context.go('/generate/${item['id']}'),
+                          )
+                      ])),
+                PaginationBar(
+                    result.meta, (number) => setState(() => page = number)),
+                OutlinedButton.icon(
+                    onPressed: () => ref.invalidate(jobsProvider(page)),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Actualizar')),
+              ])),
+    ]);
+  }
+}
+
+class JobDetailPage extends ConsumerWidget {
+  const JobDetailPage({required this.id, super.key});
+  final String id;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final data = ref.watch(jobProvider(id));
+    return PageBody(children: [
+      TextButton.icon(
+          onPressed: () => context.go('/generate'),
+          icon: const Icon(Icons.arrow_back),
+          label: const Text('Prospección')),
+      data.when(
+          loading: () => const LoadingPanel(),
+          error: (e, _) => ErrorPanel(e, () => ref.invalidate(jobProvider(id))),
+          data: (job) =>
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const PageHeading('Detalle del trabajo',
+                    'Información registrada de la prospección.'),
+                StatusBadge(job['status'] as String),
+                const SizedBox(height: 24),
+                Surface(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      Text('Búsqueda',
+                          style: Theme.of(context).textTheme.titleLarge),
+                      const SizedBox(height: 12),
+                      SelectableText(
+                          (job['query'] as Map?)?['keyword']?.toString() ??
+                              'Sin información'),
+                      const SizedBox(height: 8),
+                      Text(
+                          'Ubicación: ${(job['query'] as Map?)?['location'] ?? 'Sin información'}'),
+                      const SizedBox(height: 20),
+                      Text(
+                          'Límite solicitado: ${job['requestedLimit'] ?? (job['query'] as Map?)?['limit'] ?? 'Sin información'}'),
+                      const SizedBox(height: 8),
+                      Text('Creado el ${dateLabel(job['createdAt'])}'),
+                      if (job['startedAt'] != null) ...[
+                        const SizedBox(height: 8),
+                        Text('Inicio: ${dateLabel(job['startedAt'])}')
+                      ],
+                      if (job['completedAt'] != null) ...[
+                        const SizedBox(height: 8),
+                        Text('Finalización: ${dateLabel(job['completedAt'])}')
+                      ],
+                      const SizedBox(height: 16),
+                      TextButton(
+                          onPressed: () =>
+                              context.go('/campaigns/${job['campaignId']}'),
+                          child: const Text('Ver campaña')),
+                    ])),
+                const SizedBox(height: 24),
+                const StatePanel(
+                    title: 'Resultados no disponibles en esta beta',
+                    message:
+                        'El estado registrado del trabajo no implica que sus resultados puedan consultarse o exportarse.',
+                    icon: Icons.info_outline),
+                if (job['error'] != null) ...[
+                  const SizedBox(height: 24),
+                  Surface(
+                      child: Text(
+                          'El trabajo registró un error. Contacta al administrador para revisarlo.'))
+                ],
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                    onPressed: () => ref.invalidate(jobProvider(id)),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Actualizar')),
+              ])),
+    ]);
+>>>>>>> Stashed changes
   }
 }
