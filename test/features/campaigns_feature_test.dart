@@ -14,23 +14,56 @@ import 'campaigns_fixtures.dart';
 
 const key = (page: 1, search: '', sort: SortField.name, order: SortOrder.asc);
 void main() {
+  testWidgets('beta status filter stays local to the visible server page', (
+    tester,
+  ) async {
+    final repo = FakeCampaigns();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
+          campaignsRepositoryProvider.overrideWithValue(repo),
+          currentTenantPermissionsProvider.overrideWith(
+            (ref) async =>
+                const TenantPermissions(role: RoleName.OWNER, hasTenant: true),
+          ),
+        ],
+        child: const MaterialApp(home: Scaffold(body: CampaignsPage())),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Campaign'), findsOneWidget);
+    await tester.tap(find.widgetWithText(ChoiceChip, 'PAUSADA'));
+    await tester.pumpAndSettle();
+    expect(find.text('Campaign'), findsNothing);
+    expect(
+      find.text('El filtro de estado se aplica a la página actual.'),
+      findsOneWidget,
+    );
+    expect(repo.lastQuery!.page, 1);
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Todas'));
+    await tester.pumpAndSettle();
+    expect(find.text('Campaign'), findsOneWidget);
+  });
   test('campaigns API repository uses typed requests and queries', () async {
     final adapter = ContractAdapter()..response = page(campaignJson);
     final repo = ApiCampaignsRepository(testApi(adapter));
     expect(
-        (await repo.list(
-                query: const PaginationQuery(
-                    page: 2,
-                    search: 'coffee',
-                    sortBy: SortField.createdAt,
-                    sortOrder: SortOrder.desc)))
-            .items,
-        hasLength(1));
+      (await repo.list(
+        query: const PaginationQuery(
+          page: 2,
+          search: 'coffee',
+          sortBy: SortField.createdAt,
+          sortOrder: SortOrder.desc,
+        ),
+      )).items,
+      hasLength(1),
+    );
     expect(adapter.request!.queryParameters, {
       'page': 2,
       'search': 'coffee',
       'sortBy': 'createdAt',
-      'sortOrder': 'desc'
+      'sortOrder': 'desc',
     });
     adapter.response = envelope(campaignJson);
     expect((await repo.get(entityId)).id, entityId);
@@ -46,31 +79,42 @@ void main() {
     adapter.response = page(prospectJson);
     expect((await repo.prospects(entityId)).items.single.id, entityId);
   });
-  test('campaigns providers drop old tenant state and ignore a late response',
-      () async {
-    final old = Completer<PaginatedResult<Campaign>>();
-    final repo = FakeCampaigns()..pending = old.future;
-    final c = ProviderContainer(overrides: [
-      authControllerProvider.overrideWith(FeatureAuthController.new),
-      campaignsRepositoryProvider.overrideWithValue(repo)
-    ]);
-    addTearDown(c.dispose);
-    final sub = c.listen(campaignsListProvider(key), (_, __) {});
-    addTearDown(sub.close);
-    expect(c.read(campaignsListProvider(key)).isLoading, isTrue);
-    // Repository overrides deliberately survive the switch; the future must still reload.
-    repo.pending = null;
-    repo.items = [];
-    await c.read(authControllerProvider.notifier).selectTenant('b');
-    final current = await c.read(campaignsListProvider(key).future);
-    expect(current.items, isEmpty);
-    old.complete(PaginatedResult(
-        items: [Campaign.fromJson(campaignJson)],
-        meta:
-            const PaginationMeta(page: 1, limit: 20, total: 1, totalPages: 1)));
-    await Future<void>.delayed(Duration.zero);
-    expect(c.read(campaignsListProvider(key)).asData!.value.items, isEmpty);
-  });
+  test(
+    'campaigns providers drop old tenant state and ignore a late response',
+    () async {
+      final old = Completer<PaginatedResult<Campaign>>();
+      final repo = FakeCampaigns()..pending = old.future;
+      final c = ProviderContainer(
+        overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
+          campaignsRepositoryProvider.overrideWithValue(repo),
+        ],
+      );
+      addTearDown(c.dispose);
+      final sub = c.listen(campaignsListProvider(key), (_, __) {});
+      addTearDown(sub.close);
+      expect(c.read(campaignsListProvider(key)).isLoading, isTrue);
+      // Repository overrides deliberately survive the switch; the future must still reload.
+      repo.pending = null;
+      repo.items = [];
+      await c.read(authControllerProvider.notifier).selectTenant('b');
+      final current = await c.read(campaignsListProvider(key).future);
+      expect(current.items, isEmpty);
+      old.complete(
+        PaginatedResult(
+          items: [Campaign.fromJson(campaignJson)],
+          meta: const PaginationMeta(
+            page: 1,
+            limit: 20,
+            total: 1,
+            totalPages: 1,
+          ),
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(c.read(campaignsListProvider(key)).asData!.value.items, isEmpty);
+    },
+  );
   for (final mode in ['loading', 'empty', 'error', 'success']) {
     testWidgets('campaigns list $mode', (tester) async {
       final repo = FakeCampaigns();
@@ -79,15 +123,26 @@ void main() {
       }
       if (mode == 'empty') repo.items = [];
       if (mode == 'error') {
-        repo.error =
-            const ApiException(kind: ApiErrorKind.forbidden, message: 'denied');
+        repo.error = const ApiException(
+          kind: ApiErrorKind.forbidden,
+          message: 'denied',
+        );
       }
-      await tester.pumpWidget(ProviderScope(overrides: [
-        authControllerProvider.overrideWith(FeatureAuthController.new),
-        campaignsRepositoryProvider.overrideWithValue(repo),
-        currentTenantPermissionsProvider.overrideWith((ref) async =>
-            const TenantPermissions(role: RoleName.OWNER, hasTenant: true))
-      ], child: const MaterialApp(home: Scaffold(body: CampaignsPage()))));
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            authControllerProvider.overrideWith(FeatureAuthController.new),
+            campaignsRepositoryProvider.overrideWithValue(repo),
+            currentTenantPermissionsProvider.overrideWith(
+              (ref) async => const TenantPermissions(
+                role: RoleName.OWNER,
+                hasTenant: true,
+              ),
+            ),
+          ],
+          child: const MaterialApp(home: Scaffold(body: CampaignsPage())),
+        ),
+      );
       await tester.pump();
       if (mode == 'loading') {
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -96,8 +151,10 @@ void main() {
         expect(find.text('No hay información disponible.'), findsOneWidget);
       }
       if (mode == 'error') {
-        expect(find.text('No tienes permisos para realizar esta acción.'),
-            findsOneWidget);
+        expect(
+          find.text('No tienes permisos para realizar esta acción.'),
+          findsOneWidget,
+        );
       }
       if (mode == 'success') {
         expect(find.text('Campaign'), findsOneWidget);
@@ -115,69 +172,100 @@ void main() {
       }
     });
   }
-  testWidgets('campaigns detail and edit visibility for MEMBER',
-      (tester) async {
+  testWidgets('campaigns detail and edit visibility for MEMBER', (
+    tester,
+  ) async {
     final repo = FakeCampaigns();
-    await tester.pumpWidget(ProviderScope(
+    await tester.pumpWidget(
+      ProviderScope(
         overrides: [
           campaignsRepositoryProvider.overrideWithValue(repo),
-          currentTenantPermissionsProvider.overrideWith((ref) async =>
-              const TenantPermissions(role: RoleName.MEMBER, hasTenant: true))
+          currentTenantPermissionsProvider.overrideWith(
+            (ref) async =>
+                const TenantPermissions(role: RoleName.MEMBER, hasTenant: true),
+          ),
         ],
         child: const MaterialApp(
-            home: Scaffold(body: CampaignDetailPage(entityId)))));
+          home: Scaffold(body: CampaignDetailPage(entityId)),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Campaign'), findsOneWidget);
     expect(find.text('Editar campaña'), findsOneWidget);
     expect(find.text('Eliminar permanentemente'), findsNothing);
   });
   testWidgets('campaigns direct create route permission', (tester) async {
-    await tester.pumpWidget(ProviderScope(overrides: [
-      currentTenantPermissionsProvider.overrideWith((ref) async =>
-          const TenantPermissions(role: RoleName.MEMBER, hasTenant: true))
-    ], child: const MaterialApp(home: Scaffold(body: CampaignFormPage()))));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          currentTenantPermissionsProvider.overrideWith(
+            (ref) async =>
+                const TenantPermissions(role: RoleName.MEMBER, hasTenant: true),
+          ),
+        ],
+        child: const MaterialApp(home: Scaffold(body: CampaignFormPage())),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Guardar'), findsOneWidget);
   });
-  testWidgets('permanent delete preserves 409 and does not navigate',
-      (tester) async {
+  testWidgets('permanent delete preserves 409 and does not navigate', (
+    tester,
+  ) async {
     final repo = FakeCampaigns();
-    await tester.pumpWidget(ProviderScope(
+    await tester.pumpWidget(
+      ProviderScope(
         overrides: [
           campaignsRepositoryProvider.overrideWithValue(repo),
-          currentTenantPermissionsProvider.overrideWith((ref) async =>
-              const TenantPermissions(admin: true, hasTenant: true))
+          currentTenantPermissionsProvider.overrideWith(
+            (ref) async =>
+                const TenantPermissions(admin: true, hasTenant: true),
+          ),
         ],
         child: const MaterialApp(
-            home: Scaffold(body: CampaignDetailPage(entityId)))));
+          home: Scaffold(body: CampaignDetailPage(entityId)),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Prospectos'));
     await tester.pumpAndSettle();
     expect(find.text('Business'), findsOneWidget);
-    repo.error =
-        const ApiException(kind: ApiErrorKind.conflict, message: 'dependent');
+    repo.error = const ApiException(
+      kind: ApiErrorKind.conflict,
+      message: 'dependent',
+    );
     await tester.tap(find.text('Eliminar permanentemente'));
     await tester.pumpAndSettle();
     expect(repo.removals, 0);
     await tester.tap(find.text('Confirmar').last);
     await tester.pumpAndSettle();
     expect(repo.removals, 1);
-    expect(find.text('La operación entra en conflicto con el estado actual.'),
-        findsOneWidget);
+    expect(
+      find.text('La operación entra en conflicto con el estado actual.'),
+      findsOneWidget,
+    );
     await tester.tap(find.text('Detalle'));
     await tester.pumpAndSettle();
     expect(find.text('Campaign'), findsOneWidget);
   });
   testWidgets('MEMBER can create and archive campaigns', (tester) async {
     final repo = FakeCampaigns();
-    await tester.pumpWidget(ProviderScope(
+    await tester.pumpWidget(
+      ProviderScope(
         overrides: [
           campaignsRepositoryProvider.overrideWithValue(repo),
-          currentTenantPermissionsProvider.overrideWith((ref) async =>
-              const TenantPermissions(role: RoleName.MEMBER, hasTenant: true))
+          currentTenantPermissionsProvider.overrideWith(
+            (ref) async =>
+                const TenantPermissions(role: RoleName.MEMBER, hasTenant: true),
+          ),
         ],
         child: const MaterialApp(
-            home: Scaffold(body: CampaignDetailPage(entityId)))));
+          home: Scaffold(body: CampaignDetailPage(entityId)),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Archivar campaña'));
     await tester.pumpAndSettle();

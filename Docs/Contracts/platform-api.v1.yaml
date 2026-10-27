@@ -5,8 +5,11 @@ info:
   description: |
     Contrato HTTP V1 entre Flutter y Platform Backend. Los DTOs son independientes
     de Prisma; el tenant se resuelve desde el contexto autenticado.
-    F4 implementa Auth, Users y Health. Tenants, Campaigns, Prospects y
-    Prospecting Jobs conservan su contrato objetivo para fases posteriores.
+    Backend verificado: 967044e2 (dev), 3a330939 (main), 26-10-2026.
+    Auth, Users, Health, Tenants, Campaigns, Prospects e importación CSV están implementados.
+    Jobs permite listar y consultar registros. Crear, cancelar, persistir y exportar
+    responden 503 PROSPECTOR_INTEGRATION_PENDING; sus respuestas objetivo se conservan
+    exclusivamente bajo x-target-responses, sin promesa de disponibilidad ni validación E2E.
 servers:
   - url: https://api.example.invalid
     description: Placeholder; el entorno real se configura fuera del contrato.
@@ -572,7 +575,8 @@ paths:
     post:
       tags: [Prospecting Jobs]
       summary: Crea y encola un Job de prospección
-      description: El tenant se obtiene del contexto JWT. La operación es idempotente por Idempotency-Key.
+      description: Backend actual devuelve 503 PROSPECTOR_INTEGRATION_PENDING después de validar autenticación y solicitud. Sin operación ni éxito simulado.
+      x-implementation-status: integration-pending
       operationId: createProspectingJob
       security: [{ bearerAuth: [] }]
       parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
@@ -583,6 +587,10 @@ paths:
             schema: { $ref: '#/components/schemas/CreateProspectingJobRequest' }
       responses:
         '403': { description: Tenant no seleccionado o permisos insuficientes. }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+      x-target-responses:
         '201':
           description: Job creado o recuperado por Idempotency-Key. Puede haber avanzado de estado antes de responder.
           content:
@@ -592,10 +600,8 @@ paths:
                   - $ref: '#/components/schemas/SuccessResponse'
                   - type: object
                     properties: { data: { $ref: '#/components/schemas/ProspectingJobDetail' } }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
         '409': { $ref: '#/components/responses/Conflict' }
-        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
     get:
       tags: [Prospecting Jobs]
       summary: Lista Jobs del tenant autenticado
@@ -616,7 +622,7 @@ paths:
       responses:
         '403': { description: Tenant no seleccionado o permisos insuficientes. }
         '200':
-          description: Detalle del Job, incluyendo datos temporales cuando existan.
+          description: Registro persistido. Backend actual devuelve resultsAvailable=false, results=null y progress=null.
           content:
             application/json:
               schema:
@@ -630,12 +636,15 @@ paths:
     post:
       tags: [Prospecting Jobs]
       summary: Solicita la cancelación de un Job
+      x-implementation-status: integration-pending
       operationId: cancelProspectingJob
       security: [{ bearerAuth: [] }]
       parameters: [{ $ref: '#/components/parameters/EntityId' }]
       responses:
         '503': { $ref: '#/components/responses/ServiceUnavailable' }
         '403': { description: Tenant no seleccionado o permisos insuficientes. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+      x-target-responses:
         '200':
           description: Job cancelado o solicitud de cancelación aceptada.
           content:
@@ -645,20 +654,24 @@ paths:
                   - $ref: '#/components/schemas/SuccessResponse'
                   - type: object
                     properties: { data: { $ref: '#/components/schemas/ProspectingJobDetail' } }
-        '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
+
         '409': { $ref: '#/components/responses/Conflict' }
+
   /api/v1/prospecting-jobs/{id}/persist:
     post:
       tags: [Prospecting Jobs]
       summary: Persiste los resultados temporales de un Job
-      description: Mapea BusinessResult a Prospect y CampaignProspect aplicando la deduplicación definida por Platform.
+      description: Backend actual devuelve 503 PROSPECTOR_INTEGRATION_PENDING después de validar autenticación y solicitud. Sin operación ni éxito simulado.
+      x-implementation-status: integration-pending
       operationId: persistProspectingJob
       security: [{ bearerAuth: [] }]
       parameters: [{ $ref: '#/components/parameters/EntityId' }]
       responses:
         '503': { $ref: '#/components/responses/ServiceUnavailable' }
         '403': { description: Tenant no seleccionado o permisos insuficientes. }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+      x-target-responses:
         '200':
           description: Resultados persistidos.
           content:
@@ -668,14 +681,16 @@ paths:
                   - $ref: '#/components/schemas/SuccessResponse'
                   - type: object
                     properties: { data: { $ref: '#/components/schemas/PersistResultsResult' } }
-        '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
+
         '409': { $ref: '#/components/responses/Conflict' }
+
   /api/v1/prospecting-jobs/{id}/export:
     get:
       tags: [Prospecting Jobs]
       summary: Exporta resultados en CSV o XLSX
-      description: Respuesta binaria; no utiliza el wrapper JSON estándar. ADR-002 define GET para esta operación.
+      description: Backend actual devuelve 503 PROSPECTOR_INTEGRATION_PENDING después de validar autenticación y solicitud. Sin operación ni éxito simulado.
+      x-implementation-status: integration-pending
       operationId: exportProspectingJob
       security: [{ bearerAuth: [] }]
       parameters:
@@ -687,6 +702,9 @@ paths:
       responses:
         '503': { $ref: '#/components/responses/ServiceUnavailable' }
         '403': { description: Tenant no seleccionado o permisos insuficientes. }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+      x-target-responses:
         '200':
           description: Archivo de exportación.
           content:
@@ -694,10 +712,10 @@ paths:
               schema: { type: string, format: binary }
             application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
               schema: { type: string, format: binary }
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '401': { $ref: '#/components/responses/Unauthorized' }
         '404': { $ref: '#/components/responses/NotFound' }
+
         '409': { $ref: '#/components/responses/Conflict' }
+
 components:
   securitySchemes:
     bearerAuth:
@@ -780,7 +798,7 @@ components:
       description: Conflicto de estado, unicidad o idempotencia.
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
     ServiceUnavailable:
-      description: Prospector Service no pudo aceptar el Job.
+      description: Integración deshabilitada en Backend actual; error.details.reason=PROSPECTOR_INTEGRATION_PENDING. No se ha aceptado ni ejecutado el Job.
       content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' } } }
     EmptySuccess:
       description: Operación completada.
