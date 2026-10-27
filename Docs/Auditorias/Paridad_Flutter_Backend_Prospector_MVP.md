@@ -202,3 +202,6 @@ La existencia de un Preview exitoso en GitHub/Vercel no certifica la aplicación
 Comprobación local adicional del cierre: build_runner aprobado, analyze sin incidencias tras retirar un import sin uso del nuevo test, build Web release aprobado (advertencia preexistente de fuente Cupertino ausente, sin fallo de compilación). La integración HTTP con FastAPI/EnginePort controlado se volvió a ejecutar explícitamente: **1/1 aprobada**, separada del flujo de núcleo sin Service. Los dos tests no se contabilizan como ejecutados en la regresión que los omite por defecto.
 
 CI remoto Foundation `095e899`: [40480231249](https://github.com/CarlosAM03/saas-platform-client/actions/runs/40480231249), aprobado, incluidos build compose, imagen de producción y smoke SPA `/dashboard`. La revisión de paridad tiene sus propios checks; no se hereda su aprobación por inferencia.
+
+
+Los primeros runs remotos de las dos integraciones explícitas fallaron antes de ejecutar sus pruebas porque el checkout limpio no contenía los modelos generados de `json_serializable`. Se agregó el paso requerido `dart run build_runner build` a ambos workflows, conservando todos sus checks. No fue un fallo de aislamiento ni se sustituyó la integración por mocks; la aprobación se debe verificar en el nuevo SHA remoto.

@@ -40,6 +40,7 @@ jobs:
       - run: npm ci && npm run prisma:generate && npm run prisma:migrate:deploy && npm run build
         working-directory: integration-backend
       - run: flutter pub get
+      - run: dart run build_runner build
       - name: Production entrypoint without Service, real Flutter CSV 600
         shell: bash
         run: |
