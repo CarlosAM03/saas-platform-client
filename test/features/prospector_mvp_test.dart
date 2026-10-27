@@ -91,6 +91,26 @@ Future<void> mountJob(WidgetTester tester, SnapshotJobs jobs) async {
 }
 
 void main() {
+  test(
+    'availability distinguishes disabled, missing policy, unreachable, verification, capacity and quota',
+    () {
+      const reasons = [
+        'PROSPECTOR_INTEGRATION_PENDING',
+        'PROSPECTOR_POLICY_NOT_CONFIGURED',
+        'PROSPECTOR_SERVICE_UNAVAILABLE',
+        'PROSPECTOR_VERIFICATION_FAILED',
+        'PROSPECTOR_CAPACITY_EXHAUSTED',
+        'TENANT_QUOTA_EXHAUSTED',
+      ];
+      final messages = reasons.map(prospectingUnavailableMessage).toSet();
+      expect(messages.length, reasons.length);
+      expect(
+        prospectingUnavailableMessage(reasons.first),
+        contains('importar prospectos mediante CSV'),
+      );
+    },
+  );
+
   for (final status in [200, 404, 503]) {
     test(
       'capabilities verifies the actual contract and fails closed for HTTP $status',

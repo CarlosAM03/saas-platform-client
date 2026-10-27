@@ -182,3 +182,18 @@ INTEGRACIÓN FUNCIONAL CON LIMITACIONES.
 | Cancelar HTTP | IMPLEMENTADO cooperativo interno | DESHABILITADO HTTP | DESHABILITADO | DESHABILITADO | No endpoint supuesto |
 | Reinicio/fallo | NO APLICA | PENDIENTE durabilidad | VALIDADO deadline/reserva | VALIDADO fallo/repetición | Sin reanudación automática |
 | Cuotas | NO APLICA | IMPLEMENTADO capacidad | VALIDADO | VALIDADO capabilities | Facturación PENDIENTE verificación del operador |
+
+
+## Cierre MVP — 27 de octubre de 2026
+
+PR Draft [#8](https://github.com/CarlosAM03/saas-platform-client/pull/8), base temporal `fix/f5-foundation`, destino final dev tras [#7](https://github.com/CarlosAM03/saas-platform-client/pull/7). Se incorporó el hardening Foundation `095e899ace31acf17d97bbe945c118c1a5d88682` mediante merge exclusivo entre ramas de trabajo. Dev y main no se modificaron.
+
+P0 de diálogos reproducido con tres pruebas antes de corregir: confirmación/búsqueda del tenant anterior visible tras cambiar contexto o salir. Todos los diálogos de dominio y la confirmación de generación usan `showSessionDialog`; se ocultan al observar nuevo contexto y se cierran sin confirmar. Providers, formularios, CSV, respuestas tardías y monitor de Jobs mantienen los guards de contexto existentes. Véase `Cierre_MVP_Seguridad_2026-10-27.md`.
+
+Los mensajes distinguen generación deshabilitada, política sin configurar, Service inaccesible, verificación fallida, capacidad ocupada y cuota agotada. El Backend decide `create`; Flutter conserva cancel/persist/export deshabilitados.
+
+Regresión completa local: **267 pruebas aprobadas, 2 integraciones explícitas omitidas por defecto**, sin reemplazarlas por mocks. Foundation obtuvo 255 aprobadas. Se ejecutó adicionalmente `test/integration/core_stack_test.dart` con manifest privado: **1/1 aprobada**, contra el `dist/src/main.js` real de Backend `42b96fefd73cc11b42ecde4df6d5f42393328bfc`, NODE_ENV=production, PostgreSQL real desechable y sin Service ni credenciales externas. Login/tenant/Users/Campaigns/Prospects/CSV600/dashboard/Jobs, 600 altas + 1 manual = 601, replay409, cruce404, generación503, cero Jobs ficticios y cero llamadas fetch salientes del Backend. Evidencia agregada `build/test-evidence/core-stack.json`; manifest y tokens no se publican.
+
+CI ahora se dispara para PR apilados. `core-integration.yml` comprueba el núcleo sin instalar Service; `prospector-integration.yml` comprueba separadamente HTTP con FastAPI real y EnginePort controlado. Ambos fijan el Backend remoto por SHA y sólo publican evidencia agregada. No ejecutan extracción pública ni importan datos DATRA.
+
+La existencia de un Preview exitoso en GitHub/Vercel no certifica la aplicación productiva, CORS ni sesión autenticada. La revisión productiva y dictamen se detallan en los documentos globales del 27 de octubre. Ningún merge a dev/main ni despliegue se ejecuta aquí.

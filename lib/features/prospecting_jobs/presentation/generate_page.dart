@@ -1,3 +1,4 @@
+import '../../../shared/widgets/session_dialog.dart';
 import 'dart:math';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -31,7 +32,6 @@ class _GenerateState extends ConsumerState<GeneratePage> {
       uncertain = false,
       retryLoading = false,
       confirming = false;
-  DialogRoute<bool>? confirmationRoute;
   String? error, requestSignature, requestKey, uncertainJobId;
   @override
   void initState() {
@@ -80,12 +80,6 @@ class _GenerateState extends ConsumerState<GeneratePage> {
 
   @override
   void dispose() {
-    final route = confirmationRoute;
-    if (route != null) {
-      Future<void>.microtask(() {
-        if (route.isActive) route.navigator?.removeRoute(route);
-      });
-    }
     keyword.dispose();
     location.dispose();
     limit.dispose();
@@ -119,7 +113,7 @@ class _GenerateState extends ConsumerState<GeneratePage> {
       error = null;
     });
     try {
-      final route = DialogRoute<bool>(
+      final confirmed = await showSessionDialog<bool>(
         context: context,
         builder: (dialog) => AlertDialog(
           title: Text(
@@ -142,12 +136,6 @@ class _GenerateState extends ConsumerState<GeneratePage> {
           ],
         ),
       );
-      confirmationRoute = route;
-      final confirmed = await Navigator.of(
-        context,
-        rootNavigator: true,
-      ).push(route);
-      confirmationRoute = null;
       if (!mounted ||
           scope != ref.read(sessionScopeProvider) ||
           confirmed != true) {

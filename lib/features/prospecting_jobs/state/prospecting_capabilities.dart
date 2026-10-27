@@ -43,6 +43,12 @@ final prospectingCapabilitiesProvider =
 const pendingProspectorMessage =
     'La creación requiere disponibilidad y cuota verificadas en el Backend. Cancelar, guardar resultados en campaña y exportar trabajos no están disponibles. La importación CSV continúa disponible.';
 String prospectingUnavailableMessage(String? reason) => switch (reason) {
+  'PROSPECTOR_INTEGRATION_PENDING' =>
+    'La generación automática de prospectos aún no está disponible en esta instancia. Puedes gestionar campañas e importar prospectos mediante CSV.',
+  'PROSPECTOR_POLICY_NOT_CONFIGURED' =>
+    'La generación automática está pendiente de configuración. Puedes gestionar campañas e importar prospectos mediante CSV.',
+  'PROSPECTOR_VERIFICATION_FAILED' =>
+    'No fue posible verificar la disponibilidad de generación. Puedes consultar campañas e importar prospectos mediante CSV.',
   'TENANT_QUOTA_EXHAUSTED' || 'GLOBAL_QUOTA_EXHAUSTED' =>
     'Se agotó la cuota de búsquedas. Espera a que se renueve el periodo.',
   'PROSPECTOR_CAPACITY_EXHAUSTED' =>

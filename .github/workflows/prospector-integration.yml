@@ -1,11 +1,12 @@
 name: Prospector controlled HTTP integration
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       backend_ref:
         description: Reviewed Backend commit available remotely after authorized push
         required: true
-        default: b6cd40f5c00990411bd6f46a22991c9be60de4bf
+        default: 42b96fefd73cc11b42ecde4df6d5f42393328bfc
 jobs:
   controlled-stack:
     runs-on: ubuntu-latest
@@ -32,7 +33,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: CarlosAM03/saas-platform-backend
-          ref: ${{ inputs.backend_ref }}
+          ref: ${{ inputs.backend_ref || '42b96fefd73cc11b42ecde4df6d5f42393328bfc' }}
           path: integration-backend
       - uses: actions/setup-node@v4
         with:
