@@ -6,8 +6,14 @@
 !analysis_options.yaml
 !lib/
 !lib/**
+!assets/
+!assets/fonts/
+!assets/fonts/Inter.ttf
+!assets/fonts/OFL.txt
 !web/
 !web/**
+!tool/
+!tool/validate_api_origin.dart
 !docker/
 !docker/nginx.conf
 !docker/nginx.vercel.conf.template
