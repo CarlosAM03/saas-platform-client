@@ -26,7 +26,13 @@ class ProspectingJobsApi {
       ProspectingJobDetail.fromJson(
         unwrapObject(await _client.get(entityPath('prospecting-jobs', id))),
       );
-  // Prepared client contract. The verified NestJS backend rejects mutations with 503.
+  Future<ProspectingPolicyStatus> capabilities() async =>
+      ProspectingPolicyStatus.fromJson(
+        unwrapObject(
+          await _client.get('/api/v1/prospecting-jobs/capabilities'),
+        ),
+      );
+  // Creation is revalidated by Backend; preserve the key on uncertain responses.
   Future<ProspectingJobDetail> create(
     CreateProspectingJobRequest request, {
     required String idempotencyKey,

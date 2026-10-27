@@ -1,0 +1,73 @@
+name: Prospector controlled HTTP integration
+on:
+  workflow_dispatch:
+    inputs:
+      backend_ref:
+        description: Reviewed Backend commit available remotely after authorized push
+        required: true
+        default: b6cd40f5c00990411bd6f46a22991c9be60de4bf
+jobs:
+  controlled-stack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci_test
+          POSTGRES_PASSWORD: ci_test_password
+          POSTGRES_DB: prospector_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U ci_test -d prospector_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      CI: true
+      DATABASE_ENV: test
+      DATABASE_URL: postgresql://ci_test:ci_test_password@127.0.0.1:5432/prospector_test
+      INTEGRATION_TEST_DATABASE_URL: postgresql://ci_test:ci_test_password@127.0.0.1:5432/prospector_test
+      PROSPECTOR_TEST_PYTHON: python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: CarlosAM03/saas-platform-backend
+          ref: ${{ inputs.backend_ref }}
+          path: integration-backend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.47.5'
+          cache: true
+      - run: python -m pip install "git+https://github.com/CarlosAM03/prospector-service.git@566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab"
+      - run: npm ci && npm run prisma:generate && npm run prisma:migrate:deploy
+        working-directory: integration-backend
+      - run: flutter pub get
+      - name: Run real loopback stack and Flutter integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd integration-backend && node -r ts-node/register test/scripts/mvp-stack.ts > .tmp-stack.log 2>&1) &
+          stack_pid=$!
+          cleanup() {
+            node -e "const f=require('./integration-backend/.tmp/mvp-stack.json'); require('fs').writeFileSync(f.stopFile,'stop')"
+            wait "$stack_pid"
+          }
+          trap cleanup EXIT
+          for attempt in $(seq 1 60); do
+            if [ -f integration-backend/.tmp/mvp-stack.json ]; then break; fi
+            if ! kill -0 "$stack_pid" 2>/dev/null; then exit 1; fi
+            sleep 1
+          done
+          test -f integration-backend/.tmp/mvp-stack.json
+          flutter test test/integration/prospector_stack_test.dart --dart-define=MVP_MANIFEST="$PWD/integration-backend/.tmp/mvp-stack.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: controlled-stack-evidence
+          path: build/test-evidence/prospector-stack.json

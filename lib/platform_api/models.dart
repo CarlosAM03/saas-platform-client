@@ -334,22 +334,27 @@ class ProspectingJobSummary {
 }
 
 class ProspectingJobDetail {
-  const ProspectingJobDetail(
-      {required this.id,
-      required this.campaignId,
-      required this.status,
-      required this.createdAt,
-      this.startedAt,
-      this.completedAt,
-      required this.tenantId,
-      required this.requestedBy,
-      required this.query,
-      this.requestedLimit,
-      this.error,
-      required this.updatedAt,
-      required this.resultsAvailable,
-      this.results,
-      this.progress});
+  const ProspectingJobDetail({
+    required this.id,
+    required this.campaignId,
+    required this.status,
+    required this.createdAt,
+    this.startedAt,
+    this.completedAt,
+    required this.tenantId,
+    required this.requestedBy,
+    required this.query,
+    this.requestedLimit,
+    this.error,
+    required this.updatedAt,
+    required this.resultsAvailable,
+    this.results,
+    this.progress,
+    this.resultsExpiresAt,
+    this.dispatchState,
+    this.failureCode,
+    this.retryAllowed = false,
+  });
   final String id;
   final String campaignId;
   final ProspectingJobStatus status;
@@ -365,6 +370,10 @@ class ProspectingJobDetail {
   final bool resultsAvailable;
   final List<BusinessResult>? results;
   final PipelineProgress? progress;
+  final DateTime? resultsExpiresAt;
+  final ProspectingDispatchState? dispatchState;
+  final String? failureCode;
+  final bool retryAllowed;
   factory ProspectingJobDetail.fromJson(Map<String, dynamic> json) =>
       ProspectingJobDetail(
         id: requiredValue<String>(json, 'id'),
@@ -379,6 +388,15 @@ class ProspectingJobDetail {
         requestedLimit: nullableValue<int>(json, 'requestedLimit'),
         error: nullableValue<String>(json, 'error'),
         updatedAt: dateValue(json, 'updatedAt'),
+        resultsExpiresAt:
+            optionalValue<String>(json, 'resultsExpiresAt') == null
+            ? null
+            : DateTime.parse(json['resultsExpiresAt'] as String),
+        dispatchState: json['dispatchState'] == null
+            ? null
+            : enumValue(json['dispatchState'], ProspectingDispatchState.values),
+        failureCode: optionalValue<String>(json, 'failureCode'),
+        retryAllowed: optionalValue<bool>(json, 'retryAllowed') ?? false,
         resultsAvailable: requiredValue<bool>(json, 'resultsAvailable'),
         results: nullableValue<List<dynamic>>(json, 'results')
             ?.map((item) => BusinessResult.fromJson(jsonObject(item)))
@@ -387,4 +405,29 @@ class ProspectingJobDetail {
             ? null
             : PipelineProgress.fromJson(jsonObject(json['progress'])),
       );
+}
+
+// The public JobStatus enum stays unchanged; dispatch uncertainty is separate.
+enum ProspectingDispatchState { PENDING, ACCEPTED, UNCERTAIN, REJECTED }
+
+class ProspectingPolicyStatus {
+  const ProspectingPolicyStatus({required this.create, this.reason});
+  final bool create;
+  final String? reason;
+  factory ProspectingPolicyStatus.fromJson(Map<String, dynamic> json) {
+    if (json['contractVersion'] != 'prospector-mvp-v1' ||
+        json['source'] != 'google_maps' ||
+        json['minLimit'] != 1 ||
+        json['maxLimit'] != 100 ||
+        json['resultsTtlSeconds'] != 3600 ||
+        json['cancel'] != false ||
+        json['persist'] != false ||
+        json['export'] != false) {
+      throw const FormatException('Unsupported prospecting capabilities');
+    }
+    return ProspectingPolicyStatus(
+      create: requiredValue<bool>(json, 'create'),
+      reason: nullableValue<String>(json, 'reason'),
+    );
+  }
 }

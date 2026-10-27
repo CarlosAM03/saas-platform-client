@@ -1,0 +1,27 @@
+{
+  "contractVersion": "1.1.0",
+  "capabilitiesVersion": "prospector-mvp-v1",
+  "implementationSha": "d19b78afef8148a41f69397f6fdbc5ef70c5f912",
+  "baselineSha": "967044e2dc7d10ea91d7d78a86e1ea6fe2accd1a",
+  "engineSha": "70f6081688db5c5bc5ea612f5fabd5724aab0b20",
+  "serviceSha": "566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab",
+  "platformYamlSha256Lf": "12c7a08feb6f3acdfb782f559949aa140521befd420a0a1fcd022b2972b1df14",
+  "evidence": {
+    "engineTests": 247,
+    "enginePublicE2eDeselected": 1,
+    "serviceTests": 94,
+    "backendUnit": 61,
+    "backendHttpRegression": 77,
+    "postgresTests": 29,
+    "postgresMvpRealHttp": 19,
+    "lint": "PASS",
+    "format": "PASS",
+    "build": "PASS",
+    "allTypes": "PASS",
+    "docker": "NOT_RUN_DAEMON_UNAVAILABLE",
+    "googleMapsLive": "NOT_RUN_NO_PUBLIC_SCRAPING",
+    "serviceRuff": "PASS"
+  },
+  "scope": "Service and Backend HTTP real, disposable PostgreSQL; EnginePort controlled in HTTP tests",
+  "consumedBackendSha": "b6cd40f5c00990411bd6f46a22991c9be60de4bf"
+}

@@ -515,7 +515,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Completado'), findsOneWidget);
     expect(
-      find.textContaining('No hay resultados temporales disponibles.'),
+      find.textContaining(
+        'Los resultados temporales no están disponibles o vencieron.',
+      ),
       findsOneWidget,
     );
   });
@@ -679,21 +681,30 @@ void main() {
       await tester.pumpAndSettle();
       expect(jobs.keys, isEmpty);
       await tester.enterText(find.byType(TextFormField).at(2), '5');
-      for (var i = 0; i < 2; i++) {
-        await tester.tap(find.text('Iniciar búsqueda'));
+      Future<void> confirmedAttempt(String button) async {
+        await tester.tap(find.text(button));
+        await tester.pumpAndSettle();
+        expect(jobs.keys.length, lessThan(10));
+        await tester.tap(find.widgetWithText(FilledButton, 'Confirmar'));
         await tester.pumpAndSettle();
       }
+
+      await confirmedAttempt('Iniciar búsqueda');
+      expect(
+        tester.widget<TextFormField>(find.byType(TextFormField).first).enabled,
+        isFalse,
+      );
+      await confirmedAttempt('Consultar misma solicitud');
       expect(jobs.keys, hasLength(2));
       expect(jobs.keys[0], jobs.keys[1]);
       jobs.createError = const ApiException(
         kind: ApiErrorKind.serviceUnavailable,
         statusCode: 503,
         message: 'pending',
+        details: {'reason': 'PROSPECTOR_INTEGRATION_PENDING'},
       );
-      await tester.tap(find.text('Iniciar búsqueda'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Iniciar búsqueda'));
-      await tester.pumpAndSettle();
+      await confirmedAttempt('Consultar misma solicitud');
+      await confirmedAttempt('Iniciar búsqueda');
       expect(jobs.keys[2], jobs.keys[1]);
       expect(jobs.keys[3], isNot(jobs.keys[2]));
       expect(
