@@ -25,7 +25,7 @@ por Vercel; CSP queda pendiente de evaluar scripts y CanvasKit de Flutter.
 
 Foundation y Auth se conservan. Tenants, Users, Campaigns y Prospects no-CSV usan API real, con listados, detalles, formularios, permisos visibles y estado por sesión/tenant.
 
-Estado reconciliado del 26-10-2026: CSV y dashboard consumen las APIs reales de Backend **dev 967044e2**. Jobs permite historial, detalle y polling de registros existentes. Crear, cancelar, persistir y exportar están deshabilitados: Backend devuelve 503 por integración pendiente. No existe un flag de configuración que active esa integración. [Alcance y pruebas](Docs/Funciones-Pendientes-Implementadas.md), [auditoría](Docs/Auditorias/Auditoria_Reconciliacion_Dev_2026-10-26.md) y [configuración Web/Vercel](Docs/Despliegue-Web.md).
+Estado MVP del 27-10-2026: Backend **b6cd40f** ofrece creación condicionada, callbacks y resultados temporales de Jobs (TTL una hora). Flutter verifica capacidades del tenant antes de habilitar generación; mantiene cancel/persist/export deshabilitados. CSV existe en Backend **main y dev** y conserva su flujo independiente. Auth, arquitectura tipada, sesión/tenant y dashboard se mantienen. [Reporte y evidencia](Docs/Auditorias/Paridad_Flutter_Backend_Prospector_MVP.md), [contrato](Docs/Contracts/README.md) y [configuración Web](Docs/Despliegue-Web.md). Ningún entorno productivo fue desplegado.
 
 ## Papel de Flutter
 

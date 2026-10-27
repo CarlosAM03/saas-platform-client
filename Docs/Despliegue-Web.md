@@ -18,7 +18,7 @@ docker build -f Dockerfile.vercel --build-arg API_BASE_URL=https://api.tudominio
 
 El build productivo rechaza HTTP, origen vacío y valores con /api/v1 mediante
 `tool/validate_api_origin.dart`. El default público no es una credencial y no debe
-usarse para asumir que el Backend desplegado corresponde a dev 967044e2.
+usarse para asumir que el Backend desplegado corresponde al commit MVP b6cd40f.
 
 ## Ajustes externos de Vercel pendientes del propietario
 
@@ -26,7 +26,7 @@ usarse para asumir que el Backend desplegado corresponde a dev 967044e2.
 2. Configurar API_BASE_URL por separado en Preview y Production. En Docker, pasar --build-arg; en compilación estática, usar flutter build web con --dart-define=API_BASE_URL. Reconstruir al cambiarlo.
 3. Identificar el dominio exacto del Preview/Production y añadirlo en CORS_ORIGINS del Backend autorizado. El código inspeccionado usa una lista de orígenes separados por comas, sin activación automática por PR.
 4. Configurar fallback de rutas al index.html y HTTPS en el hosting. Las plantillas Nginx versionadas conservan ese fallback y sus cabeceras.
-5. Verificar con una cuenta de prueba autorizada login, selección de organización, campañas, prospectos, CSV y logout, comprobando el SHA del Backend desplegado. Un health HTTP 200 no sustituye estas pruebas.
+5. Verificar con una cuenta de prueba autorizada login, selección de organización, campañas, prospectos, CSV y logout, comprobando el SHA del Backend desplegado y GET /prospecting-jobs/capabilities para creación. Un health HTTP 200 no sustituye estas pruebas.
 
 No se cambió configuración Vercel, CORS, dominios ni secretos; tampoco se publicó un deployment.
 No se proporcionó un dominio Preview concreto para comprobar su CORS en esta ejecución.
