@@ -23,27 +23,9 @@ por Vercel; CSP queda pendiente de evaluar scripts y CanvasKit de Flutter.
 
 ## Estado
 
-<<<<<<< Updated upstream
 Foundation y Auth se conservan. Tenants, Users, Campaigns y Prospects no-CSV usan API real, con listados, detalles, formularios, permisos visibles y estado por sesión/tenant.
 
-<<<<<<< Updated upstream
-CSV, Dashboard y Jobs están implementados con API real. La prospección requiere habilitar la integración del backend y desplegar el Service correspondiente. Ver [funciones implementadas](Docs/Funciones-Pendientes-Implementadas.md).
-=======
-PlatformApi representa las operaciones públicas de backend/main `3a3309398458ab333d7b00f16e9c2df6a09ef734`, incluida creación manual y CSV preview/confirm. La UI CSV, Jobs, Prospector, polling/caché de resultados y Dashboard real quedan deliberadamente postergados. El Dashboard conserva temporalmente datos demo.
-=======
-Este repositorio contiene la beta frontend 0.2, construida sobre Fase 5 - Flutter Foundation y alineada con `Docs/DocsTeam/Documentacion UIUX/LineamientosUI-UX.md`.
-
-La beta conecta autenticacion real, organizaciones, dashboard, campañas, prospectos, equipo y perfil con el backend NestJS. La prospeccion muestra historial y detalle, pero la generacion y exportacion siguen deshabilitadas en el backend. No utiliza una cuenta de prueba ni metricas simuladas en produccion.
-
-Consultar [la guia beta](Docs/BETA-FRONTEND.md) para ejecutar contra el servidor desplegado, revisar los flujos y conocer los limites del contrato. La verificacion contra la instancia publica requiere su URL y una cuenta existente.
-
-El cierre historico de F5 es:
-
-```text
-F5 CLOSED AS FLUTTER FOUNDATION / READY FOR FEATURE DEVELOPMENT
-```
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+Estado reconciliado del 26-10-2026: CSV y dashboard consumen las APIs reales de Backend **dev 967044e2**. Jobs permite historial, detalle y polling de registros existentes. Crear, cancelar, persistir y exportar están deshabilitados: Backend devuelve 503 por integración pendiente. No existe un flag de configuración que active esa integración. [Alcance y pruebas](Docs/Funciones-Pendientes-Implementadas.md), [auditoría](Docs/Auditorias/Auditoria_Reconciliacion_Dev_2026-10-26.md) y [configuración Web/Vercel](Docs/Despliegue-Web.md).
 
 ## Papel de Flutter
 
@@ -72,25 +54,10 @@ El backend es la autoridad para tenant context, autorizacion, persistencia, regl
 - Campaigns: listado/búsqueda/paginación/orden, creación, detalle, edición/estado, archivo, eliminación permanente ADMIN confirmada y prospectos por campaña.
 - Prospects: listado/búsqueda/paginación, detalle, edición y creación manual ADMIN/OWNER. Sources persistidos: `google_maps`, `manual`, `csv`.
 - CSV: selector de archivo, vista previa, decisiones por fila, confirmación y resumen.
-- Dashboard: totales reales y actividad reciente del tenant.
-- Jobs: crear, listar, monitorear, cancelar, guardar y exportar resultados CSV/XLSX.
+- Dashboard: totales de meta.total, campañas, prospectos y trabajos recientes del tenant.
+- Jobs: listar y consultar registros; polling cada 4 segundos sin solapamiento. Cliente preparado para otras operaciones, con acciones deshabilitadas hasta verificar una implementación Backend compatible.
 
-<<<<<<< Updated upstream
 Las rutas CRUD manejan carga, vacíos, errores y permisos. Los datos y formularios se reinician al cambiar sesión o tenant. Backend sigue autorizando cada operación.
-=======
-- Login mediante `POST /api/v1/auth/login`.
-- Restauracion mediante `GET /api/v1/auth/me`.
-- Seleccion y cambio de tenant mediante `POST /api/v1/auth/select-tenant`.
-- Logout mediante `POST /api/v1/auth/logout`.
-- JWT en `flutter_secure_storage`.
-- AuthState con Riverpod.
-- Rutas protegidas con `go_router`.
-- Estados de carga, vacio, error y exito.
-
-En la beta se implementaron Campaigns y Prospects con repositories API, paginacion y estados de interfaz. ProspectingJobs permite consultar datos existentes y comunica las operaciones pendientes.
-
-La beta incorpora equipo y organizaciones segun los endpoints existentes: alta/edicion de usuarios para ADMIN/OWNER, desactivacion para ADMIN y creacion de organizaciones para ADMIN.
->>>>>>> Stashed changes
 
 ## Decisiones tecnicas vigentes
 
@@ -104,7 +71,7 @@ La beta incorpora equipo y organizaciones segun los endpoints existentes: alta/e
 - `API_BASE_URL` se configura con `--dart-define`; `.env.example` es referencia documental y no se carga automaticamente. La dependencia `envied` permanece instalada, pero no se usa para esta configuracion F5.
 - `logger` se usa para logs seguros.
 - No hay refresh token, OAuth ni self-register publico.
-- Jobs monitorea cada 4 segundos y limpia estado por sesión/tenant. Backend sin Prospector configurado conserva respuestas 503.
+- Jobs monitorea cada 4 segundos y limpia estado por sesión/tenant. Backend actual conserva respuestas 503 para mutaciones; configurar variables no las habilita.
 - No hay WebSocket, SSE, workers Flutter, background tasks u offline avanzado.
 
 ## Tenant y roles
@@ -147,10 +114,6 @@ La documentacion vigente del cliente vive dentro de `Docs/`:
 - `Docs/DocsTeam/FormularioDeDecisiones/FormularioDecisionesFase5.md`
 - `Docs/Flutter-Foundation.md`
 - `Docs/DocsTeam/Documentacion UIUX/LineamientosUI-UX.md`
-<<<<<<< Updated upstream
-=======
-- `Docs/BETA-FRONTEND.md`
->>>>>>> Stashed changes
 
 La fuente contractual HTTP es `platform-api.v1.yaml` del backend. La autoridad de las decisiones de F4 es `ADR-004-CommonBaseline.md` del backend.
 
@@ -198,12 +161,7 @@ flutter test
 
 Si `.dart_tool` ya existe, no recrear el enlace. `lib/shared/models/api_models.g.dart` es salida ignorada de `build_runner`, nunca un archivo escrito a mano. Para cambiar de backend, sustituir la URL en `--dart-define`. El backend NestJS debe estar disponible por separado para probar login real; sin backend, el cliente Web aun debe compilar y arrancar.
 
-<<<<<<< Updated upstream
-El alcance funcional y la matriz MEMBER vigente están descritos arriba y en `FEATURE-DEVELOPMENT.md`. Dashboard y Jobs se completan en la entrega descrita en Docs/Funciones-Pendientes-Implementadas.md.
-=======
-<<<<<<< Updated upstream
-El alcance funcional y la matriz MEMBER vigente están descritos arriba y en `FEATURE-DEVELOPMENT.md`. Dashboard y Jobs siguen fuera del sprint de paridad core.
->>>>>>> Stashed changes
+El alcance funcional y la matriz MEMBER vigente están descritos arriba y en `FEATURE-DEVELOPMENT.md`. El alcance de CSV, dashboard y consulta de Jobs se detalla en Docs/Funciones-Pendientes-Implementadas.md; no hay validación E2E contra despliegues.
 ## Inicio con Docker
 
 Requisitos en host: Git, Docker y Docker Compose. El SDK Linux oficial está fijado en Flutter 3.47.5 / Dart 3.13.4 y se verifica mediante SHA-256 dentro de la imagen.
@@ -252,6 +210,3 @@ Para una prueba rápida del frontend se recomienda:
 `owner.demo-norte@demo.example` / `DevOnlyPass123!`
 
 La operación de PostgreSQL, migraciones y restauración del dataset pertenece al [backend](https://github.com/CarlosAM03/saas-platform-backend/blob/main/Docs/DevelopmentEnvironment.md). El cliente no necesita credenciales de base de datos.
-=======
-La beta usa los permisos de los controladores actuales: MEMBER puede operar campañas y prospectos y consultar equipo; ADMIN/OWNER pueden crear y editar usuarios. El servidor conserva la autorizacion real. La documentacion historica de F5 describe el foundation anterior; el alcance actual se detalla en `Docs/BETA-FRONTEND.md`.
->>>>>>> Stashed changes

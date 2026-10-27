@@ -2,12 +2,19 @@
 
 ## Plataforma SaaS — Cliente Flutter
 
-> Estado actualizado: CSV UI, dashboard y Jobs implementados; ver Docs/Funciones-Pendientes-Implementadas.md. Los aplazamientos del sprint anterior descritos abajo quedan sustituidos por esa entrega.
+> Estado reconciliado 26-10-2026: CSV UI y dashboard usan Backend dev 967044e2. Jobs conserva historial/detalle/polling; crear/cancelar/persistir/exportar están deshabilitados por 503 PROSPECTOR_INTEGRATION_PENDING. Configurar Prospector no activa el adaptador NestJS. Ver Docs/Funciones-Pendientes-Implementadas.md y la auditoría de reconciliación. No se declara E2E.
 
 > Registro del sprint anterior: Foundation/Auth preservados; Tenants, Users, Campaigns y Prospects no-CSV implementados con API real. CSV PlatformApi está completo; CSV UI/file picker, Jobs UI, Prospector, polling/results cache y Dashboard real están diferidos deliberadamente. Autoridad: código de backend/main, su OpenAPI sincronizado y ADR-004; después código/ADRs frontend. El encargo de paridad core autoriza los cambios transversales del sprint.
 
 
 Guía para desarrollo de features sobre el baseline Flutter Foundation.
+
+Regla de integración vigente: conservar PlatformApi, DTOs, repositorios por feature,
+TenantPermissions y sessionScopeProvider. No introducir repositorios dinámicos paralelos,
+providers duplicados ni un router alternativo. Los componentes visuales se adaptan a
+las interfaces tipadas. Las respuestas objetivo de Jobs se documentan únicamente en
+x-target-responses del OpenAPI; las pruebas con fixtures comprueban preparación del
+cliente, sin certificar la ejecución real. Las pruebas de permisos no reemplazan al Backend.
 
 ---
 
