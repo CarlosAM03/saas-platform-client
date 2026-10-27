@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/errors/api_exception.dart';
 import '../../../core/errors/error_mapper.dart';
 import '../../../platform_api/platform_api.dart';
@@ -12,6 +14,7 @@ import '../../auth/state/tenant_permissions.dart';
 import '../../dashboard/state/dashboard_providers.dart';
 import '../state/prospecting_jobs_providers.dart';
 import '../state/prospecting_capabilities.dart';
+import 'prospecting_demo_panel.dart';
 
 class GeneratePage extends ConsumerStatefulWidget {
   const GeneratePage({super.key});
@@ -122,7 +125,16 @@ class _GenerateState extends ConsumerState<GeneratePage> {
         child: const Center(
           child: Padding(
             padding: EdgeInsets.all(16),
-            child: Text(pendingProspectorMessage),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(pendingProspectorMessage),
+                  SizedBox(height: 16),
+                  ProspectingDemoPanel(),
+                ],
+              ),
+            ),
           ),
         ),
       );

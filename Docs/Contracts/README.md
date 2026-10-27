@@ -9,3 +9,7 @@ PlatformApi cubre todos los paths/métodos públicos del YAML, incluidas creaci�
 Tenants, Users, Campaigns, Prospects, CSV UI y dashboard tienen clientes de API reales. Jobs UI consulta registros y hace polling sin solapamiento; Prospector sigue pendiente. Jobs create/cancel/persist/export siguen propagando 503 con `PROSPECTOR_INTEGRATION_PENDING`.
 
 La guía de uso y validación está en [Platform_API_Client.md](Platform_API_Client.md). No se inventan endpoints, roles IDs, analytics ni semántica de persistencia en Flutter.
+
+## Cierre v1.0.0 — 27 octubre2026
+
+La autoridad es el documento servido por Backendmain1.0.0. Jobs admite solo lectura: resultsAvailable=false y results/progress=null. Las operaciones objetivo en x-target-responses no están habilitadas. No existe SnapshotPG ni TTL de resultados en core. La demo visual no usa SDK/red/datos de negocio.

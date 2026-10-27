@@ -607,7 +607,7 @@ paths:
       summary: Lista Jobs del tenant autenticado
       operationId: listProspectingJobs
       security: [{ bearerAuth: [] }]
-      parameters: [{ $ref: '#/components/parameters/Page' }, { $ref: '#/components/parameters/Limit' }, { $ref: '#/components/parameters/SortBy' }, { $ref: '#/components/parameters/SortOrder' }]
+      parameters: [{ $ref: '#/components/parameters/Page' }, { $ref: '#/components/parameters/Limit' }, { name: sortBy, in: query, schema: { type: string, default: createdAt, enum: [createdAt, updatedAt, startedAt, completedAt, status, id] } }, { $ref: '#/components/parameters/SortOrder' }]
       responses:
         '403': { description: Tenant no seleccionado o permisos insuficientes. }
         '200': { $ref: '#/components/responses/JobPage' }
@@ -948,10 +948,10 @@ components:
       type: object
       required: [keyword, location, source, limit]
       properties:
-        keyword: { type: string, minLength: 1, maxLength: 200, pattern: '\S' }
-        location: { type: string, minLength: 1, maxLength: 200, pattern: '\S' }
+        keyword: { type: string }
+        location: { type: string }
         source: { type: string, enum: [google_maps] }
-        limit: { type: integer, minimum: 1, maximum: 100 }
+        limit: { type: integer, minimum: 1 }
     PipelineProgress:
       type: object
       nullable: true
@@ -1005,12 +1005,12 @@ components:
             requestedLimit: { type: integer, nullable: true }
             error: { type: string, nullable: true }
             updatedAt: { $ref: '#/components/schemas/DateTime' }
-            resultsAvailable: { type: boolean, description: Disponible durante una hora después de recibir COMPLETED; false después de persistir o vencer. }
+            resultsAvailable: { type: boolean, description: Siempre false en el core v1.0.0. }
             results:
               type: array
               nullable: true
               items: { $ref: '#/components/schemas/BusinessResult' }
-              description: Snapshot temporal en PostgreSQL; se elimina al persistir o al vencer su vigencia de una hora.
+              description: Siempre null en el core v1.0.0; sin snapshot persistido ni TTL.
             progress: { $ref: '#/components/schemas/PipelineProgress' }
     LoginRequest:
       type: object
@@ -1233,7 +1233,7 @@ components:
       type: object
       required: [campaignId, query]
       properties:
-        campaignId: { type: string, minLength: 1, maxLength: 191 }
+        campaignId: { $ref: '#/components/schemas/Id' }
         query: { $ref: '#/components/schemas/ProspectingQuery' }
     PersistResultsResult:
       type: object
