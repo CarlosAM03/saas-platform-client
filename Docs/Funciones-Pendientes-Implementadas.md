@@ -1,68 +1,57 @@
-# CSV, dashboard y Jobs — 22 de octubre de 2026
+# Estado funcional reconciliado — 26 de octubre de 2026
 
-## Importación CSV
+Este documento actualiza la entrega del 22 de octubre conservada en el historial Git.
+Autoridad: Foundation y PlatformApi de main a85a996; mejoras tipadas de André en
+fe9e32f/e225e6a/9dd9b57; Backend dev 967044e2. No equivale a una validación E2E.
 
-Prospectos → Importar CSV, disponible para OWNER/ADMIN y protegida por ruta directa.
-Seleccionar una campaña desde la API paginada, elegir CSV UTF-8 y generar vista previa.
-El selector admite hasta 5 MiB; el backend valida las 1,000 filas y las columnas.
-La plantilla se puede descargar desde la pantalla.
+## Implementado y probado con contratos y fixtures
 
-Las filas nuevas proponen Crear. Las coincidencias proponen Omitir hasta que se elija
-Vincular o Actualizar. Cada fila muestra valores, errores, candidatos y diferencias.
-Conflictos múltiples e inválidos no permiten una decisión. Actualizar un prospecto
-compartido exige advertencia explícita en la confirmación. Una celda vacía presente
-puede limpiar el campo; una columna ausente lo conserva, según la decisión backend.
+- Autenticación real, restauración, sesión expirada, logout local aun si falla el servidor y selección de organización.
+- JWT Bearer, DTOs tipados, permisos ADMIN/OWNER/MEMBER y estado/formularios separados por sesión y tenant.
+- Listados, búsqueda, paginación, creación, detalle, edición y archivado de campañas; eliminación permanente ADMIN según Backend.
+- Prospectos manuales para ADMIN/OWNER, consultas y edición para los roles admitidos. Los opcionales modificados pueden enviarse como null sin borrar los demás.
+- Importación CSV con selector, límite de 5 MiB en tamaño declarado, buffer y stream, campaña paginada, plantilla, preview sin escrituras, clasificaciones, diferencias y decisiones por fila.
+- Confirmación CSV explícita, advertencia para actualizaciones compartidas, expiración/409, reutilización de los mismos bytes y actualización de listados/dashboard al confirmar.
+- Una respuesta incierta de confirmación bloquea otra preview hasta revisar manualmente el resultado. Nunca se reintenta automáticamente.
+- Dashboard con meta.total y registros reales: campañas, prospectos y trabajos recientes, enlaces, carga, vacío, error y refresco.
+- Jobs: historial paginado, detalle, errores reales y polling secuencial de cuatro segundos. Se detiene al finalizar, perder listeners, cambiar la sesión o desmontar la página.
+- UI compatible de André: Inter local y licencia OFL, tema, login validado con mostrar contraseña, tarjetas y estado visual de campañas, superficies, formularios y navegación responsiva.
 
-Preview y confirmación reutilizan el mismo ApiUploadFile inmutable. Cambiar campaña
-o archivo elimina la revisión anterior. Una vista vencida/obsoleta exige otra preview.
-Después de confirmar se muestran creados/vinculados/actualizados/omitidos/rechazados.
-No se reintenta una confirmación automáticamente si su respuesta se pierde.
+Los tests usan fixtures exclusivamente en test/. Las llamadas productivas sólo van a NestJS.
+Los resultados temporales y el progreso sólo se muestran si el contrato los proporciona.
+Backend actual devuelve resultsAvailable=false, results=null y progress=null.
 
-## Dashboard
+## Cliente preparado; Backend no habilitado
 
-Conteos totales de campañas, prospectos y trabajos vienen de `meta.total` del backend,
-no del número de filas visibles ni de mocks. Muestra las cinco campañas y trabajos
-más recientes, con navegación al detalle. No se inventan conversiones ni contactos.
-Se puede actualizar manualmente y los datos se eliminan al cambiar sesión/tenant.
+Crear, cancelar, persistir y exportar Jobs conservan métodos y DTOs para integración,
+pero la UI los deshabilita mediante capacidades verificadas, todas falsas en producción.
+No hay flag de entorno que las active ni se simula éxito.
 
-## Prospección y Jobs
+NestJS ProspectingJobsService delega esas operaciones en assertAvailable(), que lanza
+503 PROSPECTOR_INTEGRATION_PENDING antes de crear trabajos. Cambiar variables de
+configuración o desplegar Python no activa ese adaptador.
 
-Buscar prospectos permite elegir campaña, tipo de negocio, ubicación y límite 1–100.
-La UI envía una clave idempotente por input y la conserva en reintentos. Todos los
-requests van al SaaS Backend; no se llama directamente al Service ni al Engine.
+El formulario preparado conserva Idempotency-Key para el mismo payload cuando se
+pierde una respuesta. Una respuesta contractual definitiva descarta la clave para que
+un nuevo intento legítimo no quede ligado indefinidamente a un fallo anterior.
+Las pruebas que habilitan esa capacidad sólo ejercitan el cliente con repositorios falsos.
 
-Trabajos lista registros paginados de la organización y abre su detalle. El monitor
-consulta cada cuatro segundos sin solapar peticiones; termina en COMPLETED, FAILED,
-CANCELLED, error, falta de listeners, cambio de sesión/tenant o destrucción de página.
-Muestra progreso real cuando existe, sin inventar porcentajes si es null.
+## Dependencias y límites externos
 
-Los resultados disponibles pueden guardarse en campaña o exportarse CSV/XLSX mediante
-descarga de bytes del backend. Descartar vista pide confirmación y abandona el detalle,
-liberando el estado local; no elimina datos persistidos ni el snapshot remoto.
-Sin resultados disponibles se explica su ausencia. Errores 503 no se presentan como
-búsquedas aceptadas.
+Backend main 3a330939 es el baseline, pero el CSV inspeccionado está en dev 967044e2.
+La revisión del Backend desplegado debe comprobarse antes de aceptar CSV en producción.
+Service main 566bbbe expone POST /api/v1/prospecting/jobs y health live/ready. Su código
+local 69c54a1 coincide en src con main. No ofrece HTTP público de cancelación/exportación,
+recuperación durable, cuotas completas ni alta disponibilidad validada. Engine main
+70f6081 es una biblioteca Python. Flutter no llama a ninguno directamente.
 
-## Rutas nuevas
+Reinicio durante una búsqueda: mostrar fallo y permitir repetición manual, sin reanudar
+scraping. El bloqueo por cuotas gratuitas requiere soporte Backend/Service verificable;
+Flutter no inventa contadores, presupuestos ni escalamiento pagado.
 
-- `/prospects/import`
-- `/generate` (reemplaza el placeholder)
-- `/jobs`
-- `/jobs/:id`
+## Validación y aceptación
 
-El menú ofrece Trabajos y Buscar prospectos. Las rutas usan el alcance de sesión y
-organización de Foundation y mantienen autorización definitiva en el backend.
-
-## Dependencias y pruebas
-
-file_picker 10.3.10 es compatible con flutter_secure_storage 9.2.4 / win32 5.
-Se conserva la versión de secure storage. Web y pruebas se compilan con Flutter
-3.47.5. El SDK local de Windows puede exigir Developer Mode para compilar plugins
-nativos; eso no impide la compilación Web.
-
-`flutter analyze`, `flutter test`, `flutter build web --no-wasm-dry-run`.
-Las pruebas nuevas verifican preview sin escritura, archivo idéntico al confirmar,
-expiración/409, permiso MEMBER, reintento idempotente, límite de búsqueda, detención
-del monitor y conteos del dashboard. Las pruebas existentes conservan CRUD/Auth.
-
-La integración de backend requiere la migración y configuración documentadas en
-`backend/Docs/Prospector-Integration.md`; desplegar sólo este cliente no activa Python.
+Consultar resultados ejecutables, SHA y riesgos en
+[Auditoria_Reconciliacion_Dev_2026-10-26.md](Auditorias/Auditoria_Reconciliacion_Dev_2026-10-26.md).
+No se declara E2E, scraping real, disponibilidad productiva de Jobs ni aceptación CORS.
+La configuración de publicación está en [Despliegue-Web.md](Despliegue-Web.md).

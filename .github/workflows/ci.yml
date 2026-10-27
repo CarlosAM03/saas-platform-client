@@ -4,7 +4,6 @@ on:
   push:
     branches: [dev, main]
   pull_request:
-    branches: [dev, main]
 
 jobs:
   foundation:
@@ -16,12 +15,14 @@ jobs:
           channel: stable
           flutter-version: '3.47.5'
           cache: true
+      - name: Reject unresolved merge markers
+        run: dart run tool/check_merge_markers.dart
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter analyze
       - name: Foundation, Platform API and contract tests
         run: flutter test
-      - run: flutter build web --no-wasm-dry-run
+      - run: flutter build web --release --no-wasm-dry-run --dart-define=API_BASE_URL=https://api.example.invalid
 
   container:
     runs-on: ubuntu-latest

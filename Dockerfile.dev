@@ -16,6 +16,7 @@ RUN flutter pub get
 COPY analysis_options.yaml ./
 COPY lib ./lib
 COPY web ./web
+COPY assets ./assets
 ARG API_BASE_URL=http://localhost:3000
 RUN dart run build_runner build \
     && flutter build web --no-pub --no-wasm-dry-run --dart-define=API_BASE_URL=${API_BASE_URL}

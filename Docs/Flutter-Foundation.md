@@ -10,6 +10,17 @@
 
 ---
 
+## Actualización de reconciliación — 26-10-2026
+
+El cuerpo conserva las decisiones e historia F5. El estado funcional vigente está en
+[Funciones-Pendientes-Implementadas.md](Funciones-Pendientes-Implementadas.md) y la
+[auditoría de reconciliación](Auditorias/Auditoria_Reconciliacion_Dev_2026-10-26.md).
+Backend dev 967044e2 implementa CRUD y CSV; Jobs sólo ofrece consultas operativas.
+Se mantienen ApiClient/Dio, PlatformApi tipado, permisos por JWT, selección de tenant,
+logout local y árbol de widgets por sesión. Las respuestas tardías se filtran con una
+revisión de sesión y operaciones serializadas de token. Ninguna decisión pendiente
+sobre cuotas, durabilidad o escalamiento se incorpora a Flutter.
+
 ## 0. Nota de alineación con F4
 
 Este documento fue **actualizado** para alinearse con el estado real del Platform Backend tras:
