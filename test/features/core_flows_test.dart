@@ -217,6 +217,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
           campaignsRepositoryProvider.overrideWithValue(repo),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>
@@ -256,6 +257,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
           campaignsRepositoryProvider.overrideWithValue(repo),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>
@@ -292,6 +294,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
           usersRepositoryProvider.overrideWithValue(repo),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>
@@ -386,6 +389,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
           prospectsRepositoryProvider.overrideWithValue(repo),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>

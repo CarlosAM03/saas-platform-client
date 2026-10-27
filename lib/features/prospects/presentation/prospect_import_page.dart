@@ -1,3 +1,4 @@
+import '../../../shared/widgets/session_dialog.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -108,7 +109,7 @@ class _ImportState extends ConsumerState<ProspectImportPage> {
               row.matches.any((m) => m.sharedWithOtherCampaigns),
         )
         .length;
-    final approved = await showDialog<bool>(
+    final approved = await showSessionDialog<bool>(
       context: context,
       builder: (dialog) => AlertDialog(
         title: const Text('Confirmar importación'),
