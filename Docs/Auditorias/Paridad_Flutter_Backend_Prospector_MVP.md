@@ -197,3 +197,8 @@ Regresión completa local: **267 pruebas aprobadas, 2 integraciones explícitas 
 CI ahora se dispara para PR apilados. `core-integration.yml` comprueba el núcleo sin instalar Service; `prospector-integration.yml` comprueba separadamente HTTP con FastAPI real y EnginePort controlado. Ambos fijan el Backend remoto por SHA y sólo publican evidencia agregada. No ejecutan extracción pública ni importan datos DATRA.
 
 La existencia de un Preview exitoso en GitHub/Vercel no certifica la aplicación productiva, CORS ni sesión autenticada. La revisión productiva y dictamen se detallan en los documentos globales del 27 de octubre. Ningún merge a dev/main ni despliegue se ejecuta aquí.
+
+
+Comprobación local adicional del cierre: build_runner aprobado, analyze sin incidencias tras retirar un import sin uso del nuevo test, build Web release aprobado (advertencia preexistente de fuente Cupertino ausente, sin fallo de compilación). La integración HTTP con FastAPI/EnginePort controlado se volvió a ejecutar explícitamente: **1/1 aprobada**, separada del flujo de núcleo sin Service. Los dos tests no se contabilizan como ejecutados en la regresión que los omite por defecto.
+
+CI remoto Foundation `095e899`: [40480231249](https://github.com/CarlosAM03/saas-platform-client/actions/runs/40480231249), aprobado, incluidos build compose, imagen de producción y smoke SPA `/dashboard`. La revisión de paridad tiene sus propios checks; no se hereda su aprobación por inferencia.

@@ -6,7 +6,6 @@ import 'package:saas_platform_client/app/app_providers.dart';
 import 'package:saas_platform_client/core/config/app_config.dart';
 import 'package:saas_platform_client/core/errors/api_exception.dart';
 import 'package:saas_platform_client/core/storage/secure_token_storage.dart';
-import 'package:saas_platform_client/features/auth/state/auth_state.dart';
 import 'package:saas_platform_client/features/auth/state/tenant_permissions.dart';
 import 'package:saas_platform_client/features/dashboard/state/dashboard_providers.dart';
 import 'package:saas_platform_client/features/prospecting_jobs/state/prospecting_capabilities.dart';
