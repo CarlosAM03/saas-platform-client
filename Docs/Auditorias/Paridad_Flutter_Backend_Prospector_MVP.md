@@ -205,3 +205,12 @@ CI remoto Foundation `095e899`: [40480231249](https://github.com/CarlosAM03/saas
 
 
 Los primeros runs remotos de las dos integraciones explícitas fallaron antes de ejecutar sus pruebas porque el checkout limpio no contenía los modelos generados de `json_serializable`. Se agregó el paso requerido `dart run build_runner build` a ambos workflows, conservando todos sus checks. No fue un fallo de aislamiento ni se sustituyó la integración por mocks; la aprobación se debe verificar en el nuevo SHA remoto.
+
+
+### Ensayo Web real y cierre remoto
+
+En `0465db2` los tres workflows remotos quedaron aprobados: [Foundation/calidad/containers 40481914447](https://github.com/CarlosAM03/saas-platform-client/actions/runs/40481914447), [núcleo sin Service 40481914550](https://github.com/CarlosAM03/saas-platform-client/actions/runs/40481914550) e [integración HTTP controlada 40481914785](https://github.com/CarlosAM03/saas-platform-client/actions/runs/40481914785).
+
+Se realizó además el flujo en navegador sobre Web release local: login efímero, tenant A, selección de campaña/CSV sintético, preview600 NEW, confirm600 CREATE, dashboard600; cambio a B mostró cero campañas/prospectos/Jobs; generación mostró el mensaje explícito de indisponibilidad; historial y logout funcionaron. Es un fixture separado de la integración automatizada de601 (600+manual). Las capturas sin contactos reales se versionan en el reporte global del Backend.
+
+`tool/core-demo-server.cjs` permite reproducir el ensayo: sólo loopback18420, build Web con API_BASE_URL de ese mismo origen y proxy al Backend aislado identificado por el manifest privado. No expone credenciales ni sustituye hosting/CORS productivos. El entorno local puede conservarse para ensayo y cerrarse con el stopFile específico del harness. Los informes globales canónicos de preauditoría, readiness y segundo avance están en `saas-platform-backend/Docs/Auditorias`; DocumentacionGlobal sólo los indexa.
