@@ -1,3 +1,4 @@
+import 'session_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../platform_api/platform_api.dart';
@@ -5,7 +6,7 @@ import '../../features/campaigns/state/campaigns_providers.dart';
 import 'feature_widgets.dart';
 
 Future<Campaign?> pickCampaign(BuildContext context, WidgetRef ref) =>
-    showDialog<Campaign>(
+    showSessionDialog<Campaign>(
         context: context,
         builder: (dialog) => AlertDialog(
                 title: const Text('Seleccionar campaña'),

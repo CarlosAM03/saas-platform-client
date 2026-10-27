@@ -1,3 +1,4 @@
+import '../../../shared/widgets/session_dialog.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -169,7 +170,7 @@ class ProspectFormPage extends ConsumerStatefulWidget {
 class _ProspectFormPageState extends ConsumerState<ProspectFormPage> {
   Campaign? selected;
   Future<void> pickCampaign() async {
-    final result = await showDialog<Campaign>(
+    final result = await showSessionDialog<Campaign>(
       context: context,
       builder: (c) => AlertDialog(
         title: const Text('Seleccionar campaña'),

@@ -1,3 +1,4 @@
+import 'session_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/errors/error_mapper.dart';
@@ -421,7 +422,7 @@ class _EntityEditorState extends State<EntityEditor> {
 }
 
 Future<bool> confirmAction(BuildContext context, String message) async =>
-    await showDialog<bool>(
+    await showSessionDialog<bool>(
       context: context,
       builder: (c) => AlertDialog(
         title: const Text('Confirmar'),

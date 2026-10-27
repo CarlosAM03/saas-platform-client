@@ -1,3 +1,4 @@
+import 'session_dialog.dart';
 import 'package:flutter/material.dart';
 import '../../core/errors/error_mapper.dart';
 import '../models/api_models.dart';
@@ -185,7 +186,7 @@ void showFeedback(BuildContext context, String message) =>
         .showSnackBar(SnackBar(content: Text(message)));
 Future<bool> confirmAction(
         BuildContext context, String title, String message) async =>
-    await showDialog<bool>(
+    await showSessionDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(title),
