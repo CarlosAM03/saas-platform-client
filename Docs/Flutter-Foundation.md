@@ -10,6 +10,13 @@
 
 ---
 
+## Actualización MVP — 27-10-2026
+
+Backend b6cd40f5c00990411bd6f46a22991c9be60de4bf y OpenAPI1.1.0 añaden creación condicionada,
+callbacks y snapshots PostgreSQL. Flutter verifica capabilities; cancelar/persistir/exportar
+continúan off. CSV ya está en main y dev. El cuerpo anterior se conserva como historia;
+prevalecen [reporte MVP](Auditorias/Paridad_Flutter_Backend_Prospector_MVP.md) y contrato actual.
+
 ## Actualización de reconciliación — 26-10-2026
 
 El cuerpo conserva las decisiones e historia F5. El estado funcional vigente está en

@@ -439,6 +439,24 @@ void main() {
       },
     ),
     Operation(
+      'jobs capabilities',
+      'GET',
+      '/api/v1/prospecting-jobs/capabilities',
+      envelope({
+        'contractVersion': 'prospector-mvp-v1',
+        'create': true,
+        'cancel': false,
+        'persist': false,
+        'export': false,
+        'reason': null,
+        'source': 'google_maps',
+        'minLimit': 1,
+        'maxLimit': 100,
+        'resultsTtlSeconds': 3600,
+      }),
+      (api) => api.prospectingJobs.capabilities(),
+    ),
+    Operation(
       'jobs list',
       'GET',
       '/api/v1/prospecting-jobs',
@@ -459,7 +477,7 @@ void main() {
       (api) => api.prospectingJobs.get(entityId),
     ),
     Operation(
-      'jobs create contract only',
+      'jobs create',
       'POST',
       '/api/v1/prospecting-jobs',
       envelope(detailJson),
@@ -514,7 +532,20 @@ void main() {
       final adapter = ContractAdapter()
         ..response = op.response
         ..binary = op.name.startsWith('jobs export');
-      final result = await op.call(client(adapter));
+      final disabled = op.name.contains('contract only');
+      Object? result;
+      if (disabled) {
+        adapter.status = 503;
+        adapter.response = apiError(503);
+        await expectLater(
+          op.call(client(adapter)),
+          throwsA(
+            isA<ApiException>().having((e) => e.statusCode, 'status', 503),
+          ),
+        );
+      } else {
+        result = await op.call(client(adapter));
+      }
       final request = adapter.request!;
       expect(request.method, op.method);
       expect(request.path, op.path);
@@ -570,19 +601,19 @@ void main() {
       } else {
         expect(definition['requestBody'], isNull);
       }
-      if (!adapter.binary) {
+      if (!adapter.binary || disabled) {
         final response = resolve(
-          (op.name.contains('contract only')
-              ? definition['x-target-responses']
-              : definition['responses'])[op.name.endsWith('create')
+          definition['responses'][disabled
+              ? '503'
+              : op.name.endsWith('create')
               ? '201'
-              : op.name == 'jobs create contract only'
+              : op.name == 'jobs create'
               ? '201'
               : '200'],
         );
         validate(
           response['content']['application/json']['schema'],
-          op.response,
+          disabled ? adapter.response : op.response,
         );
       }
       if (result is PaginatedResult) {
@@ -637,7 +668,7 @@ void main() {
       'users create',
       'campaigns update',
       'prospects update',
-      'jobs create contract only',
+      'jobs create',
       'jobs cancel contract only',
       'jobs persist contract only',
       'jobs export contract only',

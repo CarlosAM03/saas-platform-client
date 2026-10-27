@@ -355,7 +355,7 @@ void main() {
     await mount(tester, repo, size: const Size(390, 844));
     navigate(tester, '/generate');
     await tester.pumpAndSettle();
-    expect(find.text('Generación automática próximamente'), findsOneWidget);
+    expect(find.text('Generación automática no disponible'), findsOneWidget);
     expect(repo.createdResource, isNull);
     await screenshot(tester, 'prospecting-mobile');
     expect(tester.takeException(), isNull);

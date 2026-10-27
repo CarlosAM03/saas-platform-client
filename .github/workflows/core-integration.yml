@@ -1,0 +1,67 @@
+name: Core MVP without Prospector Service
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  core-stack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci_test
+          POSTGRES_PASSWORD: ci_test_password
+          POSTGRES_DB: prospector_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U ci_test -d prospector_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      CI: true
+      DATABASE_ENV: test
+      DATABASE_URL: postgresql://ci_test:ci_test_password@127.0.0.1:5432/prospector_test
+      INTEGRATION_TEST_DATABASE_URL: postgresql://ci_test:ci_test_password@127.0.0.1:5432/prospector_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: CarlosAM03/saas-platform-backend
+          ref: 42b96fefd73cc11b42ecde4df6d5f42393328bfc
+          path: integration-backend
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.47.5'
+          cache: true
+      - run: npm ci && npm run prisma:generate && npm run prisma:migrate:deploy && npm run build
+        working-directory: integration-backend
+      - run: flutter pub get
+      - run: dart run build_runner build
+      - name: Production entrypoint without Service, real Flutter CSV 600
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd integration-backend && node test/scripts/core-stack.cjs > .tmp-core.log 2>&1) &
+          stack_pid=$!
+          cleanup() {
+            if [ -f integration-backend/.tmp/core-stack.json ]; then
+              node -e "const f=require('./integration-backend/.tmp/core-stack.json'); require('fs').writeFileSync(f.stopFile,'stop')"
+            fi
+            wait "$stack_pid"
+          }
+          trap cleanup EXIT
+          for attempt in $(seq 1 60); do
+            if [ -f integration-backend/.tmp/core-stack.json ]; then break; fi
+            if ! kill -0 "$stack_pid" 2>/dev/null; then exit 1; fi
+            sleep 1
+          done
+          test -f integration-backend/.tmp/core-stack.json
+          flutter test test/integration/core_stack_test.dart --dart-define=CORE_MANIFEST="$PWD/integration-backend/.tmp/core-stack.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-stack-aggregate-evidence
+          path: build/test-evidence/core-stack.json

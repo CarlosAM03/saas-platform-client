@@ -1,3 +1,4 @@
+import 'dart:async';
 import '../../../shared/widgets/session_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -134,6 +135,30 @@ class JobDetailPage extends ConsumerStatefulWidget {
 
 class _JobDetailState extends ConsumerState<JobDetailPage> {
   bool busy = false, hidden = false;
+  Timer? expiryTimer;
+  DateTime? scheduledExpiry;
+  @override
+  void dispose() {
+    expiryTimer?.cancel();
+    super.dispose();
+  }
+
+  void watchExpiry(ProspectingJobDetail job) {
+    final expiry = job.resultsExpiresAt;
+    if (expiry == scheduledExpiry) return;
+    expiryTimer?.cancel();
+    scheduledExpiry = expiry;
+    if (expiry == null || !expiry.isAfter(DateTime.now())) return;
+    expiryTimer = Timer(
+      expiry.difference(DateTime.now()) + const Duration(milliseconds: 1),
+      () {
+        if (!mounted) return;
+        setState(() {});
+        ref.invalidate(jobMonitorProvider(widget.id));
+      },
+    );
+  }
+
   String? notice;
   Object? error;
   Future<void> action(Future<void> Function() task) async {
@@ -192,7 +217,13 @@ class _JobDetailState extends ConsumerState<JobDetailPage> {
       value: ref.watch(jobMonitorProvider(widget.id)),
       retry: () => ref.invalidate(jobMonitorProvider(widget.id)),
       data: (job) {
-        final results = hidden ? null : job.results;
+        watchExpiry(job);
+        final expired =
+            job.resultsExpiresAt != null &&
+            !job.resultsExpiresAt!.isAfter(DateTime.now());
+        final results = hidden || expired || !job.resultsAvailable
+            ? null
+            : job.results;
         return ListView(
           children: [
             Text(
@@ -208,17 +239,30 @@ class _JobDetailState extends ConsumerState<JobDetailPage> {
               child: const Text('Ver campaña'),
             ),
             if (isJobActive(job.status)) ...[
-              LinearProgressIndicator(
-                value: job.progress == null
-                    ? null
-                    : (job.progress!.percentage / 100).clamp(0, 1).toDouble(),
-              ),
-              Text(
-                job.progress?.message ??
-                    'Actualizando el estado cada 4 segundos…',
-              ),
+              const LinearProgressIndicator(),
+              const Text('Actualizando el estado cada 4 segundos…'),
             ],
+            if (job.dispatchState == ProspectingDispatchState.UNCERTAIN ||
+                job.dispatchState == ProspectingDispatchState.PENDING)
+              const Text(
+                'La aceptación o finalización no está confirmada. La búsqueda puede continuar; no se repetirá automáticamente.',
+              ),
             if (job.error != null) Text(job.error!),
+            if (job.resultsExpiresAt != null)
+              Text(
+                'Resultados disponibles hasta: ${job.resultsExpiresAt!.toLocal()}',
+              ),
+            if (job.status == ProspectingJobStatus.FAILED)
+              job.retryAllowed
+                  ? OutlinedButton(
+                      onPressed: () => context.go(
+                        '/generate?retryJobId=${Uri.encodeComponent(job.id)}',
+                      ),
+                      child: const Text('Repetir búsqueda manualmente'),
+                    )
+                  : const Text(
+                      'No se confirmó que la ejecución haya terminado. Espera la confirmación antes de repetirla.',
+                    ),
             if (notice != null)
               Padding(padding: const EdgeInsets.all(12), child: Text(notice!)),
             if (error != null)
@@ -264,6 +308,7 @@ class _JobDetailState extends ConsumerState<JobDetailPage> {
                     child: const Text('Cancelar trabajo'),
                   ),
                 if (job.resultsAvailable &&
+                    !expired &&
                     !hidden &&
                     job.status == ProspectingJobStatus.COMPLETED) ...[
                   FilledButton(
@@ -329,7 +374,7 @@ class _JobDetailState extends ConsumerState<JobDetailPage> {
                         : () => action(() async {
                             if (await confirm(
                               'Descartar vista de resultados',
-                              'Se limpiarán los resultados de esta vista. Los prospectos guardados se conservarán.',
+                              'Se cerrará esta vista. Los resultados seguirán sujetos al plazo de disponibilidad del Backend.',
                             )) {
                               if (mounted) {
                                 ref.invalidate(jobMonitorProvider(job.id));
@@ -367,7 +412,7 @@ class _JobDetailState extends ConsumerState<JobDetailPage> {
                 ),
             ] else if (job.status == ProspectingJobStatus.COMPLETED && !hidden)
               const Text(
-                'No hay resultados temporales disponibles. Pueden haberse guardado, vencido o descartado.',
+                'Los resultados temporales no están disponibles o vencieron. El historial del trabajo se conserva.',
               ),
           ],
         );

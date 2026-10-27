@@ -1,8 +1,10 @@
+import '../../../shared/widgets/session_dialog.dart';
 import 'dart:math';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../app/app_providers.dart';
 import '../../../core/errors/api_exception.dart';
 import '../../../core/errors/error_mapper.dart';
 import '../../../platform_api/platform_api.dart';
@@ -14,7 +16,8 @@ import '../state/prospecting_jobs_providers.dart';
 import '../state/prospecting_capabilities.dart';
 
 class GeneratePage extends ConsumerStatefulWidget {
-  const GeneratePage({super.key});
+  const GeneratePage({super.key, this.retryJobId});
+  final String? retryJobId;
   @override
   ConsumerState<GeneratePage> createState() => _GenerateState();
 }
@@ -25,8 +28,56 @@ class _GenerateState extends ConsumerState<GeneratePage> {
       location = TextEditingController(),
       limit = TextEditingController(text: '20');
   Campaign? campaign;
-  bool busy = false;
-  String? error, requestSignature, requestKey;
+  bool busy = false,
+      uncertain = false,
+      retryLoading = false,
+      confirming = false;
+  String? error, requestSignature, requestKey, uncertainJobId;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.retryJobId != null) {
+      retryLoading = true;
+      Future<void>.microtask(loadRetry);
+    }
+  }
+
+  Future<void> loadRetry() async {
+    final scope = ref.read(sessionScopeProvider);
+    try {
+      final job = await ref
+          .read(prospectingJobsRepositoryProvider)
+          .get(widget.retryJobId!);
+      if (!mounted || scope != ref.read(sessionScopeProvider)) return;
+      if (job.status != ProspectingJobStatus.FAILED || !job.retryAllowed) {
+        throw StateError(
+          'La ejecución anterior no permite una repetición segura. Consulta su detalle.',
+        );
+      }
+      final selected = await ref
+          .read(platformApiProvider)
+          .campaigns
+          .get(job.campaignId);
+      if (!mounted || scope != ref.read(sessionScopeProvider)) return;
+      setState(() {
+        campaign = selected;
+        keyword.text = job.query.keyword;
+        location.text = job.query.location;
+        limit.text = job.query.limit.toString();
+      });
+    } catch (e) {
+      if (mounted && scope == ref.read(sessionScopeProvider)) {
+        setState(
+          () => error = e is StateError
+              ? e.message.toString()
+              : const ErrorMapper().userMessage(e),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => retryLoading = false);
+    }
+  }
+
   @override
   void dispose() {
     keyword.dispose();
@@ -36,8 +87,9 @@ class _GenerateState extends ConsumerState<GeneratePage> {
   }
 
   Future<void> submit() async {
-    if (!ref.read(prospectingCapabilitiesProvider).create ||
-        busy ||
+    if (busy ||
+        retryLoading ||
+        (!uncertain && !ref.read(prospectingCapabilitiesProvider).create) ||
         !form.currentState!.validate()) {
       return;
     }
@@ -55,78 +107,148 @@ class _GenerateState extends ConsumerState<GeneratePage> {
         limit: int.parse(limit.text),
       ),
     );
-    final signature = jsonEncode(request.toJson());
-    if (requestSignature != signature) {
-      requestSignature = signature;
-      requestKey = List.generate(
-        24,
-        (_) => Random.secure().nextInt(256).toRadixString(16).padLeft(2, '0'),
-      ).join();
-    }
     setState(() {
       busy = true;
+      confirming = true;
       error = null;
     });
     try {
+      final confirmed = await showSessionDialog<bool>(
+        context: context,
+        builder: (dialog) => AlertDialog(
+          title: Text(
+            uncertain ? 'Consultar la misma solicitud' : 'Confirmar búsqueda',
+          ),
+          content: Text(
+            uncertain
+                ? 'Se conservarán los datos y la clave de la solicitud incierta. El Backend consultará esa intención sin reenviar la búsqueda.'
+                : 'Buscar hasta ${request.query.limit} negocios en ${request.query.location}. Los resultados estarán disponibles durante una hora y no se guardarán automáticamente en la campaña.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialog, false),
+              child: const Text('Volver'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialog, true),
+              child: const Text('Confirmar'),
+            ),
+          ],
+        ),
+      );
+      if (!mounted ||
+          scope != ref.read(sessionScopeProvider) ||
+          confirmed != true) {
+        return;
+      }
+      setState(() => confirming = false);
+      final signature = jsonEncode(request.toJson());
+      if (requestSignature != signature) {
+        requestSignature = signature;
+        requestKey = List.generate(
+          24,
+          (_) => Random.secure().nextInt(256).toRadixString(16).padLeft(2, '0'),
+        ).join();
+      }
       final job = await ref
           .read(prospectingJobsRepositoryProvider)
           .create(request, requestKey!);
       if (!mounted || scope != ref.read(sessionScopeProvider)) return;
       ref.invalidate(jobsListProvider);
       ref.invalidate(dashboardProvider);
+      ref.invalidate(verifiedProspectingCapabilitiesProvider);
       context.go('/jobs/${job.id}');
     } catch (e) {
-      // A contractual rejection is definitive; a lost response retains key + payload.
-      if (e is ApiException &&
-          {
-            ApiErrorKind.badRequest,
-            ApiErrorKind.unauthorized,
-            ApiErrorKind.forbidden,
-            ApiErrorKind.notFound,
-            ApiErrorKind.conflict,
-            ApiErrorKind.payloadTooLarge,
-            ApiErrorKind.rateLimited,
-            ApiErrorKind.serviceUnavailable,
-          }.contains(e.kind)) {
+      if (!mounted || scope != ref.read(sessionScopeProvider)) return;
+      final details = e is ApiException && e.details is Map
+          ? e.details as Map
+          : const <String, Object?>{};
+      final reason = details['reason'];
+      final definitive =
+          e is ApiException &&
+          ({
+                ApiErrorKind.badRequest,
+                ApiErrorKind.unauthorized,
+                ApiErrorKind.forbidden,
+                ApiErrorKind.notFound,
+                ApiErrorKind.conflict,
+                ApiErrorKind.payloadTooLarge,
+                ApiErrorKind.rateLimited,
+              }.contains(e.kind) ||
+              (e.kind == ApiErrorKind.serviceUnavailable &&
+                  {
+                    'PROSPECTOR_INTEGRATION_PENDING',
+                    'PROSPECTOR_POLICY_NOT_CONFIGURED',
+                    'PROSPECTOR_SERVICE_UNAVAILABLE',
+                    'PROSPECTOR_SERVICE_REJECTED',
+                    'PROSPECTOR_CAPACITY_EXHAUSTED',
+                    'PROSPECTOR_TENANT_ID_UNSUPPORTED',
+                  }.contains(reason)));
+      if (definitive) {
         requestSignature = null;
         requestKey = null;
+        ref.invalidate(verifiedProspectingCapabilitiesProvider);
       }
-      if (!mounted || scope != ref.read(sessionScopeProvider)) return;
-      setState(
-        () => error =
-            e is ApiException && e.kind == ApiErrorKind.serviceUnavailable
-            ? 'El servicio de prospección no está disponible. La solicitud fue rechazada por el Backend.'
-            : e is ApiException &&
-                  (e.kind == ApiErrorKind.network ||
-                      e.kind == ApiErrorKind.unknown)
-            ? 'No se pudo confirmar si se creó el trabajo. Revisa el historial antes de iniciar otra búsqueda. El reintento con los mismos datos conserva la clave.'
-            : const ErrorMapper().userMessage(e),
-      );
+      final id = details['jobId'];
+      setState(() {
+        uncertain = !definitive;
+        uncertainJobId =
+            id is String && RegExp(r'^c[a-z0-9]{20,}$').hasMatch(id)
+            ? id
+            : null;
+        error = uncertain
+            ? 'No se pudo confirmar la aceptación. Conservamos la clave y los datos; revisa el trabajo o el historial antes de iniciar otra búsqueda. No se repetirá el scraping automáticamente.'
+            : e is ApiException && e.kind == ApiErrorKind.serviceUnavailable
+            ? 'El servicio de prospección no está disponible. ${prospectingUnavailableMessage(reason is String ? reason : null)}'
+            : e is ApiException && e.kind == ApiErrorKind.rateLimited
+            ? prospectingUnavailableMessage(reason is String ? reason : null)
+            : e is ApiException && e.kind == ApiErrorKind.notFound
+            ? 'No se encontró una campaña disponible en esta organización.'
+            : const ErrorMapper().userMessage(e);
+      });
     } finally {
-      if (mounted) setState(() => busy = false);
+      if (mounted) {
+        setState(() {
+          busy = false;
+          confirming = false;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final permissions = ref.watch(currentTenantPermissionsProvider);
-    if (!ref.watch(prospectingCapabilitiesProvider).create) {
+    final capabilities = ref.watch(prospectingCapabilitiesProvider);
+    if (!capabilities.create && !uncertain) {
       return FeaturePage(
-        title: 'Generación automática próximamente',
+        title: 'Generación automática no disponible',
         actions: [
           TextButton(
             onPressed: () => context.go('/jobs'),
             child: const Text('Ver trabajos'),
           ),
         ],
-        child: const Center(
+        child: Center(
           child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(pendingProspectorMessage),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(prospectingUnavailableMessage(capabilities.reason)),
+                if (error != null) Text(error!),
+                TextButton(
+                  onPressed: () =>
+                      ref.invalidate(verifiedProspectingCapabilitiesProvider),
+                  child: const Text('Verificar disponibilidad'),
+                ),
+              ],
+            ),
           ),
         ),
       );
     }
+    final editable = !busy && !uncertain && !retryLoading;
     return FeaturePage(
       title: 'Buscar prospectos',
       actions: [
@@ -149,11 +271,11 @@ class _GenerateState extends ConsumerState<GeneratePage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text(
-                      'Busca negocios en Google Maps y revisa los resultados antes de guardarlos en una campaña.',
+                      'Busca negocios en Google Maps. Los resultados son temporales; guardar en campaña y exportar no están disponibles.',
                     ),
                     const SizedBox(height: 16),
                     OutlinedButton(
-                      onPressed: busy
+                      onPressed: !editable
                           ? null
                           : () async {
                               final selected = await pickCampaign(context, ref);
@@ -165,7 +287,7 @@ class _GenerateState extends ConsumerState<GeneratePage> {
                     ),
                     TextFormField(
                       controller: keyword,
-                      enabled: !busy,
+                      enabled: editable,
                       decoration: const InputDecoration(
                         labelText: 'Tipo de negocio',
                       ),
@@ -175,7 +297,7 @@ class _GenerateState extends ConsumerState<GeneratePage> {
                     ),
                     TextFormField(
                       controller: location,
-                      enabled: !busy,
+                      enabled: editable,
                       decoration: const InputDecoration(
                         labelText: 'Ciudad o ubicación',
                       ),
@@ -185,7 +307,7 @@ class _GenerateState extends ConsumerState<GeneratePage> {
                     ),
                     TextFormField(
                       controller: limit,
-                      enabled: !busy,
+                      enabled: editable,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         labelText: 'Máximo de resultados (1–100)',
@@ -205,10 +327,20 @@ class _GenerateState extends ConsumerState<GeneratePage> {
                           color: Theme.of(context).colorScheme.error,
                         ),
                       ),
-                    if (busy) const LinearProgressIndicator(),
+                    if (uncertainJobId != null)
+                      TextButton(
+                        onPressed: () => context.go('/jobs/${uncertainJobId!}'),
+                        child: const Text('Consultar trabajo incierto'),
+                      ),
+                    if ((busy && !confirming) || retryLoading)
+                      const LinearProgressIndicator(),
                     FilledButton(
-                      onPressed: busy ? null : submit,
-                      child: const Text('Iniciar búsqueda'),
+                      onPressed: busy || retryLoading ? null : submit,
+                      child: Text(
+                        uncertain
+                            ? 'Consultar misma solicitud'
+                            : 'Iniciar búsqueda',
+                      ),
                     ),
                   ],
                 ),

@@ -94,7 +94,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             '/prospects/:id/edit',
             (s) => ProspectFormPage(id: s.pathParameters['id']!),
           ),
-          featureRoute('/generate', (s) => const GeneratePage()),
+          featureRoute(
+            '/generate',
+            (s) => GeneratePage(
+              key: ValueKey(s.uri.toString()),
+              retryJobId: s.uri.queryParameters['retryJobId'],
+            ),
+          ),
           featureRoute('/jobs', (s) => const JobsPage()),
           featureRoute(
             '/jobs/:id',

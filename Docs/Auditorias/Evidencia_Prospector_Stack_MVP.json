@@ -1,0 +1,13 @@
+{
+  "engine": "controlled EnginePort; no public scraping",
+  "backendImplementation": "b6cd40f5c00990411bd6f46a22991c9be60de4bf",
+  "tenantId": "cmvqdmiwu0003q7up0e50njwh",
+  "completedJobId": "cmvqdqdjo000gq7upnma7ow2a",
+  "failedJobId": "cmvqdqgss000rq7up6ksrjuqo",
+  "emptyJobId": "cmvqdqjzp0011q7up5m3ds62l",
+  "results": 1,
+  "manualProspects": 1,
+  "csvCreated": 1,
+  "tenantIsolation": true,
+  "logoutDuringJob": true
+}
