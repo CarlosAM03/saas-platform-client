@@ -12,7 +12,7 @@ void main() {
     () {
       final original = history.location();
       try {
-        final base = Uri.parse(original).replace(fragment: '').toString();
+        final base = Uri.parse(original).removeFragment().toString();
         history.replace('$base#/activate?code=${activationCode()}');
         final length = history.length();
         final captured = captureActivationLink();
