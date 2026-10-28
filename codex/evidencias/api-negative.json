@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-28T09:54:20.494Z",
+  "runId": "negativeb622ad50f301e180",
+  "runnerSha": "7b5320c2a61e2f4170f23f5637cf630a9902de7d",
+  "environment": "local-isolated",
+  "scope": "HTTP_SQL complementary; never UI_TO_DB",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "AUTH-EXPIRED-401",
+      "scope": "HTTP_SQL",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "GET",
+          "path": "/api/v1/users",
+          "status": 401,
+          "requestId": "50b96975-f294-4a72-adb5-3b68bdddf0de"
+        }
+      ],
+      "dbAssertions": [
+        "Direct SQL verifies no partial or unauthorized writes"
+      ]
+    },
+    {
+      "caseId": "CSV-EXPIRED-400",
+      "scope": "HTTP_SQL",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/confirm",
+          "status": 400,
+          "requestId": "12202778-e9a6-4c63-a24c-62d5a7edee52"
+        }
+      ],
+      "dbAssertions": [
+        "Direct SQL verifies no partial or unauthorized writes"
+      ]
+    },
+    {
+      "caseId": "CSV-BYTES-MISMATCH-400",
+      "scope": "HTTP_SQL",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/confirm",
+          "status": 400,
+          "requestId": "f1ccfd0d-3a7b-4ebf-a75b-cc23bbd81fb3"
+        }
+      ],
+      "dbAssertions": [
+        "Direct SQL verifies no partial or unauthorized writes"
+      ]
+    },
+    {
+      "caseId": "CSV-OVERSIZE-413",
+      "scope": "HTTP_SQL",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/preview",
+          "status": 413,
+          "requestId": "ca586dde-f73f-4c41-a00f-c5bf39c0e013"
+        }
+      ],
+      "dbAssertions": [
+        "Direct SQL verifies no partial or unauthorized writes"
+      ]
+    },
+    {
+      "caseId": "CSV-REPLAY-409",
+      "scope": "HTTP_SQL",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/confirm",
+          "status": 200,
+          "requestId": "be9579dc-b255-458a-a477-f2505ff2ff34"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/confirm",
+          "status": 409,
+          "requestId": "bdce8468-82b3-4ce2-965c-64187d0a2fa2"
+        }
+      ],
+      "dbAssertions": [
+        "Direct SQL verifies no partial or unauthorized writes"
+      ]
+    },
+    {
+      "caseId": "AUTH-RATE-LIMIT-429",
+      "scope": "HTTP_SQL",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/auth/login",
+          "status": 200,
+          "requestId": "225b2236-6382-4b33-98bd-61b2a0a614ad"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/auth/login",
+          "status": 200,
+          "requestId": "857b738d-b5c4-4180-abd2-1801266c8b88"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/auth/login",
+          "status": 200,
+          "requestId": "34a400c9-4d35-4efa-a526-a6382db41edf"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/auth/login",
+          "status": 200,
+          "requestId": "bd662233-91db-4cac-bbda-ccdd9e378130"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/auth/login",
+          "status": 429,
+          "requestId": "b6de24a9-ddab-4b43-b0fb-5bb0f3410cc2"
+        }
+      ],
+      "dbAssertions": [
+        "Direct SQL verifies no partial or unauthorized writes"
+      ]
+    }
+  ]
+}

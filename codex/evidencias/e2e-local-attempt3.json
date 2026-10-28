@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-28T08:52:20.427Z",
+  "runId": "sprint70ba154e12f96d",
+  "environment": "local-isolated",
+  "frontendSha": "0f944b2a42d270a20940fff739ceff1a0cbe4a90",
+  "frontendImageSha": "0f944b2a42d270a20940fff739ceff1a0cbe4a90",
+  "backendSha": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+  "postgres": "16",
+  "tls": "CA confined to browser container; ignore_https_errors=false",
+  "cleanup": "NOT RUN",
+  "cases": [
+    {
+      "caseId": "ENV-SETUP",
+      "scope": "ENVIRONMENT",
+      "status": "FAIL",
+      "error": "Error: Docker command failed: Traceback (most recent call last):\n  File \"/usr/local/lib/python3.11/urllib/request.py\", line 1348, in do_open\n    h.request(req.get_method(), req.selector, req.data, headers,\n  File \"/usr/local/lib/python3.11/http/client.py\", line 1303, in request\n    self._send_request(method, url, body, headers, encode_chunked)\n  File \"/usr/local/lib/python3.11/http/client.py\", line 1349, in _send_request\n    self.endheaders(body, encode_chunked=encode_chunked)\n  File \"/usr/local/lib/python3.11/http/client.py",
+      "cleanup": "NOT RUN"
+    }
+  ]
+}

@@ -51,3 +51,11 @@ también el SDK mediante Q:\.flutter-sdk. No se desactivaron shaders ni checks p
 
 Docker Desktop estaba apagado. Se solicitó su inicio para intentar ambos builds; los
 resultados efectivos, incluidos los reintentos, se registran en la auditoría.
+
+## Evidencia de sprint — 28 octubre 2026
+
+Origen frontend confirmado por el owner: https://saas-platform-client-web.vercel.app. El bundle público usa https://saas-platform-backend-l55n.onrender.com. CORS permite el origen frontend correcto y rechaza un origen ajeno. El alias histórico saas-platform-client.vercel.app responde404 y no debe emplearse para el smoke actual.
+
+Se ejecutó login, selección de organización, lecturas de Dashboard/Campaigns/Prospects/Users/Jobs y logout con recarga. La evidencia contiene únicamente resultados y metadatos HTTP anonimizados; no contiene credenciales ni datos de cuenta/negocio. No hubo escrituras de negocio, cambios de CORS/hosting ni despliegues manuales.
+
+La identidad SHA servida por ambos hosts permanece sin confirmar mediante metadatos autorizados de hosting. Health, Swagger, éxito de login y un registro GitHub de deployment no reemplazan esa correlación; no se declara producción validada. Ver ../codex/evidencias/remoto-resumen.md y el handoff de QA.

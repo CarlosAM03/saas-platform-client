@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-28T10:41:02.859Z",
+  "fullDiffCheck": {
+    "exit": 2,
+    "status": "FAIL"
+  },
+  "reviewedDisposition": "Preserve approved source bytes and intentional Markdown hard breaks; no semantic/source changes",
+  "preservedSources": [
+    "Docs/ADRs/ADR-006-TenantRegistration-APROBADO.md",
+    "Docs/Contracts/platform-api.tenant-registration.approved.yaml",
+    "codex/01_PLAN_RECTOR_SPRINT_FRONTEND_1A1.md",
+    "codex/02_NORMATIVA_CODEX.md",
+    "codex/03_GUIA_EJECUCION_AUTONOMA.md",
+    "codex/evidencias/README.md"
+  ],
+  "generatedTextNormalization": "Trailing whitespace only; all test states preserved",
+  "codeAndGeneratedEvidenceCheck": {
+    "exit": 0,
+    "status": "PASS"
+  }
+}

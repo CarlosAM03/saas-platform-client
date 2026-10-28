@@ -1,0 +1,160 @@
+{
+  "scope": "REMOTE_UI_HTTP_READ_ONLY",
+  "frontendOrigin": "https://saas-platform-client-web.vercel.app",
+  "cases": [
+    {
+      "caseId": "REMOTE-LOGIN",
+      "status": "PASS",
+      "ui": true,
+      "http": true
+    },
+    {
+      "caseId": "REMOTE-READ-DASHBOARD",
+      "status": "PASS",
+      "ui": true,
+      "http": true,
+      "businessDataRecorded": false
+    },
+    {
+      "caseId": "REMOTE-READ-CAMPAIGNS",
+      "status": "PASS",
+      "ui": true,
+      "http": true,
+      "businessDataRecorded": false
+    },
+    {
+      "caseId": "REMOTE-READ-PROSPECTS",
+      "status": "PASS",
+      "ui": true,
+      "http": true,
+      "businessDataRecorded": false
+    },
+    {
+      "caseId": "REMOTE-READ-USERS",
+      "status": "PASS",
+      "ui": true,
+      "http": true,
+      "businessDataRecorded": false
+    },
+    {
+      "caseId": "REMOTE-READ-JOBS",
+      "status": "PASS",
+      "ui": true,
+      "http": true,
+      "businessDataRecorded": false
+    },
+    {
+      "caseId": "REMOTE-LOGOUT",
+      "status": "PASS",
+      "http": true,
+      "reload": true
+    }
+  ],
+  "http": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200,
+      "requestId": "c7592a10-5084-4adf-87f7-7aecd0bd04d3"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants",
+      "status": 200,
+      "requestId": "71a15b97-ade2-471b-b36c-7881ed73ce99"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants",
+      "status": 200,
+      "requestId": "321b4a99-62ff-4ee8-bb1f-5d7da636589c"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/select-tenant",
+      "status": 200,
+      "requestId": "440791e4-46f4-46ed-8741-2ef1353a6f05"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants",
+      "status": 200,
+      "requestId": "ccf8886b-4de9-4423-8dec-f10c01c96241"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs",
+      "status": 200,
+      "requestId": "773efdaf-1a0a-4eaf-a33e-71e25575e54c"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "status": 200,
+      "requestId": "550a426c-481b-4775-844d-cde21297a8cc"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200,
+      "requestId": "fd4ee125-9264-49a5-a90d-983e7538408f"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants/{id}",
+      "status": 200,
+      "requestId": "24960c88-003e-402a-aacb-d6961c7d2162"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "status": 200,
+      "requestId": "4242a9d8-ac4e-4691-a06e-8551195ffd20"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200,
+      "requestId": "7543ed1b-4d73-45bc-a199-aaa708f1f80a"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs",
+      "status": 200,
+      "requestId": "1bd9ec75-488e-4015-8c60-b435e2d0364b"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200,
+      "requestId": "ff339298-bdfb-47c0-95dc-9db7460fbc8c"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "status": 200,
+      "requestId": "bd0ca08c-6b38-4058-b93c-3eb0f041b810"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users",
+      "status": 200,
+      "requestId": "d94b6830-f081-428a-a2ba-70f60bc1c86e"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs",
+      "status": 200,
+      "requestId": "1e56b9a9-d66c-4835-be55-409b0321b45a"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "status": 200,
+      "requestId": "ff8a4ce4-9ed8-4717-b187-95876eb108f2"
+    }
+  ],
+  "date": "2026-10-28T09:28:37.819Z",
+  "privacy": "Credentials, account, entity IDs and business contents omitted; paths are operation templates",
+  "sanitizedAt": "2026-10-28T10:31:19.351Z"
+}

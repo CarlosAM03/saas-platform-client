@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-28T10:03:58.861Z",
+  "scope": "Public read-only smoke, no database access, no deployment and no writes",
+  "frontendDeploymentSha": null,
+  "githubReportedProductionSha": "7731649a2c69b45cb9776d02de4a6105d6fd9886",
+  "frontendDeploymentSource": "User supplied frontend URL; GitHub deployment7373752531 alone does not prove its alias mapping",
+  "backendDeploymentSha": null,
+  "cases": [
+    {
+      "caseId": "REMOTE-HEALTH-LIVE",
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/health/live",
+      "method": "GET",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "caseId": "REMOTE-HEALTH-READY",
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/health/ready",
+      "method": "GET",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "caseId": "REMOTE-SWAGGER",
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/docs-json",
+      "method": "GET",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "caseId": "REMOTE-VERCEL-DEPLOYMENT",
+      "url": "https://saas-platform-client-web.vercel.app/",
+      "method": "GET",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "caseId": "REMOTE-VERCEL-ALIAS",
+      "url": "https://saas-platform-client.vercel.app/",
+      "method": "GET",
+      "httpStatus": 404,
+      "status": "FAIL"
+    },
+    {
+      "caseId": "REMOTE-BUNDLE-API-ORIGIN",
+      "url": "https://saas-platform-client-web.vercel.app/main.dart.js",
+      "method": "GET",
+      "httpStatus": 200,
+      "status": "PASS"
+    },
+    {
+      "caseId": "REMOTE-CORS-DEPLOYMENT",
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/auth/login",
+      "method": "OPTIONS",
+      "httpStatus": 204,
+      "status": "PASS",
+      "corsAllowOrigin": "https://saas-platform-client-web.vercel.app"
+    },
+    {
+      "caseId": "REMOTE-CORS-ALIAS",
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/auth/login",
+      "method": "OPTIONS",
+      "httpStatus": 204,
+      "status": "FAIL",
+      "corsAllowOrigin": null
+    },
+    {
+      "caseId": "REMOTE-CORS-DENIED",
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/auth/login",
+      "method": "OPTIONS",
+      "httpStatus": 204,
+      "status": "PASS",
+      "corsAllowOrigin": null
+    },
+    {
+      "caseId": "REMOTE-AUTHENTICATED-UI",
+      "status": "NOT RUN",
+      "reason": "Executed separately by remote-ui.mjs with protected stdin; see remote-ui.json. Public smoke never handles credentials."
+    },
+    {
+      "caseId": "REMOTE-BACKEND-SHA",
+      "status": "BLOCKED",
+      "reason": "GitHub exposes no Backend deployment record; health/Swagger do not prove the Render source SHA."
+    }
+  ]
+}

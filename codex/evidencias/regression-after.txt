@@ -1,0 +1,21 @@
+00:00 +0: loading C:/w/test/sprint_core_regression_test.dart
+00:00 +0: FE-01 differential user PATCH: none
+00:01 +1: FE-01 differential user PATCH: name
+00:01 +2: FE-01 differential user PATCH: email
+00:01 +3: FE-01 differential user PATCH: password
+00:02 +4: FE-01 differential user PATCH: status
+00:02 +5: FE-01 differential user PATCH: trim
+00:02 +6: FE-02 ADMIN discovery with existing membership
+00:02 +7: FE-02 OWNER discovery with existing membership
+00:03 +8: FE-02 MEMBER discovery with existing membership
+00:03 +9: FE-02 ADMIN discovery retry with memberships
+00:03 +10: FE-03 JWT OWNER remains presentation authority after DB role change
+00:03 +11: FE-03 JWT MEMBER remains presentation authority after DB role change
+00:03 +12: FE-03 rejects invalid presentation claims {sub: another-user}
+00:03 +13: FE-03 rejects invalid presentation claims {tenantId: b}
+00:03 +14: FE-03 rejects invalid presentation claims {tenantRole: ADMIN}
+00:03 +15: FE-03 rejects invalid presentation claims {exp: 1}
+00:03 +16: FE-03 rejects invalid presentation claims {exp: invalid}
+00:03 +17: FE-03 rejects invalid presentation claims {tenantRole: null}
+00:03 +18: FE-03 malformed token fails closed
+00:03 +19: All tests passed!

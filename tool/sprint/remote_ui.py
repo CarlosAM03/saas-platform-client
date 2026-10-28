@@ -30,7 +30,8 @@ async def main():
         async def response(r):
             u=urlsplit(r.url)
             if u.path.startswith('/api/v1/'):
-                result['http'].append({'method':r.request.method,'path':u.path,'status':r.status,'requestId':r.headers.get('x-request-id')})
+                record_path=re.sub(r'(/api/v1/(?:tenants|users|campaigns|prospects|prospecting-jobs))/[^/]+',r'\1/{id}',u.path)
+                result['http'].append({'method':r.request.method,'path':record_path,'status':r.status,'requestId':r.headers.get('x-request-id')})
                 if u.path=='/api/v1/tenants' and r.status==200:
                     body=await r.json()
                     tenant_list['observed']=True
