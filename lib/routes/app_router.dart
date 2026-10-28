@@ -32,6 +32,7 @@ class ScopedFeaturePage extends ConsumerWidget {
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier(0);
+  Uri? restoringLocation;
   ref.listen(authControllerProvider, (_, __) => refresh.value++);
   GoRoute featureRoute(String path, Widget Function(GoRouterState) page) =>
       GoRoute(
@@ -41,8 +42,31 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   final router = GoRouter(
     initialLocation: '/splash',
     refreshListenable: refresh,
-    redirect: (_, state) =>
-        redirectForAuth(ref.read(authControllerProvider), state.uri.path),
+    redirect: (_, state) {
+      final auth = ref.read(authControllerProvider);
+      final path = state.uri.path;
+      if ((auth.status == AuthStatus.unknown ||
+              auth.status == AuthStatus.loading) &&
+          auth.context == null &&
+          path != '/splash') {
+        // Keep only the current router's internal location during restoration.
+        restoringLocation ??= state.uri;
+      }
+      if (auth.status == AuthStatus.unauthenticated ||
+          auth.status == AuthStatus.sessionExpired ||
+          auth.status == AuthStatus.failure) {
+        restoringLocation = null;
+      }
+      if (auth.status == AuthStatus.authenticated &&
+          restoringLocation != null) {
+        final intended = restoringLocation!;
+        restoringLocation = null;
+        if (path == '/splash') {
+          return redirectForAuth(auth, intended.path) ?? intended.toString();
+        }
+      }
+      return redirectForAuth(auth, path);
+    },
     routes: [
       GoRoute(path: '/organizations', redirect: (_, __) => '/change-tenant'),
       GoRoute(path: '/splash', builder: (_, __) => const SplashPage()),
