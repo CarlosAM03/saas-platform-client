@@ -2,11 +2,16 @@ import 'dart:async';
 import '../../../platform_api/platform_api.dart';
 
 class DashboardData {
-  const DashboardData(
-      {required this.campaigns, required this.prospects, required this.jobs});
+  const DashboardData({
+    required this.campaigns,
+    required this.prospects,
+    required this.jobs,
+    this.jobsError,
+  });
   final PaginatedResult<Campaign> campaigns;
   final PaginatedResult<Prospect> prospects;
-  final PaginatedResult<ProspectingJobSummary> jobs;
+  final PaginatedResult<ProspectingJobSummary>? jobs;
+  final Object? jobsError;
 }
 
 abstract interface class DashboardRepository {
@@ -19,18 +24,30 @@ class ApiDashboardRepository implements DashboardRepository {
   @override
   Future<DashboardData> load() async {
     const recent = PaginationQuery(
-        page: 1,
-        limit: 5,
-        sortBy: SortField.createdAt,
-        sortOrder: SortOrder.desc);
-    final values = await Future.wait<Object>([
+      page: 1,
+      limit: 5,
+      sortBy: SortField.createdAt,
+      sortOrder: SortOrder.desc,
+    );
+    Object? jobsError;
+    final values = await Future.wait<Object?>([
       api.campaigns.list(query: recent),
       api.prospects.list(query: recent),
-      api.prospectingJobs.list(query: recent)
+      api.prospectingJobs
+          .list(query: recent)
+          .then<Object?>(
+            (value) => value,
+            onError: (Object error) {
+              jobsError = error;
+              return null;
+            },
+          ),
     ]);
     return DashboardData(
-        campaigns: values[0] as PaginatedResult<Campaign>,
-        prospects: values[1] as PaginatedResult<Prospect>,
-        jobs: values[2] as PaginatedResult<ProspectingJobSummary>);
+      campaigns: values[0] as PaginatedResult<Campaign>,
+      prospects: values[1] as PaginatedResult<Prospect>,
+      jobs: values[2] as PaginatedResult<ProspectingJobSummary>?,
+      jobsError: jobsError,
+    );
   }
 }

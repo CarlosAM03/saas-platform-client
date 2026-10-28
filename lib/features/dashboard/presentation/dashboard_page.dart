@@ -46,7 +46,13 @@ class DashboardPage extends ConsumerWidget {
                   '/prospects',
                   Icons.people_outline,
                 ),
-                ('Trabajos', data.jobs.meta.total, '/jobs', Icons.work_outline),
+                if (data.jobs != null)
+                  (
+                    'Trabajos',
+                    data.jobs!.meta.total,
+                    '/jobs',
+                    Icons.work_outline,
+                  ),
               ])
                 SizedBox(
                   width: 240,
@@ -105,12 +111,19 @@ class DashboardPage extends ConsumerWidget {
             'Trabajos recientes',
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          if (data.jobs.items.isEmpty)
+          if (data.jobsError != null) ...[
+            ErrorView(data.jobsError!),
+            TextButton(
+              onPressed: () => ref.invalidate(dashboardProvider),
+              child: const Text('Reintentar trabajos'),
+            ),
+          ],
+          if (data.jobs?.items.isEmpty == true)
             const Padding(
               padding: EdgeInsets.all(16),
               child: Text('Aún no hay trabajos de prospección.'),
             ),
-          for (final job in data.jobs.items)
+          for (final job in data.jobs?.items ?? [])
             ListTile(
               title: Text('Trabajo ${job.id}'),
               subtitle: Text(job.createdAt.toLocal().toString()),
