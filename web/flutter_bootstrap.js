@@ -1,3 +1,25 @@
+// The engine can snapshot the initial URL before Dart main runs. Scrub first,
+// including history.state, and hand the original location to Dart exactly once.
+(() => {
+  const href = window.location.href;
+  const fragment = href.slice(href.indexOf('#') + 1);
+  if (!href.includes('#') || fragment.split('?')[0] !== '/activate') return;
+  const clean = new URL(href);
+  clean.hash = '/activate';
+  try {
+    window.history.replaceState(null, '', clean.href);
+  } catch (_) {
+    throw new Error('No se pudo limpiar la ubicación de activación.');
+  }
+  let captured = href;
+  window.__prospectorTakeActivationLocation = () => {
+    const value = captured;
+    captured = null;
+    delete window.__prospectorTakeActivationLocation;
+    return value;
+  };
+})();
+
 {{flutter_js}}
 {{flutter_build_config}}
 

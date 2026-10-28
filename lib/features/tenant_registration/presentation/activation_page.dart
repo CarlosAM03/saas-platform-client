@@ -14,6 +14,7 @@ class ActivationPage extends ConsumerStatefulWidget {
 class _ActivationPageState extends ConsumerState<ActivationPage> {
   final password = TextEditingController();
   final form = GlobalKey<FormState>();
+  final passwordFocus = FocusNode();
   late final ActivationController controller;
   @override
   void initState() {
@@ -26,12 +27,17 @@ class _ActivationPageState extends ConsumerState<ActivationPage> {
   void dispose() {
     password.clear();
     password.dispose();
+    passwordFocus.dispose();
     controller.leave();
     super.dispose();
   }
 
   Future<void> submit() async {
-    if (!form.currentState!.validate()) return;
+    if (ref.read(activationControllerProvider).busy) return;
+    if (!form.currentState!.validate()) {
+      passwordFocus.requestFocus();
+      return;
+    }
     final completion = controller.complete(password.text);
     password.clear();
     if (await completion && mounted) context.go('/login');
@@ -66,7 +72,8 @@ class _ActivationPageState extends ConsumerState<ActivationPage> {
                   'Este enlace no inicia una sesión. Al terminar deberás usar el login habitual.',
                 ),
                 if (state.busy) const LinearProgressIndicator(),
-                if (state.message != null) Text(state.message!),
+                if (state.message != null)
+                  Semantics(liveRegion: true, child: Text(state.message!)),
                 if (canComplete)
                   Form(
                     key: form,
@@ -74,13 +81,18 @@ class _ActivationPageState extends ConsumerState<ActivationPage> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Desafío válido hasta: ${state.expiresAt?.toLocal()}',
+                          'Vencimiento indicado por el servidor: ${state.expiresAt?.toLocal()}',
                         ),
                         const Text(
                           'Mínimo 10 caracteres Unicode, letra, número y especial; máximo 72 bytes UTF-8.',
                         ),
+                        const Text(
+                          'El servidor valida el vencimiento al enviar; la hora del dispositivo puede ser diferente.',
+                        ),
                         TextFormField(
                           controller: password,
+                          focusNode: passwordFocus,
+                          textInputAction: TextInputAction.done,
                           obscureText: true,
                           enabled: !state.busy,
                           autocorrect: false,

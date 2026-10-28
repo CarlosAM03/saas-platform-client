@@ -35,8 +35,32 @@ class _RegistrationFormState extends ConsumerState<_RegistrationForm> {
       tenantSlug = TextEditingController();
   final ownerName = TextEditingController(),
       ownerEmail = TextEditingController();
+  final fields = List.generate(4, (_) => GlobalKey<FormFieldState<String>>());
+  final focus = List.generate(4, (_) => FocusNode());
+  void submit() {
+    if (ref.read(registrationControllerProvider).busy) return;
+    if (!form.currentState!.validate()) {
+      final first = fields.indexWhere((field) => field.currentState!.hasError);
+      if (first >= 0) focus[first].requestFocus();
+      return;
+    }
+    ref
+        .read(registrationControllerProvider.notifier)
+        .register(
+          RegisterTenantRequest(
+            tenantName: tenantName.text,
+            tenantSlug: tenantSlug.text,
+            ownerName: ownerName.text,
+            ownerEmail: ownerEmail.text,
+          ),
+        );
+  }
+
   @override
   void dispose() {
+    for (final node in focus) {
+      node.dispose();
+    }
     tenantName.dispose();
     tenantSlug.dispose();
     ownerName.dispose();
@@ -80,42 +104,42 @@ class _RegistrationFormState extends ConsumerState<_RegistrationForm> {
                 const Text(
                   'Se creará la organización y su primer OWNER. No se envían contraseñas por correo.',
                 ),
-                for (final field in [
+                for (final entry in [
                   (tenantName, 'Nombre de empresa', registrationName),
                   (tenantSlug, 'Slug', registrationSlug),
                   (ownerName, 'Nombre del OWNER', registrationName),
                   (ownerEmail, 'Correo del OWNER', registrationEmail),
-                ])
+                ].asMap().entries)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextFormField(
-                      controller: field.$1,
+                      key: fields[entry.key],
+                      focusNode: focus[entry.key],
+                      controller: entry.value.$1,
                       enabled: !state.busy,
-                      validator: field.$3,
-                      keyboardType: field.$1 == ownerEmail
+                      validator: entry.value.$3,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      textInputAction: entry.key == 3
+                          ? TextInputAction.done
+                          : TextInputAction.next,
+                      onFieldSubmitted: (_) {
+                        if (entry.key == 3) {
+                          submit();
+                        } else {
+                          focus[entry.key + 1].requestFocus();
+                        }
+                      },
+                      keyboardType: entry.value.$1 == ownerEmail
                           ? TextInputType.emailAddress
                           : TextInputType.text,
-                      decoration: InputDecoration(labelText: field.$2),
+                      decoration: InputDecoration(labelText: entry.value.$2),
                     ),
                   ),
-                if (state.error != null) Text(state.error!),
+                if (state.error != null)
+                  Semantics(liveRegion: true, child: Text(state.error!)),
                 if (state.busy) const LinearProgressIndicator(),
                 FilledButton(
-                  onPressed: state.busy
-                      ? null
-                      : () {
-                          if (!form.currentState!.validate()) return;
-                          ref
-                              .read(registrationControllerProvider.notifier)
-                              .register(
-                                RegisterTenantRequest(
-                                  tenantName: tenantName.text,
-                                  tenantSlug: tenantSlug.text,
-                                  ownerName: ownerName.text,
-                                  ownerEmail: ownerEmail.text,
-                                ),
-                              );
-                        },
+                  onPressed: state.busy ? null : submit,
                   child: const Text('Registrar organización'),
                 ),
               ],
@@ -154,7 +178,8 @@ class _OnboardingBody extends ConsumerWidget {
     return ListView(
       children: [
         if (state.busy) const LinearProgressIndicator(),
-        if (state.error != null) Text(state.error!),
+        if (state.error != null)
+          Semantics(liveRegion: true, child: Text(state.error!)),
         if (state.data != null) OnboardingSummary(state.data!),
         TextButton(
           onPressed: state.busy ? null : controller.refresh,

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/activation/activation_bootstrap.dart';
 import '../../../core/errors/api_exception.dart';
@@ -46,15 +45,12 @@ class ActivationController extends StateNotifier<ActivationViewState> {
   final TenantRegistrationRepository _repository;
   final ActivationBootstrap _bootstrap;
   String? _challenge;
-  Timer? _expiry;
   bool _started = false;
   int _operation = 0;
   bool _current(int op) => mounted && op == _operation;
   void _clear() {
     _challenge = null;
     _bootstrap.clear();
-    _expiry?.cancel();
-    _expiry = null;
   }
 
   void _fail(String message) {
@@ -75,20 +71,13 @@ class ActivationController extends StateNotifier<ActivationViewState> {
     try {
       final result = await _repository.redeem(code);
       if (!_current(op)) return;
-      if (!result.expiresAt.isAfter(DateTime.now())) {
-        _fail(invalidActivationMessage);
-        return;
-      }
+      // expiresAt is server metadata. A device wall clock can be wrong in
+      // either direction; only complete-first-access can authorize expiry.
       _challenge = result.firstAccessToken;
       state = ActivationViewState(
         ActivationPhase.password,
         expiresAt: result.expiresAt,
       );
-      _expiry = Timer(result.expiresAt.difference(DateTime.now()), () {
-        if (!mounted) return;
-        ++_operation;
-        _fail(invalidActivationMessage);
-      });
     } catch (error) {
       if (_current(op)) _fail(registrationError(error, activation: true));
     }
@@ -105,10 +94,6 @@ class ActivationController extends StateNotifier<ActivationViewState> {
         expiresAt: state.expiresAt,
         message: validation,
       );
-      return false;
-    }
-    if (!state.expiresAt!.isAfter(DateTime.now())) {
-      _fail(invalidActivationMessage);
       return false;
     }
     final op = ++_operation;

@@ -175,7 +175,7 @@ void main() {
       expect(repo.completions, 2);
     },
   );
-  testWidgets('challenge expiry clears memory and prevents completion', (
+  testWidgets('device time passing does not replace server expiry validation', (
     tester,
   ) async {
     final repo = FakeRegistration()
@@ -187,9 +187,15 @@ void main() {
     addTearDown(controller.dispose);
     await controller.begin();
     await tester.pump(const Duration(seconds: 2));
-    expect(controller.state.phase, ActivationPhase.failed);
+    expect(controller.state.phase, ActivationPhase.password);
+    repo.error = const ApiException(
+      kind: ApiErrorKind.unauthorized,
+      statusCode: 401,
+      message: 'private',
+    );
     expect(await controller.complete(passwordValue()), isFalse);
-    expect(repo.completions, 0);
+    expect(controller.state.phase, ActivationPhase.failed);
+    expect(repo.completions, 1);
   });
   test(
     'all error messages ignore provider messages, tokens, passwords and URLs',
