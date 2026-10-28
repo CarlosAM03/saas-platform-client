@@ -172,7 +172,7 @@ class SelectTenantPage extends ConsumerWidget {
               onPressed: auth.busy
                   ? null
                   : () => GoRouter.maybeOf(context)?.go('/tenants/new'),
-              child: const Text('Crear organización'),
+              child: const Text('Registrar organización'),
             ),
           IconButton(
             tooltip: 'Cerrar sesión',

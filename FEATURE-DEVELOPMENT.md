@@ -9,6 +9,18 @@
 
 Guía para desarrollo de features sobre el baseline Flutter Foundation.
 
+### Ampliación autorizada ADR-006 (carril independiente del sprint Core)
+
+El registro de negocio visible utiliza `POST /tenants/register`, nunca la provisión
+técnica `POST /tenants`, que conserva su API/repository por compatibilidad. El
+feature `tenant_registration` sigue data/state/presentation, PlatformApi y el mismo
+ApiClient. `/activate` es pública y limpia el código antes del router; enlace y
+desafío solo viven en memoria. La excepción de red pública es exclusiva de los
+dos endpoints de activación: sin JWT ni invalidación de sesión normal por 401.
+No aplicar esa excepción a las demás rutas. No modifica login, SEC-01 ni permisos
+Core. Ver [runbook ADR-006](Docs/ADR006-Flutter.md). Las restricciones históricas
+del sprint Core no se reinterpretan como autorización de despliegue.
+
 Regla de integración vigente: conservar PlatformApi, DTOs, repositorios por feature,
 TenantPermissions y sessionScopeProvider. No introducir repositorios dinámicos paralelos,
 providers duplicados ni un router alternativo. Los componentes visuales se adaptan a
