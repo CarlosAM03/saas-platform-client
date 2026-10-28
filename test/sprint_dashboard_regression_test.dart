@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:saas_platform_client/platform_api/platform_api.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,6 +38,30 @@ class PartialDashboard extends ContractAdapter {
 }
 
 void main() {
+  testWidgets('FE-10 populated Jobs render enum status on the dashboard', (
+    tester,
+  ) async {
+    const meta = PaginationMeta(page: 1, limit: 5, total: 1, totalPages: 1);
+    final data = DashboardData(
+      campaigns: const PaginatedResult<Campaign>(items: [], meta: meta),
+      prospects: const PaginatedResult<Prospect>(items: [], meta: meta),
+      jobs: PaginatedResult<ProspectingJobSummary>(
+        items: [ProspectingJobSummary.fromJson(jobJson)],
+        meta: meta,
+      ),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [dashboardProvider.overrideWith((ref) async => data)],
+        child: const MaterialApp(home: Scaffold(body: DashboardPage())),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    expect(find.text('Trabajo $entityId'), findsOneWidget);
+    expect(find.text('COMPLETED'), findsOneWidget);
+  });
+
   testWidgets(
     'FE-05 Jobs failure preserves real campaign and prospect totals and offers retry',
     (tester) async {

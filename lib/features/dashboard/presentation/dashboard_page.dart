@@ -123,13 +123,14 @@ class DashboardPage extends ConsumerWidget {
               padding: EdgeInsets.all(16),
               child: Text('Aún no hay trabajos de prospección.'),
             ),
-          for (final job in data.jobs?.items ?? [])
-            ListTile(
-              title: Text('Trabajo ${job.id}'),
-              subtitle: Text(job.createdAt.toLocal().toString()),
-              trailing: Text(job.status.name),
-              onTap: () => context.go('/jobs/${job.id}'),
-            ),
+          if (data.jobs != null)
+            for (final job in data.jobs!.items)
+              ListTile(
+                title: Text('Trabajo ${job.id}'),
+                subtitle: Text(job.createdAt.toLocal().toString()),
+                trailing: Text(job.status.name),
+                onTap: () => context.go('/jobs/${job.id}'),
+              ),
         ],
       ),
     ),
