@@ -1,0 +1,3 @@
+{"id":"compose-config","command":"docker compose config --quiet","exitCode":0,"start":"2026-10-28T22:23:34.6519847Z","seconds":0.6597022}
+{"id":"development-container","command":"docker build -f Dockerfile.dev -t prospector-frontend-g1-dev:validated .","exitCode":1,"start":"2026-10-28T22:23:35.4546951Z","seconds":275.8571828}
+{"id":"production-container","command":"docker build -f Dockerfile.vercel --build-arg API_BASE_URL=https://api.example.invalid -t prospector-frontend-g1-prod:validated .","exitCode":1,"start":"2026-10-28T22:28:11.3514170Z","seconds":32.619202}

@@ -40,8 +40,12 @@ límites 60s/cinco por hora. Sin reintentos automáticos ni body/destinatario al
 
 ## Activación y revisión de seguridad
 
-1. `main` captura la ubicación mediante abstracción condicional **antes de crear
-   el binding Flutter**. En web se reemplaza la entrada actual con
+1. `web/flutter_bootstrap.js` captura y limpia la ubicación **antes de cargar el
+   motor Flutter**: la prueba real mostró que hacerlo solo en Dart era demasiado
+   tarde para impedir una escritura de historial del motor. Una closure entrega
+   la ubicación original una sola vez a la abstracción web y elimina su función
+   de transferencia. `main` conserva la validación y limpieza antes del binding.
+   En web se reemplaza la entrada actual con
    `history.replaceState(null, '', URL_sin_codigo)`, sin push de otra entrada.
 2. Después de limpiar se interpreta el código y se transfiere una sola vez al
    controlador. Duplicados/ausentes/no válidos muestran recuperación por ADMIN.
@@ -62,8 +66,10 @@ límites 60s/cinco por hora. Sin reintentos automáticos ni body/destinatario al
 7. Completar recibe LOGIN_REQUIRED; descarta desafío y va a login sin escribir
    sesión. Si había sesión normal, no se destruye por este flujo; la excepción
    visual para mostrar login finaliza al iniciar el siguiente login normal.
-8. Timer de expiración y checks antes de enviar. Salir/desmontar cancela timer y
-   elimina referencias; respuestas tardías no rehidratan secretos. ADMIN también
+8. El Backend decide la expiración; `expiresAt` es metadato visible y no un motivo
+   de rechazo basado en el reloj del dispositivo. El401 del servidor descarta el
+   desafío. Salir/desmontar elimina referencias e invalida la operación;
+   respuestas tardías no rehidratan secretos. ADMIN también
    verifica que la sesión original siga vigente antes de pintar resultados tardíos.
 
 No storage de activación: ni secure storage, preferencias, localStorage, analytics,
@@ -161,7 +167,12 @@ flutter run -d chrome --web-port=4200 --dart-define=API_BASE_URL=http://localhos
 
 ## Gates y límites
 
-Ver resultados exactos en `codex/evidencias/adr006-flutter-validacion-20261028.md`.
+Resultados originales de Ángel:
+`codex/evidencias/adr006-flutter-validacion-20261028.md`.
+La revisión posterior y su estado vigente están en
+[`codex/frontend-adr006/evidencias/10_HANDOFF_GATE1_FRONTEND.md`](../codex/frontend-adr006/evidencias/10_HANDOFF_GATE1_FRONTEND.md).
+Allí se separan unitarias, navegador real, E2E parcial, CI y bloqueos; la ejecución
+histórica no se reescribe ni se presenta como una aceptación integral.
 Mocks/widget/contrato no prueban disponibilidad ni transacciones Backend. No se
 ejecutaron SQL, correo real, remoto o despliegues. Revisión y aprobación expresa
 del owner siguen pendientes, así como E2E local y compatibilidad nativa en dispositivo.

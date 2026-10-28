@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-28T22:21:22.635Z",
+  "frontendSha": "a09c117592f6be115b413f71c1441b08da9d0a4d",
+  "workingTree": true,
+  "browser": "Chromium / Playwright in dedicated Docker laboratory",
+  "cases": [
+    {
+      "caseId": "HISTORY-REPLACE-BACK-FORWARD-RELOAD",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "HISTORY-NEW-TAB-INVALID-DUPLICATE-SESSION-STORAGE",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "HISTORY-REPLACE-FAILURE-NO-REDEEM",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-HTTP-ERRORS-NETWORK-NO-RETRY",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    }
+  ]
+}

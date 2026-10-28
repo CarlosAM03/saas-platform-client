@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-28T22:18:52.684Z",
+  "runId": "g1fe1ae60b9593a2",
+  "frontendSha": "9c0e556b64f6ca51db3baaf284096adcde480e9b",
+  "workingTree": true,
+  "backendSha": "ca1e7c9d55d4cad73430801140593b58cb7c413b",
+  "backendStatus": "PRELIMINARY_SNAPSHOT",
+  "postgres": "16",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "REG-ADMIN-LOGIN-NO-TENANT",
+      "scope": "UI_HTTP",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "status": 200,
+        "requestId": "dfcc25cc-5e44-4a58-b7d9-0fd45e8d383e",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestKeys": [
+          "email",
+          "password"
+        ]
+      }
+    },
+    {
+      "caseId": "REG-CREATE-201-ATOMIC",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/tenants/register",
+        "status": 201,
+        "requestId": "82cf43aa-d804-4aef-ab04-e06ea77aee6f",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestKeys": [
+          "ownerEmail",
+          "ownerName",
+          "tenantName",
+          "tenantSlug"
+        ]
+      },
+      "dbAssertions": [
+        "Two tenant roles",
+        "Pending non-ADMIN user and OWNER membership",
+        "Onboarding, hashed link and accepted delivery persisted"
+      ]
+    },
+    {
+      "caseId": "REG-ONBOARDING-REREAD",
+      "scope": "UI_TO_DB_READ",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/tenants/cmvsodyhe000ok1mvfzhw28f4/onboarding",
+        "status": 200,
+        "requestId": "ea2b5a0d-59c6-4ba1-a5fa-0aceb6a113ba",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null
+      },
+      "uiReread": "PASS"
+    },
+    {
+      "caseId": "E2E-EXECUTION",
+      "scope": "UI_TO_DB",
+      "status": "FAIL",
+      "error": "Error: TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for get_by_label(\"Confirmar\", exact=True)\n"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-28T22:16:23.335Z",
+  "runId": "g1fe81c312952418",
+  "frontendSha": "9c0e556b64f6ca51db3baaf284096adcde480e9b",
+  "workingTree": true,
+  "backendSha": "ca1e7c9d55d4cad73430801140593b58cb7c413b",
+  "backendStatus": "PRELIMINARY_SNAPSHOT",
+  "postgres": "16",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "REG-ADMIN-LOGIN-NO-TENANT",
+      "scope": "UI_HTTP",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "status": 200,
+        "requestId": "021be5c5-4c70-47d7-935f-2cb5fdccc971",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestKeys": [
+          "email",
+          "password"
+        ]
+      }
+    },
+    {
+      "caseId": "REG-CREATE-201-ATOMIC",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/tenants/register",
+        "status": 201,
+        "requestId": "cd78f949-8959-4850-84d6-49b70d626ddb",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestKeys": [
+          "ownerEmail",
+          "ownerName",
+          "tenantName",
+          "tenantSlug"
+        ]
+      },
+      "dbAssertions": [
+        "Two tenant roles",
+        "Pending non-ADMIN user and OWNER membership",
+        "Onboarding, hashed link and accepted delivery persisted"
+      ]
+    },
+    {
+      "caseId": "REG-ONBOARDING-REREAD",
+      "scope": "UI_TO_DB_READ",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/tenants/cmvsoadku0001k1mvveho1ira/onboarding",
+        "status": 200,
+        "requestId": "9b942d1c-9fe2-4087-9b93-6ff5e6578957",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null
+      },
+      "uiReread": "PASS"
+    },
+    {
+      "caseId": "REG-RESEND-429",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/tenants/cmvsoadku0001k1mvveho1ira/resend-welcome",
+        "status": 429,
+        "requestId": "9fbc49d9-94ab-4ffc-8543-8287e7736bc0",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null
+      },
+      "dbAssertions": [
+        "No generation change on throttling"
+      ]
+    },
+    {
+      "caseId": "E2E-EXECUTION",
+      "scope": "UI_TO_DB",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- false\n"
+    }
+  ]
+}
