@@ -80,4 +80,4 @@ Si una feature requiere un campo, endpoint, permiso o codigo HTTP que no existe 
 
 PlatformApi incluye creación manual y CSV multipart preview/confirm. PersistedProspectSource admite google_maps/manual/csv; ProspectingSource sólo google_maps. CSV UI y selección de archivo están implementados.
 
-Tenants/Users/Campaigns/Prospects productivos usan API real y estado invalidado por sesión/tenant. OWNER/MEMBER se derivan del usuario actual en UsersApi; no decodificar JWT. MEMBER puede gestionar campañas y editar prospectos. Ver la matriz vigente y rutas en `FEATURE-DEVELOPMENT.md`.
+Tenants/Users/Campaigns/Prospects productivos usan API real y estado invalidado por sesión/tenant. FE-03 (excepción autorizada por el owner el 28-10-2026): los permisos visibles se derivan de los claims del JWT vigente, comprobando sub, tenantId y exp; no verifican firma ni autorizan operaciones. No consultar UsersApi para reemplazar el snapshot. NestJS conserva toda autorización. MEMBER puede gestionar campañas y editar prospectos. Ver la matriz vigente y rutas en `FEATURE-DEVELOPMENT.md`.

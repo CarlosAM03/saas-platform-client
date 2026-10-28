@@ -461,7 +461,7 @@ La matriz sigue los controllers de backend/main `3a3309398458ab333d7b00f16e9c2df
 
 Las operaciones tenant-scoped requieren organización seleccionada, incluido ADMIN. ADMIN sin tenant es válido para discovery, tenant create y Perfil.
 
-`currentTenantPermissionsProvider` reconoce ADMIN desde AuthContext. Para OWNER/MEMBER consulta UsersApi.get(currentUserId) y usa sólo el role del tenant actual; no decodifica JWT ni inventa autorización. Una consulta fallida cierra acciones. Los formularios verifican permisos también por ruta directa; backend conserva autoridad y cualquier 403 debe mostrarse.
+`currentTenantPermissionsProvider` lee solo para presentación los claims del JWT autenticado (excepción FE-03 autorizada por el owner el 28-10-2026). Comprueba sub, tenantId, exp, algoritmo y roles conocidos; entradas inválidas cierran acciones. No verifica firma ni sustituye autorización de NestJS. Los cambios de rol/membresía pueden tardar hasta ocho horas en reflejarse; login o selección de tenant emiten otro token. Los formularios verifican permisos también por ruta directa; backend conserva autoridad y cualquier 403 debe mostrarse.
 
 ---
 
