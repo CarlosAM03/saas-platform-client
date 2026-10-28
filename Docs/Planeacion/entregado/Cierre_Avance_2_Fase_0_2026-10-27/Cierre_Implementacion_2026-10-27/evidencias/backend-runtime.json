@@ -1,0 +1,197 @@
+{
+  "date": "2026-10-27T23:19:04.887Z",
+  "artifact": "Dockerfile runtime",
+  "origin": "http://127.0.0.1:18441",
+  "pass": true,
+  "results": [
+    {
+      "method": "GET",
+      "path": "/api/v1/health/live",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/ready",
+      "status": 200
+    },
+    {
+      "swaggerVersion": "1.0.0",
+      "operations": 33
+    },
+    {
+      "corsOrigin": "https://localhost:18443",
+      "status": 204,
+      "allowed": true
+    },
+    {
+      "corsOrigin": "https://untrusted.invalid",
+      "status": 204,
+      "allowed": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/me",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/demo-prospect-demo-sur-1-1",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmvrb2uaf0001mmpib09xzg8z",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/users/demo-user-demo-norte-owner",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "status": 403
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/select-tenant",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/select-tenant",
+      "status": 403
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/campaigns/cmvrb2uaf0001mmpib09xzg8z",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/preview",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/preview",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/preview",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/confirm",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects?search=AV2%20Runtime%20Synthetic",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs/demo-job-demo-norte-queued",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospecting-jobs",
+      "status": 503
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospecting-jobs/demo-job-demo-norte-queued/cancel",
+      "status": 503
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "status": 200
+    }
+  ]
+}

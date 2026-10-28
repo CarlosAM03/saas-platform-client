@@ -1,0 +1,1 @@
+{"pass": true, "phase": "before", "id": "cmvrc9nwt002wrfz4i4au94bv", "status": "RUNNING", "key": "av2-restart-demo-controlled-initial", "body": {"campaignId": "c0000000000000000000000011", "query": {"keyword": "slow", "location": "CONTROLLED RESTART FIXTURE", "source": "google_maps", "limit": 1}}}

@@ -1,0 +1,128 @@
+{
+  "recordedAt": "2026-10-27T20:29:22.832Z",
+  "authorizedBy": "Owner latest message: G0 APROBADO; two exact branches/base SHA/worktree paths only; stop G1 before code",
+  "allPass": true,
+  "repositories": [
+    {
+      "repo": "Backend",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\Backend_Nestjs\\saas-platform-backend",
+      "base": "3a3309398458ab333d7b00f16e9c2df6a09ef734",
+      "ref": "main",
+      "branch": "fix/avance2-core-security",
+      "target": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\backend-core",
+      "head": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "activeBranch": "feat/prospector-service-mvp-integration",
+      "status": "",
+      "worktrees": "worktree C:/Users/Carl0/Desktop/ProyectosPersonales/DesarrolloDeSoftwareConComputoEnLaNube/PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing/DocumentacionGlobal/Backend_Nestjs/saas-platform-backend\nHEAD a80871b6c5ebf39b4fca69eaf5f6352ab342da96\nbranch refs/heads/feat/prospector-service-mvp-integration\n",
+      "refs": "refs/heads/dev|967044e2dc7d10ea91d7d78a86e1ea6fe2accd1a|refs/remotes/origin/dev||CarlosAM03|2026-10-20T09:16:20-07:00\nrefs/heads/feat/prospector-service-mvp-integration|a80871b6c5ebf39b4fca69eaf5f6352ab342da96|refs/remotes/origin/feat/prospector-service-mvp-integration||CarlosAM03|2026-10-27T02:55:12-07:00\nrefs/heads/main|ab53272f531d15e6c4dcc9df8c1d6dca8601e87a|refs/remotes/origin/main|[behind 8]|Carlos Armenta|2026-10-09T06:20:28-07:00\nrefs/heads/release/avance-1|af62f313d15a5a5be6b0aeed4ce7652e2dfb77b3|refs/remotes/origin/release/avance-1||CarlosAM03|2026-09-28T10:21:38-07:00\nrefs/remotes/origin/HEAD|3a3309398458ab333d7b00f16e9c2df6a09ef734|||Carlos Armenta|2026-10-20T09:32:49-07:00\nrefs/remotes/origin/dev|967044e2dc7d10ea91d7d78a86e1ea6fe2accd1a|||CarlosAM03|2026-10-20T09:16:20-07:00\nrefs/remotes/origin/feat/prospector-service-mvp-integration|a80871b6c5ebf39b4fca69eaf5f6352ab342da96|||CarlosAM03|2026-10-27T02:55:12-07:00\nrefs/remotes/origin/main|3a3309398458ab333d7b00f16e9c2df6a09ef734|||Carlos Armenta|2026-10-20T09:32:49-07:00\nrefs/remotes/origin/release/avance-1|af62f313d15a5a5be6b0aeed4ce7652e2dfb77b3|||CarlosAM03|2026-09-28T10:21:38-07:00\nrefs/tags/Avance-1|af62f313d15a5a5be6b0aeed4ce7652e2dfb77b3|||CarlosAM03|2026-09-28T10:21:38-07:00",
+      "stashes": "",
+      "unpublished": "",
+      "remoteBaseline": "3a3309398458ab333d7b00f16e9c2df6a09ef734\trefs/heads/main",
+      "baseType": "commit",
+      "targetExists": false,
+      "hooksPath": null,
+      "coreLongPaths": "true",
+      "agentFiles": "",
+      "branchExists": false,
+      "activeHooks": []
+    },
+    {
+      "repo": "Flutter",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client",
+      "base": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "ref": "fix/f5-foundation",
+      "branch": "release/avance2-frontend-v1",
+      "target": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\flutter-core",
+      "head": "97ad02a621007e4139e5207511ecca2376754ed8",
+      "activeBranch": "feat/flutter-prospector-mvp-parity",
+      "status": " D \"Plan de Trabajo.md\"\n?? \"Docs/Planeacion/entregado/Plan de TrabajoAvance1.md\"\n?? \"Plan de TrabajoAvance2.md\"",
+      "worktrees": "worktree C:/Users/Carl0/Desktop/ProyectosPersonales/DesarrolloDeSoftwareConComputoEnLaNube/PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing/DocumentacionGlobal/PlataformaFlutter/saas-platform-client\nHEAD 97ad02a621007e4139e5207511ecca2376754ed8\nbranch refs/heads/feat/flutter-prospector-mvp-parity\n",
+      "refs": "refs/heads/chore/vercel-production-container|372a16de849f09d85c464dc2a0696562d618c8f0|refs/remotes/origin/chore/vercel-production-container||CarlosAM03|2026-10-13T06:44:23-07:00\nrefs/heads/dev|c7dee664cbdda85d38d896ce3103d8fc6319f0af|refs/remotes/origin/dev||Andre GRS|2026-10-26T19:27:07-07:00\nrefs/heads/feat/flutter-prospector-mvp-parity|97ad02a621007e4139e5207511ecca2376754ed8|refs/remotes/origin/feat/flutter-prospector-mvp-parity||CarlosAM03|2026-10-27T02:48:36-07:00\nrefs/heads/feature/flutter-backend-parity-core|95e7092d461f883a0c18da11f32e4eae6c43dcc4|refs/remotes/origin/feature/flutter-backend-parity-core||CarlosAM03|2026-10-20T11:54:58-07:00\nrefs/heads/fix/f5-foundation|095e899ace31acf17d97bbe945c118c1a5d88682|refs/remotes/origin/fix/f5-foundation||CarlosAM03|2026-10-27T02:21:57-07:00\nrefs/heads/fix/vercel-api-base-url-build|1a9e8841682f2e5a8ed8582b5d0ffe0fc3237905|refs/remotes/origin/fix/vercel-api-base-url-build|[gone]|CarlosAM03|2026-10-13T08:35:52-07:00\nrefs/heads/main|dd9e95b2a4e71afc98662ed4250312a615b7915a|refs/remotes/origin/main|[behind 24]|CarlosAM03|2026-09-27T21:49:43-07:00\nrefs/remotes/origin/HEAD|a85a99678101b3f5562f66d7dd1c1c454b1d20cb|||Carlos Armenta|2026-10-20T21:26:34-07:00\nrefs/remotes/origin/chore/vercel-production-container|372a16de849f09d85c464dc2a0696562d618c8f0|||CarlosAM03|2026-10-13T06:44:23-07:00\nrefs/remotes/origin/codex/complete-pending-features|fe9e32ff6decbf74de14b40f4355557904b40533|||Andre GRS|2026-10-22T12:34:31-07:00\nrefs/remotes/origin/dev|c7dee664cbdda85d38d896ce3103d8fc6319f0af|||Andre GRS|2026-10-26T19:27:07-07:00\nrefs/remotes/origin/feat/flutter-prospector-mvp-parity|97ad02a621007e4139e5207511ecca2376754ed8|||CarlosAM03|2026-10-27T02:48:36-07:00\nrefs/remotes/origin/feature/flutter-backend-parity-core|95e7092d461f883a0c18da11f32e4eae6c43dcc4|||CarlosAM03|2026-10-20T11:54:58-07:00\nrefs/remotes/origin/fix/f5-foundation|095e899ace31acf17d97bbe945c118c1a5d88682|||CarlosAM03|2026-10-27T02:21:57-07:00\nrefs/remotes/origin/main|a85a99678101b3f5562f66d7dd1c1c454b1d20cb|||Carlos Armenta|2026-10-20T21:26:34-07:00",
+      "stashes": "",
+      "unpublished": "",
+      "remoteBaseline": "095e899ace31acf17d97bbe945c118c1a5d88682\trefs/heads/fix/f5-foundation",
+      "baseType": "commit",
+      "targetExists": false,
+      "hooksPath": null,
+      "coreLongPaths": "true",
+      "agentFiles": "",
+      "branchExists": false,
+      "activeHooks": []
+    }
+  ],
+  "comparisons": [
+    {
+      "repo": "Backend",
+      "comparisons": {
+        "head": true,
+        "activeBranch": true,
+        "status": true,
+        "refs": true,
+        "stashes": true,
+        "unpublished": true,
+        "worktrees": true
+      },
+      "baseMatchesRemote": true,
+      "baseIsCommit": true,
+      "targetAbsent": true,
+      "branchAbsent": true,
+      "hooksAbsent": true
+    },
+    {
+      "repo": "Flutter",
+      "comparisons": {
+        "head": true,
+        "activeBranch": true,
+        "status": true,
+        "refs": true,
+        "stashes": true,
+        "unpublished": true,
+        "worktrees": true
+      },
+      "baseMatchesRemote": true,
+      "baseIsCommit": true,
+      "targetAbsent": true,
+      "branchAbsent": true,
+      "hooksAbsent": true
+    }
+  ],
+  "documentIntegrity": [
+    {
+      "source": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\Plan de TrabajoAvance2.md",
+      "expected": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09",
+      "current": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09",
+      "copy": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09",
+      "unchanged": true
+    },
+    {
+      "source": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\Docs\\Planeacion\\entregado\\Plan de TrabajoAvance1.md",
+      "expected": "afdbf821b98f5040d569aec44662f8414f32e4f55eb9fe44a7ebdb8e4a4fdb00",
+      "current": "afdbf821b98f5040d569aec44662f8414f32e4f55eb9fe44a7ebdb8e4a4fdb00",
+      "copy": "afdbf821b98f5040d569aec44662f8414f32e4f55eb9fe44a7ebdb8e4a4fdb00",
+      "unchanged": true
+    }
+  ],
+  "approvedReports": [
+    {
+      "file": "PLAN_EJECUCION_CIERRE_AVANCE_2.md",
+      "sha256": "3ad7de9e8274669bf7f342af002dba5aa2eb6b9cd067dec474120ecfa3073efa",
+      "unchanged": true
+    },
+    {
+      "file": "MATRIZ_CAMBIOS_AUTORIZADOS.md",
+      "sha256": "dd788d9cb66d78aa8530b61fa3ac3c8fa441ccbacba011fd9ace9a52e403510a",
+      "unchanged": true
+    },
+    {
+      "file": "BASELINES_Y_RAMAS.md",
+      "sha256": "191b11eeb5f32c8ebf3ff1856ebf37fd4411d44e5eea4e69babbd5d13562299d",
+      "unchanged": true
+    },
+    {
+      "file": "GATES_DE_ACEPTACION.md",
+      "sha256": "7d09ae37b503a80fc40853942c835e16023b4172fa50432352882bd0100f8bd7",
+      "unchanged": true
+    }
+  ],
+  "managedWorktreeToolLimitation": "create_worktree supports ref/name but neither repository nor exact destination; no attached repository. User specified exact two repository/path targets; use reviewed git -C worktree add fallback."
+}

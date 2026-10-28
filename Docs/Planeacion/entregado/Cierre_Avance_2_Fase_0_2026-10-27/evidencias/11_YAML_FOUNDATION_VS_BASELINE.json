@@ -1,0 +1,624 @@
+{
+  "recordedAt": "2026-10-27T19:46:46.339Z",
+  "backendSha": "3a3309398458ab333d7b00f16e9c2df6a09ef734",
+  "flutterSha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+  "backendYamlVersion": "1.0.0",
+  "flutterYamlVersion": "1.0.0",
+  "rawYamlSha256": {
+    "backend": "7f62d1660ad9cb3f8fca3100691d481948ab065e1554c505e5e3afb57e5e3d08",
+    "flutter": "771033cf4f547c934b7d41d1643ac0b7a1024a89906fbbed7c8d3d419060a5a7"
+  },
+  "semanticYamlEqual": false,
+  "differences": [
+    {
+      "path": "$.info.description",
+      "backendType": "string",
+      "flutterType": "string"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs.post.description",
+      "backendType": "string",
+      "flutterType": "string"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs.post.responses.201",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "description": "Job creado con estado QUEUED.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProspectingJobDetail"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs.post.responses.409",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "$ref": "#/components/responses/Conflict"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs.post.responses.403",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "description": "Tenant no seleccionado o permisos insuficientes."
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs.post.x-implementation-status",
+      "backendType": "undefined",
+      "flutterType": "string",
+      "flutter": "integration-pending"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs.post.x-target-responses",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "201": {
+          "description": "Job creado o recuperado por Idempotency-Key. Puede haber avanzado de estado antes de responder.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SuccessResponse"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "$ref": "#/components/schemas/ProspectingJobDetail"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "409": {
+          "$ref": "#/components/responses/Conflict"
+        }
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs.get.responses.403",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "description": "Tenant no seleccionado o permisos insuficientes."
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}.get.responses.200.description",
+      "backendType": "string",
+      "flutterType": "string"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}.get.responses.403",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "description": "Tenant no seleccionado o permisos insuficientes."
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/cancel.post.responses.200",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "description": "Job cancelado o solicitud de cancelación aceptada.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ProspectingJobDetail"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/cancel.post.responses.404",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "$ref": "#/components/responses/NotFound"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/cancel.post.responses.409",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "$ref": "#/components/responses/Conflict"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/cancel.post.responses.403",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "description": "Tenant no seleccionado o permisos insuficientes."
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/cancel.post.responses.503",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "$ref": "#/components/responses/ServiceUnavailable"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/cancel.post.x-implementation-status",
+      "backendType": "undefined",
+      "flutterType": "string",
+      "flutter": "integration-pending"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/cancel.post.x-target-responses",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "200": {
+          "description": "Job cancelado o solicitud de cancelación aceptada.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SuccessResponse"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "$ref": "#/components/schemas/ProspectingJobDetail"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "404": {
+          "$ref": "#/components/responses/NotFound"
+        },
+        "409": {
+          "$ref": "#/components/responses/Conflict"
+        }
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/persist.post.description",
+      "backendType": "string",
+      "flutterType": "string"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/persist.post.responses.200",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "description": "Resultados persistidos.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PersistResultsResult"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/persist.post.responses.404",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "$ref": "#/components/responses/NotFound"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/persist.post.responses.409",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "$ref": "#/components/responses/Conflict"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/persist.post.responses.403",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "description": "Tenant no seleccionado o permisos insuficientes."
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/persist.post.responses.503",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "$ref": "#/components/responses/ServiceUnavailable"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/persist.post.x-implementation-status",
+      "backendType": "undefined",
+      "flutterType": "string",
+      "flutter": "integration-pending"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/persist.post.x-target-responses",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "200": {
+          "description": "Resultados persistidos.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SuccessResponse"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "$ref": "#/components/schemas/PersistResultsResult"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "404": {
+          "$ref": "#/components/responses/NotFound"
+        },
+        "409": {
+          "$ref": "#/components/responses/Conflict"
+        }
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/export.get.description",
+      "backendType": "string",
+      "flutterType": "string"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/export.get.responses.200",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "description": "Archivo de exportación.",
+        "content": {
+          "text/csv": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/export.get.responses.404",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "$ref": "#/components/responses/NotFound"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/export.get.responses.409",
+      "backendType": "object",
+      "flutterType": "undefined",
+      "backend": {
+        "$ref": "#/components/responses/Conflict"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/export.get.responses.403",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "description": "Tenant no seleccionado o permisos insuficientes."
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/export.get.responses.503",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "$ref": "#/components/responses/ServiceUnavailable"
+      }
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/export.get.x-implementation-status",
+      "backendType": "undefined",
+      "flutterType": "string",
+      "flutter": "integration-pending"
+    },
+    {
+      "path": "$.paths./api/v1/prospecting-jobs/{id}/export.get.x-target-responses",
+      "backendType": "undefined",
+      "flutterType": "object",
+      "flutter": {
+        "200": {
+          "description": "Archivo de exportación.",
+          "content": {
+            "text/csv": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        },
+        "404": {
+          "$ref": "#/components/responses/NotFound"
+        },
+        "409": {
+          "$ref": "#/components/responses/Conflict"
+        }
+      }
+    },
+    {
+      "path": "$.components.responses.ServiceUnavailable.description",
+      "backendType": "string",
+      "flutterType": "string"
+    },
+    {
+      "path": "$.components.schemas.ProspectingQuery.properties.keyword.minLength",
+      "backendType": "undefined",
+      "flutterType": "number",
+      "flutter": 1
+    },
+    {
+      "path": "$.components.schemas.ProspectingQuery.properties.keyword.maxLength",
+      "backendType": "undefined",
+      "flutterType": "number",
+      "flutter": 200
+    },
+    {
+      "path": "$.components.schemas.ProspectingQuery.properties.keyword.pattern",
+      "backendType": "undefined",
+      "flutterType": "string",
+      "flutter": "\\S"
+    },
+    {
+      "path": "$.components.schemas.ProspectingQuery.properties.location.minLength",
+      "backendType": "undefined",
+      "flutterType": "number",
+      "flutter": 1
+    },
+    {
+      "path": "$.components.schemas.ProspectingQuery.properties.location.maxLength",
+      "backendType": "undefined",
+      "flutterType": "number",
+      "flutter": 200
+    },
+    {
+      "path": "$.components.schemas.ProspectingQuery.properties.location.pattern",
+      "backendType": "undefined",
+      "flutterType": "string",
+      "flutter": "\\S"
+    },
+    {
+      "path": "$.components.schemas.ProspectingQuery.properties.limit.maximum",
+      "backendType": "undefined",
+      "flutterType": "number",
+      "flutter": 100
+    },
+    {
+      "path": "$.components.schemas.ProspectingJobDetail.allOf",
+      "backendType": "object",
+      "flutterType": "object",
+      "backend": [
+        {
+          "$ref": "#/components/schemas/ProspectingJobSummary"
+        },
+        {
+          "type": "object",
+          "required": [
+            "tenantId",
+            "requestedBy",
+            "query",
+            "requestedLimit",
+            "error",
+            "updatedAt",
+            "resultsAvailable",
+            "results",
+            "progress"
+          ],
+          "properties": {
+            "tenantId": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "requestedBy": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "query": {
+              "$ref": "#/components/schemas/ProspectingQuery"
+            },
+            "requestedLimit": {
+              "type": "integer",
+              "nullable": true
+            },
+            "error": {
+              "type": "string",
+              "nullable": true
+            },
+            "updatedAt": {
+              "$ref": "#/components/schemas/DateTime"
+            },
+            "resultsAvailable": {
+              "type": "boolean",
+              "description": "Computed/cache-only."
+            },
+            "results": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "$ref": "#/components/schemas/BusinessResult"
+              },
+              "description": "Temporal/cache-only; no es una relación Prisma."
+            },
+            "progress": {
+              "$ref": "#/components/schemas/PipelineProgress"
+            }
+          }
+        }
+      ],
+      "flutter": [
+        {
+          "$ref": "#/components/schemas/ProspectingJobSummary"
+        },
+        {
+          "type": "object",
+          "required": [
+            "tenantId",
+            "requestedBy",
+            "query",
+            "requestedLimit",
+            "error",
+            "updatedAt",
+            "resultsAvailable",
+            "results",
+            "progress"
+          ],
+          "properties": {
+            "tenantId": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "requestedBy": {
+              "$ref": "#/components/schemas/Id"
+            },
+            "query": {
+              "$ref": "#/components/schemas/ProspectingQuery"
+            },
+            "requestedLimit": {
+              "type": "integer",
+              "nullable": true
+            },
+            "error": {
+              "type": "string",
+              "nullable": true
+            },
+            "updatedAt": {
+              "$ref": "#/components/schemas/DateTime"
+            },
+            "resultsAvailable": {
+              "type": "boolean",
+              "description": "Disponible durante una hora después de recibir COMPLETED; false después de persistir o vencer."
+            },
+            "results": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "$ref": "#/components/schemas/BusinessResult"
+              },
+              "description": "Snapshot temporal en PostgreSQL; se elimina al persistir o al vencer su vigencia de una hora."
+            },
+            "progress": {
+              "$ref": "#/components/schemas/PipelineProgress"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "path": "$.components.schemas.CreateProspectingJobRequest.properties.campaignId.$ref",
+      "backendType": "string",
+      "flutterType": "undefined",
+      "backend": "#/components/schemas/Id"
+    },
+    {
+      "path": "$.components.schemas.CreateProspectingJobRequest.properties.campaignId.type",
+      "backendType": "undefined",
+      "flutterType": "string",
+      "flutter": "string"
+    },
+    {
+      "path": "$.components.schemas.CreateProspectingJobRequest.properties.campaignId.minLength",
+      "backendType": "undefined",
+      "flutterType": "number",
+      "flutter": 1
+    },
+    {
+      "path": "$.components.schemas.CreateProspectingJobRequest.properties.campaignId.maxLength",
+      "backendType": "undefined",
+      "flutterType": "number",
+      "flutter": 191
+    }
+  ],
+  "baselinePrismaModels": [
+    "Tenant",
+    "User",
+    "UserTenant",
+    "Role",
+    "Campaign",
+    "Prospect",
+    "CampaignProspect",
+    "ProspectingJob"
+  ]
+}

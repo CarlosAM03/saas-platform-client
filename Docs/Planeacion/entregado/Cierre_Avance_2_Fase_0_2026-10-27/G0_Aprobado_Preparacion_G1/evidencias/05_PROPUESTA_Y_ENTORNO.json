@@ -1,0 +1,86 @@
+{
+  "recordedAt": "2026-10-27T20:42:00.546Z",
+  "changeRequest": {
+    "id": "CR-AV2-DEMO-110-01",
+    "goalOwnerRequested": true,
+    "architectureAccepted": false,
+    "implementationAuthorized": false,
+    "phase7Executed": false
+  },
+  "sdk": {
+    "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\.flutter-sdk",
+    "cachedFramework": "3.47.5",
+    "cachedDart": "3.13.4",
+    "channel": "stable",
+    "flutterBatExists": true,
+    "initializedThisTurn": false
+  },
+  "references": [
+    {
+      "repo": "Backend P2",
+      "path": "Backend_Nestjs/saas-platform-backend/src/prospector-client/prospector-policy.ts",
+      "sha256": "c572903e09ce642f4bfbc7b48d7ea915d7128d00c7b7c4df64a0e4f49837efa0",
+      "lines": [
+        66,
+        70,
+        75,
+        82
+      ]
+    },
+    {
+      "repo": "Service",
+      "path": "ProspectorDocs/PROSPECTOR_SERVICE/src/prospector_service/config.py",
+      "sha256": "4d898331a8fef99cb94c856fea7feac4b9147ed566a9bde5835579f1bd363ad8",
+      "lines": [
+        16,
+        31,
+        38,
+        40,
+        41,
+        52,
+        53,
+        56
+      ]
+    },
+    {
+      "repo": "Service",
+      "path": "ProspectorDocs/PROSPECTOR_SERVICE/src/prospector_service/adapters/engine.py",
+      "sha256": "3153bb9a206abb8350f6a16eedf4aff085042221660751acc03d6312eafe7a57",
+      "lines": [
+        43,
+        53,
+        59
+      ]
+    },
+    {
+      "repo": "Harness P2",
+      "path": "Backend_Nestjs/saas-platform-backend/test/support/controlled_service.py",
+      "sha256": "bef81de84c8fe8123e69ce7cd2b0244900123b39bbe25510e7a36579f98cbe7f",
+      "lines": [
+        20,
+        21,
+        27
+      ]
+    },
+    {
+      "repo": "Flutter baseline",
+      "path": "WorktreesAvance2/flutter-core/lib/features/prospecting_jobs/state/prospecting_jobs_providers.dart",
+      "sha256": "5c3ca23f9c9f572415c7e9bcceb72c48dc6158a490dae5e42b8fcf1eb74b7428",
+      "lines": [
+        49,
+        52,
+        57
+      ]
+    }
+  ],
+  "officialDockerDocs": [
+    "https://docs.docker.com/reference/cli/docker/compose/up/",
+    "https://docs.docker.com/compose/how-tos/startup-order/",
+    "https://docs.docker.com/compose/how-tos/profiles/",
+    "https://docs.docker.com/reference/compose-file/services/"
+  ],
+  "testsExecuted": 0,
+  "containersStarted": 0,
+  "buildsExecuted": 0,
+  "migrationsExecuted": 0
+}

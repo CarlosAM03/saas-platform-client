@@ -1,0 +1,9 @@
+{
+  "publishedBlob": "3988fdff5b3ce379fb461e0753ec77daed9e3a08",
+  "copy": "evidencias/PLAN_ANTERIOR_TRACKED_HEAD_SNAPSHOT.md",
+  "bytes": 18826,
+  "sha256": "5f1ddfed25739662755687832da2e122f851033eb91b653781e2f1a4d30bd683",
+  "avance1ExactlySameBytes": false,
+  "avance1SameTextIgnoringCRLFAndTrailingNewline": true,
+  "note": "Tracked deleted file not restored; preserves both versions without deciding rename intent."
+}

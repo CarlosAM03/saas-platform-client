@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-27T23:18:48.832Z",
+  "command": "docker run prospector-avance2-flutter:toolchain sh -c \"dart format test/features/prospecting_demo_test.dart && flutter analyze --no-pub && flutter test --no-pub --reporter expanded\"",
+  "environment": "Linux SDK Flutter 3.47.5, toolchain stage from actual Dockerfile.vercel; test/Docs/tool bind-mounted",
+  "analyze": "PASS no issues",
+  "tests": 256,
+  "failed": 0,
+  "exitCode": 0,
+  "limitation": "Commit todavía sin publicar; repetir en SHA consolidado dev. Windows pub get resolvió paquetes pero requirió Developer Mode para symlinks; no se cambió el host."
+}

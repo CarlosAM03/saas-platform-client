@@ -1,0 +1,79 @@
+{
+  "recordedAt": "2026-10-27T19:48:42.287Z",
+  "hooks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "repo": "Backend",
+        "resolvedHooks": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\Backend_Nestjs\\saas-platform-backend\\.git\\hooks",
+        "coreLongPaths": "true",
+        "hooksPath": null,
+        "activeHookFiles": null
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "repo": "Flutter",
+        "hooksPath": null,
+        "coreLongPaths": "true",
+        "resolvedHooks": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\.git\\hooks",
+        "activeHookFiles": null
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "repo": "Service",
+        "activeHookFiles": null,
+        "resolvedHooks": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\ProspectorDocs\\PROSPECTOR_SERVICE\\.git\\hooks",
+        "hooksPath": null,
+        "coreLongPaths": "true"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "repo": "Engine",
+        "hooksPath": null,
+        "coreLongPaths": "true",
+        "resolvedHooks": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\ProspectorDocs\\PROSPECTOR_ENGINE\\.git\\hooks",
+        "activeHookFiles": null
+      }
+    }
+  ],
+  "baselineChecks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "c44642",
+        "wall_time_seconds": 1.1254741,
+        "exit_code": 0,
+        "original_token_count": 633,
+        "output": "{\r\n  \"name\": \"saas-platform-backend\",\r\n  \"version\": \"0.0.1\",\r\n  \"description\": \"Platform Backend for SaaS - Fase 4 Baseline\",\r\n  \"author\": \"Carlos Armenta\",\r\n  \"private\": true,\r\n  \"license\": \"UNLICENSED\",\r\n  \"engines\": {\r\n    \"node\": \"20.x\"\r\n  },\r\n  \"scripts\": {\r\n    \"start:dev\": \"nest start --watch\",\r\n    \"build\": \"nest build\",\r\n    \"start\": \"nest start\",\r\n    \"test\": \"jest\",\r\n    \"test:unit:ci\": \"jest --runInBand\",\r\n    \"test:e2e\": \"jest --config ./test/jest-e2e.json\",\r\n    \"test:e2e:ci\": \"jest --config ./test/jest-e2e.json --runInBand\",\r\n    \"test:postgres\": \"jest --config ./test/jest-postgres.json --runInBand\",\r\n    \"test:jobs:db\": \"npm run test:postgres\",\r\n    \"lint\": \"eslint \\\"{src,apps,libs,test}/**/*.ts\\\" --fix\",\r\n    \"lint:check\": \"eslint \\\"{src,apps,libs,test,Prisma}/**/*.ts\\\"\",\r\n    \"format\": \"prettier --write \\\"src/**/*.ts\\\" \\\"test/**/*.ts\\\" \\\"Prisma/**/*.ts\\\"\",\r\n    \"format:check\": \"prettier --check \\\"src/**/*.ts\\\" \\\"test/**/*.ts\\\" \\\"Prisma/**/*.ts\\\"\",\r\n    \"prisma:generate\": \"prisma generate\",\r\n    \"prisma:migrate\": \"prisma migrate dev\",\r\n    \"prisma:migrate:dev\": \"prisma migrate dev\",\r\n    \"prisma:migrate:deploy\": \"prisma migrate deploy\",\r\n    \"prisma:seed\": \"ts-node Prisma/seed.ts\",\r\n    \"prisma:seed:dev\": \"ts-node Prisma/seed_dev.ts\",\r\n    \"db:reset:shared-dev\": \"node scripts/reset-shared-dev.cjs\",\r\n    \"test:f4:local\": \"node test/scripts/f4-local-validation.cjs\",\r\n    \"test:f4:db\": \"node test/scripts/f4-database-validation.cjs\"\r\n  },\r\n  \"prisma\": {\r\n    \"schema\": \"Prisma/schema.prisma\"\r\n  },\r\n  \"dependencies\": {\r\n    \"@nestjs/common\": \"11.2.3\",\r\n    \"@nestjs/config\": \"4.0.4\",\r\n    \"@nestjs/core\": \"11.2.3\",\r\n    \"@nestjs/jwt\": \"11.0.2\",\r\n    \"@nestjs/passport\": \"11.0.5\",\r\n    \"@nestjs/platform-express\": \"11.2.6\",\r\n    \"@nestjs/swagger\": \"11.4.7\",\r\n    \"@prisma/client\": \"5.22.0\",\r\n    \"bcrypt\": \"5.1.1\",\r\n    \"class-transformer\": \"0.5.1\",\r\n    \"class-validator\": \"0.14.4\",\r\n    \"csv-parse\": \"7.0.3\",\r\n    \"helmet\": \"7.2.0\",\r\n    \"js-yaml\": \"5.4.1\",\r\n    \"nestjs-pino\": \"4.6.1\",\r\n    \"passport\": \"0.7.0\",\r\n    \"passport-jwt\": \"4.0.1\",\r\n    \"pino\": \"9.14.0\",\r\n    \"pino-http\": \"8.6.1\",\r\n    \"prisma\": \"5.22.0\",\r\n    \"reflect-metadata\": \"0.2.2\",\r\n    \"rxjs\": \"7.8.2\",\r\n    \"swagger-ui-express\": \"5.0.1\"\r\n  },\r\n  \"devDependencies\": {\r\n    \"@nestjs/cli\": \"11.0.24\",\r\n    \"@nestjs/schematics\": \"11.1.0\",\r\n    \"@nestjs/testing\": \"11.2.3\",\r\n807371c90e99fe1aa4ff89835ff8e765fd507a64\n807371c90e99fe1aa4ff89835ff8e765fd507a64\n6390092d57e3d8b88b434d2d1f6c99daeb848170\nplannedBranchExists=False\r\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "048fc6",
+        "wall_time_seconds": 1.0504412,
+        "exit_code": 0,
+        "original_token_count": 720,
+        "output": "dd9e9353e5d85b49738c7f5aac346324aadf0ef5\nname: Flutter Foundation CI\r\n\r\non:\r\n  push:\r\n    branches: [dev, main]\r\n  pull_request:\r\n\r\njobs:\r\n  foundation:\r\n    runs-on: ubuntu-latest\r\n    steps:\r\n      - uses: actions/checkout@v4\r\n      - uses: subosito/flutter-action@v2\r\n        with:\r\n          channel: stable\r\n          flutter-version: '3.47.5'\r\n          cache: true\r\n      - name: Reject unresolved merge markers\r\n        run: dart run tool/check_merge_markers.dart\r\n      - run: flutter pub get\r\n      - run: dart run build_runner build\r\n      - run: flutter analyze\r\n      - name: Foundation, Platform API and contract tests\r\n        run: flutter test\r\n      - run: flutter build web --release --no-wasm-dry-run --dart-define=API_BASE_URL=https://api.example.invalid\r\n\r\n  container:\r\n    runs-on: ubuntu-latest\r\n    timeout-minutes: 20\r\n    steps:\r\n      - uses: actions/checkout@v4\r\n      - run: docker compose config --quiet\r\n      - run: docker compose build\r\n\r\n  production-container:\r\n    runs-on: ubuntu-latest\r\n    timeout-minutes: 25\r\n    steps:\r\n      - uses: actions/checkout@v4\r\n      - name: Build production image\r\n        run: >-\r\n          docker build -f Dockerfile.vercel\r\n          --build-arg API_BASE_URL=https://api.example.invalid\r\n          -t saas-platform-client:prod .\r\n      - name: Smoke test production container\r\n        shell: bash\r\n        run: |\r\n          set -euo pipefail\r\n          docker run -d --name production-smoke -e PORT=8080 -p 8080:8080 saas-platform-client:prod\r\n          ready=false\r\n          for attempt in $(seq 1 30); do\r\n            if [ \"$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/ || true)\" = 200 ]; then\r\n              ready=true\r\n              break\r\n            fi\r\n            sleep 2\r\n          done\r\n          [ \"$ready\" = true ]\r\n          curl --fail -sS -D /tmp/frontend-headers http://localhost:8080/ -o /tmp/frontend-index\r\n          curl --fail -sS http://localhost:8080/dashboard -o /tmp/frontend-spa\r\n          cmp /tmp/frontend-index /tmp/frontend-spa\r\n          grep -qi 'X-Content-Type-Options: nosniff' /tmp/frontend-headers\r\n          grep -qi 'Cache-Control: no-cache' /tmp/frontend-headers\r\n          docker exec production-smoke sh -c '! command -v flutter && ! command -v dart'\r\n      - name: Clean up\r\n        if: always()\r\n        run: docker rm -f production-smoke || true\r\nplannedBranchExists=False\r\n[{\"path\":\"C:\\\\Users\\\\Carl0\\\\Desktop\\\\ProyectosPersonales\\\\DesarrolloDeSoftwareConComputoEnLaNube\\\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\\\DocumentacionGlobal\\\\WorktreesAvance2\\\\backend-core\",\"exists\":false},{\"path\":\"C:\\\\Users\\\\Carl0\\\\Desktop\\\\ProyectosPersonales\\\\DesarrolloDeSoftwareConComputoEnLaNube\\\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\\\DocumentacionGlobal\\\\WorktreesAvance2\\\\flutter-core\",\"exists\":false}]\r\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "385aec",
+        "wall_time_seconds": 0.7134125,
+        "exit_code": 0,
+        "original_token_count": 271,
+        "output": "DependenciasServicePlatform.md\n\"docs/HandOffs/Handoff \\342\\200\\224 Cierre Prospector CLI v1.0.0 e Inicio de Extracci\\303\\263n de Prospector Engine.md\"\n[build-system]\r\nrequires = [\"setuptools>=77\", \"wheel\"]\r\nbuild-backend = \"setuptools.build_meta\"\r\n\r\n[project]\r\nname = \"prospector-service\"\r\nversion = \"0.1.0.dev0\"\r\ndescription = \"Initial single-process FastAPI integration for Prospector Engine\"\r\nreadme = \"README.md\"\r\nrequires-python = \">=3.11\"\r\ndependencies = [\r\n  \"fastapi==0.156.8\",\r\n  \"pydantic==2.14.1\",\r\n  \"httpx==0.28.1\",\r\n  \"uvicorn>=0.30,<1\",\r\n  \"email-validator>=2.2,<3\",\r\n  \"prospector-engine @ git+https://github.com/CarlosAM03/prospector-engine.git@70f6081688db5c5bc5ea612f5fabd5724aab0b20\",\r\n  \"prospector-export[xlsx] @ git+https://github.com/CarlosAM03/prospector-service.git@0494f2b385e38c6a83202290a13fab33e345c7c4#subdirectory=packages/prospector_export\",\r\n]\r\n\r\n[project.optional-dependencies]\r\ndev = [\"pytest>=8,<10\", \"pytest-asyncio>=0.24,<2\", \"ruff>=0.11,<1\", \"build>=1.2,<2\",\r\n       \"setuptools>=77\", \"wheel\", \"PyYAML>=6,<7\", \"jsonschema[format]>=4.23,<5\"]\r\n"
+      }
+    }
+  ],
+  "attachedArtifacts": [],
+  "note": "No active hooks reported; core.longpaths true; planned branches and worktree destinations absent. No worktrees created."
+}

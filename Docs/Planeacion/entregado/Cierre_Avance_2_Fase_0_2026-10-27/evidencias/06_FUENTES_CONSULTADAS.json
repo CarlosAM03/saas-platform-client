@@ -1,0 +1,768 @@
+{
+  "recordedAt": "2026-10-27T19:44:53.828Z",
+  "audit": [
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\AUDITORIA_RECONCILIACION_PROSPECTOR_V1.md",
+      "bytes": 74528,
+      "sha256": "63f6ecfe24948ad93c79c9d033a371abf83c8606c3e5d4f48e9ba6799b4b1534"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_A_RAMAS_Y_PRS.md",
+      "bytes": 36510,
+      "sha256": "198ab8a28353675348e3de232a2491e5c8d1204fdf9a0d48dfd87147049fa8cf"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_B_PR6_BACKEND_POR_ARCHIVO.md",
+      "bytes": 88243,
+      "sha256": "b52d1da6ff40898b6222f904f8164e821bbabb68341e85a3830166477e223d78"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_C_EVIDENCIA_CODIGO.md",
+      "bytes": 8753,
+      "sha256": "f98cf15a28db690952993b72da4e721e3783622d26b241e352a32b9c5c131a5a"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_D_HALLAZGOS.md",
+      "bytes": 17548,
+      "sha256": "d7bdf4d6787bcc0f6d26813756f49c81b1f482151703f1e94127d18bea92e296"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_E_OPERACIONES_PUBLICAS.md",
+      "bytes": 2259,
+      "sha256": "95b565ac8a26e1410c342f5926fac8fdad80d398a86b18a6e5a1e27780a1ecbe"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\20_CLASIFICACION_PR6_BACKEND.json",
+      "bytes": 108905,
+      "sha256": "e4ddf4d6ef1a17924f69a75dd9a14e7df9508502e3ce6162861653419fa02139"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\21_COMPARACION_PRISMA_ESTATICA.json",
+      "bytes": 2630,
+      "sha256": "160cd3a44b7c0da841901ea128853ab69cefc3832f3ba1a4bc2697181ea07f0d"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\22_REVIEWS_Y_JOBS_CI.json",
+      "bytes": 58761,
+      "sha256": "e250b384c2f6cb7c84ccc17ab3515861336721a18a13df505e9c0bbad6701874"
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\23_REGISTRO_HALLAZGOS.json",
+      "bytes": 18126,
+      "sha256": "b3e1ac0859b9f9384d479bb4e1d157682f4e4f1049278af4a323a4a7ecf73078"
+    }
+  ],
+  "plan": {
+    "sha256": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09",
+    "lines": 435,
+    "original26NumberedAnswers": "Not embedded in the governing file; do not invent original numbering"
+  },
+  "relevantPriorFindings": [
+    {
+      "id": "ARC-01",
+      "description": "Migración externa no autorizada, innecesaria para el núcleo.",
+      "recommendation": "Excluir del candidato core; mantener experimental; no revertir automáticamente.",
+      "priority": "P1"
+    },
+    {
+      "id": "ARC-02",
+      "description": "El flag no elimina la dependencia del esquema nuevo.",
+      "recommendation": "Candidato core debe conservar lectura/mantenimiento compatible con esquema baseline; validar contra esquema baseline posteriormente.",
+      "priority": "P1"
+    },
+    {
+      "id": "ARC-03",
+      "description": "Revalidación viva contradice snapshot normativo.",
+      "recommendation": "Owner debe ratificar snapshot o revocación viva y actualizar aceptación; separar de protección identidad.",
+      "priority": "P1"
+    },
+    {
+      "id": "SEC-01",
+      "description": "Corrección aprovechable de identidad global compartida.",
+      "recommendation": "Preservar fix selectivo, probar shared A/B y ADMIN; no importar trabajo local André descartado.",
+      "priority": "P1"
+    },
+    {
+      "id": "GIT-01",
+      "description": "Dev contiene conflictos de merge versionados y CI rojo.",
+      "recommendation": "Conservar aportaciones André mediante Foundation PR7; no promover PR6 en su estado actual.",
+      "priority": "P1"
+    },
+    {
+      "id": "GIT-02",
+      "description": "Main local atrasado en Backend, Flutter y Service.",
+      "recommendation": "Usar origin/main en diagnóstico; sincronizar y limpiar solo en plan posterior autorizado.",
+      "priority": "P1"
+    },
+    {
+      "id": "GOV-01",
+      "description": "Checks y atribución Git no acreditan aprobación arquitectónica.",
+      "recommendation": "Separar evidencia técnica, solicitante, autor, committer y herramienta; NO VERIFICADO donde corresponda.",
+      "priority": "P1"
+    },
+    {
+      "id": "WEB-01",
+      "description": "SHA y migraciones de producción no atestados.",
+      "recommendation": "Obtener atestación SHA/entorno/migraciones y smoke autorizado antes de despliegue.",
+      "priority": "P1"
+    },
+    {
+      "id": "WEB-02",
+      "description": "La aplicación sí está disponible en el alias web.",
+      "recommendation": "Usar URL verificada y corregir interpretación en este informe.",
+      "priority": "P0"
+    },
+    {
+      "id": "RUN-01",
+      "description": "Runtime declarado fuera de soporte.",
+      "recommendation": "Planificar versión LTS soportada y probar imágenes/toolchain en trabajo posterior.",
+      "priority": "P1"
+    },
+    {
+      "id": "TST-01",
+      "description": "Contador fetch no cubre transporte real node:http(s).",
+      "recommendation": "Instrumentar transporte real/canario después; conservar pruebas policy y spies client como evidencia parcial.",
+      "priority": "P1"
+    },
+    {
+      "id": "JOB-01",
+      "description": "Retry tras reinicio depende de intervención de operador.",
+      "recommendation": "Ratificar runbook mínimo de generación o diseñar ajuste acotado P2; no añadir persistencia/recuperación durable.",
+      "priority": "P2"
+    },
+    {
+      "id": "API-01",
+      "description": "Contrato P2 añade capacidades sin convertirlas en core aprobado.",
+      "recommendation": "Preservar lector core y CSV; mantener superficie P2 apagada.",
+      "priority": "P1"
+    },
+    {
+      "id": "COST-01",
+      "description": "Límites no prueban presupuesto ni planes de hosting.",
+      "recommendation": "Mantener apagado y verificar planes/costos/credenciales antes de aceptación específica.",
+      "priority": "P2"
+    },
+    {
+      "id": "SEC-02",
+      "description": "Hay candidatos de credenciales fijas en ejemplos/tests/docs; no exposición productiva confirmada.",
+      "recommendation": "Revisar inventario, verificar uso y rotar/revocar solo credenciales efectivamente utilizadas; no volcar .env privados.",
+      "priority": "P1"
+    },
+    {
+      "id": "DEMO-01",
+      "description": "No existe distribución única de cuatro componentes validada end-to-end contra Maps.",
+      "recommendation": "Diseñar futura orquestación de4servicios con Engine dentroService; aceptar límites/entorno después.",
+      "priority": "P2"
+    },
+    {
+      "id": "DOC-01",
+      "description": "Documentos de extracción Engine conservan estados remotos desactualizados.",
+      "recommendation": "Actualizar después con permiso de documentación; en esta auditoría solo aclarar.",
+      "priority": "P2"
+    },
+    {
+      "id": "SVC-01",
+      "description": "Estado de jobs en memoria sin recuperación y registry con capacidad de vida del proceso.",
+      "recommendation": "Documentar límites y runbook P2; no exigir durabilidad nueva para cerrar core.",
+      "priority": "P2"
+    }
+  ],
+  "priorSourceIndex": [
+    {
+      "id": "E01",
+      "repo": "Backend",
+      "sha": "3a3309398458ab333d7b00f16e9c2df6a09ef734",
+      "file": "Docs/ADRs/ADR-004-CommonBaseline.md",
+      "lines": [
+        5,
+        955,
+        959,
+        2091,
+        2374
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/3a3309398458ab333d7b00f16e9c2df6a09ef734/Docs/ADRs/ADR-004-CommonBaseline.md#L5",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E02",
+      "repo": "Backend",
+      "sha": "3a3309398458ab333d7b00f16e9c2df6a09ef734",
+      "file": "Docs/ADRs/ADR-005-FunctionalJobs.md",
+      "lines": [
+        3,
+        5,
+        18,
+        30,
+        32,
+        34
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/3a3309398458ab333d7b00f16e9c2df6a09ef734/Docs/ADRs/ADR-005-FunctionalJobs.md#L3",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E03",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "Prisma/schema.prisma",
+      "lines": [
+        204,
+        216,
+        222,
+        229,
+        243
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/Prisma/schema.prisma#L204",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E04",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "Prisma/migrations/20261027063000_prospector_mvp_integration/migration.sql",
+      "lines": [
+        1,
+        2,
+        12,
+        15,
+        25,
+        26
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/Prisma/migrations/20261027063000_prospector_mvp_integration/migration.sql#L1",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E05",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "src/prospecting-jobs/prospecting-jobs.service.ts",
+      "lines": [
+        64,
+        73,
+        75,
+        90,
+        95,
+        180,
+        215,
+        428,
+        433,
+        459
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/src/prospecting-jobs/prospecting-jobs.service.ts#L64",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E06",
+      "repo": "Backend",
+      "sha": "3a3309398458ab333d7b00f16e9c2df6a09ef734",
+      "file": "src/prospecting-jobs/prospecting-jobs.service.ts",
+      "lines": [
+        56,
+        108
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/3a3309398458ab333d7b00f16e9c2df6a09ef734/src/prospecting-jobs/prospecting-jobs.service.ts#L56",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E07",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "src/auth/strategies/jwt.strategy.ts",
+      "lines": [
+        56,
+        58,
+        67,
+        69,
+        78
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/src/auth/strategies/jwt.strategy.ts#L56",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E08",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "src/users/users.service.ts",
+      "lines": [
+        73,
+        157,
+        195,
+        218
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/src/users/users.service.ts#L73",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E09",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "src/prospector-client/prospector-client.service.ts",
+      "lines": [
+        2,
+        3,
+        39,
+        64,
+        116
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/src/prospector-client/prospector-client.service.ts#L2",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E10",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "test/scripts/core-stack.cjs",
+      "lines": [
+        27,
+        31,
+        33,
+        66,
+        104,
+        126,
+        127,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/test/scripts/core-stack.cjs#L27",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E11",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "test/prospector-mvp.postgres-spec.ts",
+      "lines": [
+        128,
+        133,
+        249,
+        302,
+        321,
+        328,
+        332,
+        512,
+        513,
+        522,
+        534,
+        543,
+        544,
+        547,
+        564,
+        681,
+        809,
+        831,
+        834,
+        854
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/test/prospector-mvp.postgres-spec.ts#L128",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E12",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "src/prospector-client/prospector-policy.ts",
+      "lines": [
+        9,
+        34,
+        35,
+        39,
+        88,
+        95,
+        100,
+        108,
+        133,
+        135,
+        139,
+        141,
+        148,
+        149,
+        150,
+        156
+      ],
+      "status": "VERIFICADO",
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/src/prospector-client/prospector-policy.ts#L9"
+    },
+    {
+      "id": "E13",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "src/prospects/imports/prospect-imports.service.ts",
+      "lines": [
+        9,
+        55,
+        67,
+        83,
+        90,
+        107,
+        203,
+        214,
+        314,
+        315,
+        353
+      ],
+      "status": "VERIFICADO",
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/src/prospects/imports/prospect-imports.service.ts#L9"
+    },
+    {
+      "id": "E14",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "src/common/openapi/deployment-document.ts",
+      "lines": [
+        6
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/src/common/openapi/deployment-document.ts#L6",
+      "status": "VERIFICADO"
+    },
+    {
+      "file": "lib/shared/widgets/session_dialog.dart",
+      "id": "E15",
+      "repo": "Flutter",
+      "status": "VERIFICADO",
+      "lines": [
+        7,
+        27,
+        28,
+        32
+      ],
+      "sha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "url": "https://github.com/CarlosAM03/saas-platform-client/blob/095e899ace31acf17d97bbe945c118c1a5d88682/lib/shared/widgets/session_dialog.dart#L7"
+    },
+    {
+      "file": "lib/core/network/api_client.dart",
+      "id": "E16",
+      "repo": "Flutter",
+      "status": "VERIFICADO",
+      "lines": [
+        37,
+        38,
+        39,
+        49,
+        50,
+        71,
+        73,
+        76,
+        77,
+        81,
+        85,
+        97,
+        117,
+        245
+      ],
+      "sha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "url": "https://github.com/CarlosAM03/saas-platform-client/blob/095e899ace31acf17d97bbe945c118c1a5d88682/lib/core/network/api_client.dart#L37"
+    },
+    {
+      "file": "lib/features/dashboard/data/dashboard_repository.dart",
+      "id": "E17",
+      "repo": "Flutter",
+      "status": "VERIFICADO",
+      "lines": [
+        26
+      ],
+      "sha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "url": "https://github.com/CarlosAM03/saas-platform-client/blob/095e899ace31acf17d97bbe945c118c1a5d88682/lib/features/dashboard/data/dashboard_repository.dart#L26"
+    },
+    {
+      "file": "lib/features/prospects/presentation/prospect_import_page.dart",
+      "id": "E18",
+      "repo": "Flutter",
+      "status": "VERIFICADO",
+      "lines": [
+        40,
+        43,
+        52,
+        56,
+        68,
+        69,
+        71,
+        75,
+        76,
+        77,
+        78,
+        81,
+        82,
+        84,
+        95,
+        96,
+        97,
+        100,
+        112,
+        115,
+        135,
+        141,
+        144,
+        151,
+        158,
+        161,
+        163,
+        164,
+        177,
+        203,
+        223,
+        241,
+        274,
+        280,
+        316,
+        413,
+        418,
+        420,
+        426,
+        428,
+        429,
+        434
+      ],
+      "sha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "url": "https://github.com/CarlosAM03/saas-platform-client/blob/095e899ace31acf17d97bbe945c118c1a5d88682/lib/features/prospects/presentation/prospect_import_page.dart#L40"
+    },
+    {
+      "file": "lib/features/prospecting_jobs/state/prospecting_capabilities.dart",
+      "id": "E19",
+      "repo": "Flutter",
+      "status": "VERIFICADO",
+      "lines": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        15,
+        16
+      ],
+      "sha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "url": "https://github.com/CarlosAM03/saas-platform-client/blob/095e899ace31acf17d97bbe945c118c1a5d88682/lib/features/prospecting_jobs/state/prospecting_capabilities.dart#L5"
+    },
+    {
+      "file": "lib/features/prospecting_jobs/state/prospecting_capabilities.dart",
+      "id": "E20",
+      "repo": "Flutter",
+      "status": "VERIFICADO",
+      "lines": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        13,
+        17,
+        18,
+        19,
+        21,
+        26,
+        27,
+        28,
+        32,
+        37,
+        38,
+        40,
+        41,
+        44
+      ],
+      "sha": "97ad02a621007e4139e5207511ecca2376754ed8",
+      "url": "https://github.com/CarlosAM03/saas-platform-client/blob/97ad02a621007e4139e5207511ecca2376754ed8/lib/features/prospecting_jobs/state/prospecting_capabilities.dart#L5"
+    },
+    {
+      "id": "E21",
+      "repo": "Service",
+      "sha": "566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab",
+      "file": "src/prospector_service/api.py",
+      "lines": [
+        10,
+        17,
+        31,
+        33,
+        42,
+        47,
+        59,
+        63
+      ],
+      "url": "https://github.com/CarlosAM03/prospector-service/blob/566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab/src/prospector_service/api.py#L10",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E22",
+      "repo": "Service",
+      "sha": "566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab",
+      "file": "src/prospector_service/jobs.py",
+      "lines": [
+        3,
+        10,
+        11,
+        30,
+        31,
+        38,
+        45,
+        46,
+        47,
+        55,
+        62,
+        67,
+        68,
+        71,
+        76,
+        83,
+        85,
+        86,
+        87,
+        94,
+        126,
+        129,
+        143,
+        144,
+        166,
+        176,
+        182,
+        190,
+        191,
+        192,
+        198,
+        199,
+        200,
+        201,
+        202,
+        205,
+        208
+      ],
+      "url": "https://github.com/CarlosAM03/prospector-service/blob/566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab/src/prospector_service/jobs.py#L3",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E23",
+      "repo": "Service",
+      "sha": "566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab",
+      "file": "src/prospector_service/adapters/callbacks.py",
+      "lines": [
+        41,
+        42,
+        54,
+        57,
+        62,
+        67
+      ],
+      "url": "https://github.com/CarlosAM03/prospector-service/blob/566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab/src/prospector_service/adapters/callbacks.py#L41",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E24",
+      "repo": "Service",
+      "sha": "566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab",
+      "file": "src/prospector_service/config.py",
+      "lines": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        23
+      ],
+      "url": "https://github.com/CarlosAM03/prospector-service/blob/566bbbe67a59a0fda307ea7d8c5f6bf46fd93aab/src/prospector_service/config.py#L17",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E25",
+      "repo": "Engine",
+      "sha": "70f6081688db5c5bc5ea612f5fabd5724aab0b20",
+      "file": "src/prospector_engine/engines/prospector_engine.py",
+      "lines": [
+        23,
+        75,
+        167
+      ],
+      "url": "https://github.com/CarlosAM03/prospector-engine/blob/70f6081688db5c5bc5ea612f5fabd5724aab0b20/src/prospector_engine/engines/prospector_engine.py#L23",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E26",
+      "repo": "Engine",
+      "sha": "70f6081688db5c5bc5ea612f5fabd5724aab0b20",
+      "file": "src/prospector_engine/engines/config.py",
+      "lines": [
+        1,
+        6,
+        13,
+        14,
+        16,
+        19,
+        20,
+        21,
+        22,
+        25,
+        26,
+        29,
+        31,
+        33,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43,
+        45,
+        46
+      ],
+      "url": "https://github.com/CarlosAM03/prospector-engine/blob/70f6081688db5c5bc5ea612f5fabd5724aab0b20/src/prospector_engine/engines/config.py#L1",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E27",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "Dockerfile",
+      "lines": [
+        1,
+        15,
+        30
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/Dockerfile#L1",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E28",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": ".github/workflows/ci.yml",
+      "lines": [
+        14,
+        51
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/.github/workflows/ci.yml#L14",
+      "status": "VERIFICADO"
+    },
+    {
+      "id": "E29",
+      "repo": "Backend",
+      "sha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "file": "test/platform.e2e-spec.ts",
+      "lines": [
+        157,
+        259,
+        297,
+        298,
+        332
+      ],
+      "url": "https://github.com/CarlosAM03/saas-platform-backend/blob/a80871b6c5ebf39b4fca69eaf5f6352ab342da96/test/platform.e2e-spec.ts#L157",
+      "status": "VERIFICADO"
+    },
+    {
+      "file": "lib/features/dashboard/presentation/dashboard_page.dart",
+      "id": "E30",
+      "repo": "Flutter",
+      "status": "VERIFICADO",
+      "lines": [
+        4,
+        7,
+        12,
+        17,
+        99,
+        216
+      ],
+      "sha": "c7dee664cbdda85d38d896ce3103d8fc6319f0af",
+      "url": "https://github.com/CarlosAM03/saas-platform-client/blob/c7dee664cbdda85d38d896ce3103d8fc6319f0af/lib/features/dashboard/presentation/dashboard_page.dart#L4"
+    }
+  ]
+}

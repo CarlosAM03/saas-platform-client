@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-28T00:20:15.6799036Z",
+  "mode": "READ ONLY; NO SEEDS OR CONFIGURATION CHANGES",
+  "repositories": [
+    {
+      "deployments": [],
+      "name": "saas-platform-backend",
+      "commitStatuses": [],
+      "treeMatches": true,
+      "missingSuccessfulChecks": [],
+      "expectedCandidate": "09593bb715cd83270821d34126a4344c8ef97cb0",
+      "main": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+      "workflowRuns": [
+        {
+          "id": 40606722665,
+          "head_sha": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/CarlosAM03/saas-platform-backend/actions/runs/40606722665"
+        }
+      ]
+    },
+    {
+      "deployments": [],
+      "name": "saas-platform-client",
+      "commitStatuses": [
+        {
+          "context": "Vercel",
+          "state": "pending",
+          "target_url": "https://vercel.com/carlos-armentas-projects/saas-platform-client-web/7HmfhjKpxRoDvK1Tu3XdD5oGA4wF"
+        }
+      ],
+      "treeMatches": true,
+      "missingSuccessfulChecks": [],
+      "expectedCandidate": "cd527ef12bc7c1327ed9a8520e1a07f0fc8be39f",
+      "main": "7731649a2c69b45cb9776d02de4a6105d6fd9886",
+      "workflowRuns": [
+        {
+          "id": 40607324970,
+          "head_sha": "7731649a2c69b45cb9776d02de4a6105d6fd9886",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/CarlosAM03/saas-platform-client/actions/runs/40607324970"
+        }
+      ]
+    }
+  ],
+  "http": [
+    {
+      "status": 200,
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/health/live"
+    },
+    {
+      "status": 200,
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/health/ready"
+    },
+    {
+      "status": 200,
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/docs"
+    },
+    {
+      "status": 200,
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/docs-json"
+    },
+    {
+      "url": "https://saas-platform-client-web.vercel.app",
+      "bundleStatus": 200,
+      "status": 200
+    }
+  ],
+  "limitations": [
+    "saas-platform-backend: provider deployment ID/SHA requires read-only Render/Vercel attestation; health is insufficient",
+    "saas-platform-client: provider deployment ID/SHA requires read-only Render/Vercel attestation; health is insufficient",
+    "Public bundle differs from local candidate; inspect provider build provenance/configuration",
+    "Authenticated production smoke NOT RUN"
+  ],
+  "bundle": {
+    "sha256": "23fbda4ab4e535aa645c5103b6a33bd25b2cddc3c881e536a360a64e8a076307",
+    "matches": false,
+    "expected": "3b5d2f49234e9a5486f235cb3a3b8d551befcb880e37854352ddf4dadb4c1578"
+  },
+  "cors": {
+    "origin": "https://saas-platform-client-web.vercel.app",
+    "allowed": true,
+    "status": 204
+  },
+  "verdict": "VALIDADO CON LIMITACIONES / REVISAR PENDIENTES"
+}

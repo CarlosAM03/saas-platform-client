@@ -1,0 +1,229 @@
+{
+  "status": "PROPOSED - G1 OWNER APPROVAL PENDING",
+  "baseMatrix": "../MATRIZ_CAMBIOS_AUTORIZADOS.md",
+  "backend": [
+    [
+      "B01",
+      "src/users/users.service.ts",
+      "Agregar ForbiddenException; en update releer destinatario dentro de transacción, detectar cambios name/email/password/status y rechazar identidad global ajena compartida o ADMIN; helper findUserInTenant acepta TransactionClient; Serializable.",
+      "Excluir cambios de findByIdForAuthentication e isTenantActiveForAuthentication del commit42b96; no modificar JwtStrategy. Conservar self-edit, identidad local y cambio de rol tenant según contrato.",
+      "Compartido A/B y ADMIN ajeno403; self/local permitidos; rol solo A; fallo sin escrituras parciales."
+    ],
+    [
+      "B02",
+      "src/common/config/configuration.ts; configuration.spec.ts",
+      "Seleccionar validación productiva de JWT de32caracteres mínimo/no muestras y orígenes CORS HTTPS exactos.",
+      "No cambiar claves/orígenes reales ni inventar reglas RBAC. Una config productiva que incumpla se registra para release, no se modifica ahora.",
+      "Config válida/inválida, TLS/origen, seis variables core sin Service."
+    ],
+    [
+      "B03",
+      "src/common/config/config.module.ts",
+      "ignoreEnvFile cuando NODE_ENV=test.",
+      "Configuración productiva y archivos .env privados intactos.",
+      "Tests independientes del .env de cada máquina."
+    ],
+    [
+      "B04",
+      "src/main.ts",
+      "Agregar trim a cada origen CORS.",
+      "No importar json ni parser/gran límite de callback del PR6.",
+      "Origen autorizado y ajeno; arranque y resto de bootstrap sin cambios."
+    ],
+    [
+      "B05",
+      "src/common/filters/global-exception.filter.ts",
+      "Mapear entity.too.large a413/PAYLOAD_TOO_LARGE con prueba negativa acotada.",
+      "No ampliar límites de payload ni publicar cuerpo/stack de excepción.",
+      "413 coherente y ausencia de detalles privados."
+    ],
+    [
+      "B06",
+      "package.json y package-lock.json",
+      "Propuesta granular: overrides body-parser2.4.0, multer2.5.0, fast-uri3.1.9 y js-yaml=$js-yaml, que mantiene5.4.1 del baseline. Conservar lodash/tar existentes.",
+      "Versiones candidatas del commit auditado, no promesa de ausencia actual de advisories. Sin scripts Python/P2, Node upgrade o actualización general. Regeneración lock solo si G1 aprueba esta fila.",
+      "Lock coherente, diff limitado y audit/regresión nuevos en G2."
+    ],
+    [
+      "B07",
+      "test/platform.e2e-spec.ts; nuevo test/core-isolation.postgres-spec.ts; test/jest-postgres.json",
+      "Seleccionar casos de SEC-01 y dos tenants; fixture core sin Event/Snapshot; ampliar regex a jobs|prospect-imports|core-isolation sin retirar suites existentes.",
+      "No copiar expectations de JWT vivo, callbacks o snapshots; no usar DB ya P2.",
+      "Snapshot se mantiene hasta nuevo token; usuario inactivo401; pertenencia/roles/IDs; PG con solo init."
+    ],
+    [
+      "B08",
+      "Prisma/, src/auth/strategies/jwt.strategy.ts, helpers de autenticación, Jobs/cliente/OpenAPI",
+      "Mantener exactamente baseline. Comprobar hashes e inventario de migraciones antes de G2.",
+      "Sin nuevas tablas/columnas ni revalidación viva, callbacks, TTL/cuotas/idempotencia o capabilities1.1.",
+      "Diff de esos invariantes vacío; creación/cancel/persist/export conservan503."
+    ]
+  ],
+  "frontend": [
+    [
+      "F01",
+      "Docs/Contracts/platform-api.v1.yaml; Docs/Contracts/README.md; documentación Foundation afectada",
+      "Corregir textos SnapshotPG/TTL1h. Alinear restricciones de ProspectingQuery y campaignId con contrato disponible; separar operaciones objetivo deshabilitadas de comportamiento servido.",
+      "No importar YAML1.1 ni cambiar Backend. Usar evidencia11 de F0 como listado de46rutas de diferencia, no como46bugs funcionales."
+    ],
+    [
+      "F02",
+      "lib/platform_api/* y test/platform_api/platform_api_contract_test.dart",
+      "Preservar SDK tipado y añadir comprobaciones del contrato servido/goldens sanitizados. Tocar DTO/repositorio solo ante discrepancia concreta demostrada.",
+      "Paridad1:1 de cada operación habilitada: método/ruta/request/auth/envelope/tipos/errores/paginación. No requiere una pantalla por endpoint ni endpoints nuevos."
+    ],
+    [
+      "F03",
+      "Auth, ApiClient, providers, rutas y session_dialog; tests existentes de sesión",
+      "Conservar sessionRevision/tokenOperation, scope y limpieza. Ampliar casos si falta cubrir algún flujo habilitado.",
+      "No reemplazo completo de módulos, refresh/JWT vivo ni persistencia de datos sensibles entre tenants."
+    ],
+    [
+      "F04",
+      "Usuarios/tenants/campañas/prospectos, tema/assets/layouts",
+      "Conservar aportaciones visuales válidas de André y PR5 ya heredadas en Foundation; corregir únicamente diferencias demostradas.",
+      "Ningún rediseño global ni rol/endpoint inventado. Mantener MEMBER por defecto y permisos actuales."
+    ],
+    [
+      "F05",
+      "CSV page/repository/file_service/campaign_picker; test/platform_api/prospect_import_test.dart; tests CSV/core existentes",
+      "Mantener bytes+referencia+decisiones, confirmación shared y limpieza de scope; cubrir conflictos/errores/duplicados.",
+      "No segundo importador, XLSX automático, datos reales ni importar archivos del usuario por inferencia."
+    ],
+    [
+      "F06",
+      "Dashboard repository/providers/page; test/dashboard_session_test.dart",
+      "Conservar tres listas reales y meta.total, recientes y refresh tras CSV; validar A/B y n>límite.",
+      "No mocks de producción, métricas inventadas/globales o endpoint dashboard."
+    ],
+    [
+      "F07",
+      "Jobs repository/providers/pages/capabilities; tests core/pending",
+      "GET list/detail reales y cuatro flagsfalse. Aclarar el acceso visual para que no prometa búsqueda real.",
+      "Conservar monitor GET existente si corresponde: su polling secuencial de lectura cada4s no es creación P2. No añadir capabilities, polling de admisión, cuotas, generación o snapshots1.1."
+    ],
+    [
+      "F08",
+      "Nuevos prospecting_demo_panel.dart y test/features/prospecting_demo_test.dart; generate_page.dart; posible etiqueta en jobs_pages.dart",
+      "Panel local dentro de la vista /generate ya existente, abierto como demostración explícita; sin nueva ruta necesaria. Rótulo DEMO — SIN EJECUCIÓN REAL visible en todos los pasos, datos sintéticos y estado local reiniciable.",
+      "El panel no importa PlatformApi, repositorios HTTP ni modelos persistidos de Job. No habilita create=true. No invalida dashboard/historial, no guarda/descarga resultados ni llama redes."
+    ],
+    [
+      "F09",
+      "SDK/build/assets/containerización existente y tests",
+      "Preservar el conjunto Foundation; ampliar regresión visual/accesibilidad de los flujos tocados.",
+      "No workflows/harness P2 del PR8 ni reutilizar artefacto compilado para API loopback en producción."
+    ]
+  ],
+  "additionalGates": [
+    [
+      "G0",
+      "APROBADO Y EJECUTADO",
+      "Dos ramas/worktrees exactos; integridad verificada. Ningún cambio de implementación."
+    ],
+    [
+      "G1",
+      "PENDIENTE",
+      "Autorizar cambios locales A de las filas B01–B08/F01–F09 y test/harness core delimitado; decidir B06/lock explícitamente. No ejecutar pruebas ni construir B."
+    ],
+    [
+      "G2",
+      "PENDIENTE",
+      "Revisar diff final e invariantes; autorizar instalaciones/build/tests en candidatos y preparación de PostgreSQL core desechable concreto. Sin Supabase/migración P2."
+    ],
+    [
+      "G3",
+      "PENDIENTE",
+      "Aceptar contrato/E2E/seguridad nuevos; autorizar publicación/propuesta PRdev con SHA/ramas precisos. Merges y pushes requieren inclusión expresa."
+    ],
+    [
+      "G4",
+      "PENDIENTE",
+      "Aceptar dev integrado/CI y revisión; autorizar propuesta/promoción main concretas, sin despliegue implícito."
+    ],
+    [
+      "G5",
+      "PENDIENTE",
+      "Autorizar release y despliegue Render/Vercel concretos, backup/rollback/atestación/config. Backend solo si las correcciones lo requieren."
+    ],
+    [
+      "G6",
+      "PENDIENTE",
+      "Tras A consolidado, ratificar ampliación B, variante de integración, almacenamiento local, red/perfiles y límites. Autorizar por tramos construcción/validación de Compose. Scraping real requiere permiso específico."
+    ]
+  ],
+  "composeAcceptance": [
+    [
+      "B-AC01",
+      "Arranque con un único comando",
+      "Desde repos/manifest y prerrequisitos documentados, levantar Flutter/Nest/PG/FastAPI+Engine sin procesos o pip/npm manuales en host. Build/bootstrap/env de demo automatizados o claramente incluidos en el launcher.",
+      "Log de comando, versiones/digests, tiempo y códigos de salida; no repetir preparación manual escondida."
+    ],
+    [
+      "B-AC02",
+      "Cuatro componentes reales y Engine instalado",
+      "Frontend Web, Nest, PG y FastAPI reales. Import/version Engine fijado y probe local de browser real, aun cuando las búsquedas del perfil controlado usen adaptador.",
+      "Manifest SHA/imágenes y smoke Engine/browser; indicar por separado el motor que produjo cada conjunto de resultados."
+    ],
+    [
+      "B-AC03",
+      "Flujo integrado controlado",
+      "UI→Nest→FastAPI→worker→callback→PG→UI con fixture sintético explícito y correlación job/event/tenant.",
+      "HTTP/trazas y consultas de la DB demo; no tests solo con mocks de repositorios ni afirmación de scraping."
+    ],
+    [
+      "B-AC04",
+      "Separación de A y producción",
+      "Artefactos/config/proyecto/volumen/secrets propios; no Render/Vercel/Supabase en URLs o credenciales demo.",
+      "Diff de A sin P2, inventario de volúmenes/proyecto, prueba negativa de destinos productivos y captura sin secretos."
+    ],
+    [
+      "B-AC05",
+      "Modo controlado claramente rotulado",
+      "Banner persistente DEMO INTEGRADA — RESULTADOS CONTROLADOS; dataset sintético distinto de negocios reales. A demo visual sigue sin red y no se confunde con B.",
+      "Capturas/guion/trazas; cada capa clasificada como real/controlada/no aceptada."
+    ],
+    [
+      "B-AC06",
+      "Arranque no significa ejecutar búsquedas",
+      "Default sin scraping, sin jobs automáticos; no proveedor externo requerido por el modo controlado.",
+      "Arranque y navegación sin egreso Maps/Service externo; contador de jobs sigue0 hasta acción de prueba explícita."
+    ],
+    [
+      "B-AC07",
+      "Aislamiento tenant y límites",
+      "Dos tenants sintéticos y pruebas de acceso cruzado; payload/capacidad/timeout acotados según política experimental aceptada para esta demo.",
+      "Casos positivos/401/403/404/409/503 y sin datos del otro tenant. No elevarlos a contrato productivo1.1."
+    ],
+    [
+      "B-AC08",
+      "Fallas/reinicio transparentes",
+      "Fallo visible si Service se cae; no éxito ni recuperación durable inventados. Repetición manual con runbook de generación/cuarentena aceptado, sin duplicar búsquedas inciertas.",
+      "Prueba controlada de caída/reinicio/timeout; estado, límites y procedimiento registrados."
+    ],
+    [
+      "B-AC09",
+      "Reproducibilidad y ciclo de datos",
+      "Mismo manifest en checkout limpio; seeds sintéticos identificados/idempotentes; reup sin duplicación; parada sin borrar datos por defecto.",
+      "Dos arranques, healthchecks, recursos medidos; reset solo del proyecto/volumen propio y con permiso separado."
+    ],
+    [
+      "B-AC10",
+      "Extracción real opcional y distinta",
+      "Ruta real Engine→Maps solo tras aprobación específica de consulta/límites/red/coste. Perfil controlado nunca cuenta como scraping real.",
+      "Si no se autoriza: estado NO EJECUTADO/NO VERIFICADO, sin bloquear honestidad de demo controlada. Si se autoriza: evidencia real separada."
+    ],
+    [
+      "B-AC11",
+      "Ningún secreto interno en Web/logs",
+      "Claves API Service/callback solo server-side, distintas entre sí y de JWT; locales y no compartidas con producción.",
+      "Bundle/manifest público/logs sanitizados y pruebas de auth interna."
+    ],
+    [
+      "B-AC12",
+      "Aceptación y alcance explícitos",
+      "Owner acepta variante local/controlada y riesgos; storage/red/retry local definidos antes de ejecutar. No release definitiva1.1 por disponer de Compose.",
+      "Acta de aprobación G6 y alcance de ejecución; limitaciones pendientes listadas."
+    ]
+  ]
+}

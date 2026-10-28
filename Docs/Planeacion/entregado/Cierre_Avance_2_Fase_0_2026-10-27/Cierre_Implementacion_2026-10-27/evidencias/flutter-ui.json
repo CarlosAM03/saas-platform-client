@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-27T23:20:28.280Z",
+  "pass": true,
+  "container": "prospector-avance2-core-browser-1",
+  "evidence": [
+    {
+      "name": "OWNER-A login-dashboard",
+      "data": {
+        "url": "https://localhost:18443/#/dashboard",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Dashboard\n- button \"Actualizar dashboard\"\n- button \"Buscar prospectos\"\n- group:\n  - text: Resumen de la organización actual\n  - button \"4 Campañas\"\n  - button \"19 Prospectos\"\n  - button \"5 Trabajos\"\n  - text: Campañas recientes\n  - group \"Avance2 validación sintética Activa Comprobación MEMBER permitida por contrato Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 3 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 2 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 1 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"",
+        "errors": []
+      }
+    },
+    {
+      "name": "OWNER-A campaigns-isolation",
+      "data": {
+        "url": "https://localhost:18443/#/campaigns",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Campañas\n- checkbox \"Todas\" [checked]\n- checkbox \"ACTIVA\"\n- checkbox \"PAUSADA\"\n- checkbox \"COMPLETADA\"\n- checkbox \"ARCHIVADA\"\n- button \"Crear campaña\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - group \"Avance2 validación sintética Activa Comprobación MEMBER permitida por contrato Actualizada el 27/10/2026 Campaña 1 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Campaña 2 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Campaña 3 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 4 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "OWNER-A users-permissions",
+      "data": {
+        "url": "https://localhost:18443/#/users",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Usuarios\n- button \"Crear usuario\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - button \"Member Demo Norte member.demo-norte@demo.example · ACTIVO\"\n  - button \"Owner Demo Norte owner.demo-norte@demo.example · ACTIVO\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 2 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "OWNER-A logout-protected-route",
+      "data": {
+        "url": "https://localhost:18443/#/login",
+        "aria": "- group:\n  - text: PLATAFORMA SaaS · BETA Bienvenido de nuevo Inicia sesión para gestionar tus campañas y tu organización.\n  - textbox \"Correo electrónico\"\n  - textbox \"Contraseña\"\n  - button \"Mostrar contraseña\"\n  - button \"Iniciar sesión\"\n  - text: ¿Necesitas acceso o recuperar tu contraseña? Contacta al administrador de tu organización.",
+        "errors": []
+      }
+    },
+    {
+      "name": "MEMBER-A login-dashboard",
+      "data": {
+        "url": "https://localhost:18443/#/dashboard",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Dashboard\n- button \"Actualizar dashboard\"\n- button \"Buscar prospectos\"\n- group:\n  - text: Resumen de la organización actual\n  - button \"4 Campañas\"\n  - button \"19 Prospectos\"\n  - button \"5 Trabajos\"\n  - text: Campañas recientes\n  - group \"Avance2 validación sintética Activa Comprobación MEMBER permitida por contrato Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 3 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 2 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 1 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"",
+        "errors": []
+      }
+    },
+    {
+      "name": "MEMBER-A campaigns-isolation",
+      "data": {
+        "url": "https://localhost:18443/#/campaigns",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Campañas\n- checkbox \"Todas\" [checked]\n- checkbox \"ACTIVA\"\n- checkbox \"PAUSADA\"\n- checkbox \"COMPLETADA\"\n- checkbox \"ARCHIVADA\"\n- button \"Crear campaña\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - group \"Avance2 validación sintética Activa Comprobación MEMBER permitida por contrato Actualizada el 27/10/2026 Campaña 1 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Campaña 2 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Campaña 3 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 4 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "MEMBER-A users-permissions",
+      "data": {
+        "url": "https://localhost:18443/#/users",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Usuarios\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - button \"Member Demo Norte member.demo-norte@demo.example · ACTIVO\"\n  - button \"Owner Demo Norte owner.demo-norte@demo.example · ACTIVO\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 2 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "MEMBER-A logout-protected-route",
+      "data": {
+        "url": "https://localhost:18443/#/login",
+        "aria": "- group:\n  - text: PLATAFORMA SaaS · BETA Bienvenido de nuevo Inicia sesión para gestionar tus campañas y tu organización.\n  - textbox \"Correo electrónico\"\n  - textbox \"Contraseña\"\n  - button \"Mostrar contraseña\"\n  - button \"Iniciar sesión\"\n  - text: ¿Necesitas acceso o recuperar tu contraseña? Contacta al administrador de tu organización.",
+        "errors": []
+      }
+    },
+    {
+      "name": "OWNER-B login-dashboard",
+      "data": {
+        "url": "https://localhost:18443/#/dashboard",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Sur\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Dashboard\n- button \"Actualizar dashboard\"\n- button \"Buscar prospectos\"\n- group:\n  - text: Resumen de la organización actual\n  - button \"3 Campañas\"\n  - button \"18 Prospectos\"\n  - button \"5 Trabajos\"\n  - text: Campañas recientes\n  - group \"Campaña 3 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 2 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 1 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - text: Prospectos recientes\n  - button \"Prospecto 6 Demo Sur Sin contacto\"\n  - button \"Prospecto 5 Demo Sur Sin contacto\"\n  - button \"Prospecto 4 Demo Sur Sin contacto\"",
+        "errors": []
+      }
+    },
+    {
+      "name": "OWNER-B campaigns-isolation",
+      "data": {
+        "url": "https://localhost:18443/#/campaigns",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Sur\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Campañas\n- checkbox \"Todas\" [checked]\n- checkbox \"ACTIVA\"\n- checkbox \"PAUSADA\"\n- checkbox \"COMPLETADA\"\n- checkbox \"ARCHIVADA\"\n- button \"Crear campaña\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - group \"Campaña 1 Demo Sur Activa Sin descripción Actualizada el 27/10/2026 Campaña 2 Demo Sur Activa Sin descripción Actualizada el 27/10/2026 Campaña 3 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 3 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "OWNER-B users-permissions",
+      "data": {
+        "url": "https://localhost:18443/#/users",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Sur\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Usuarios\n- button \"Crear usuario\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - button \"Member Demo Sur member.demo-sur@demo.example · ACTIVO\"\n  - button \"Owner Demo Sur owner.demo-sur@demo.example · ACTIVO\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 2 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "OWNER-B logout-protected-route",
+      "data": {
+        "url": "https://localhost:18443/#/login",
+        "aria": "- group:\n  - text: PLATAFORMA SaaS · BETA Bienvenido de nuevo Inicia sesión para gestionar tus campañas y tu organización.\n  - textbox \"Correo electrónico\"\n  - textbox \"Contraseña\"\n  - button \"Mostrar contraseña\"\n  - button \"Iniciar sesión\"\n  - text: ¿Necesitas acceso o recuperar tu contraseña? Contacta al administrador de tu organización.",
+        "errors": []
+      }
+    },
+    {
+      "name": "MEMBER-B login-dashboard",
+      "data": {
+        "url": "https://localhost:18443/#/dashboard",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Sur\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Dashboard\n- button \"Actualizar dashboard\"\n- button \"Buscar prospectos\"\n- group:\n  - text: Resumen de la organización actual\n  - button \"3 Campañas\"\n  - button \"18 Prospectos\"\n  - button \"5 Trabajos\"\n  - text: Campañas recientes\n  - group \"Campaña 3 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 2 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 1 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - text: Prospectos recientes\n  - button \"Prospecto 6 Demo Sur Sin contacto\"\n  - button \"Prospecto 5 Demo Sur Sin contacto\"\n  - button \"Prospecto 4 Demo Sur Sin contacto\"",
+        "errors": []
+      }
+    },
+    {
+      "name": "MEMBER-B campaigns-isolation",
+      "data": {
+        "url": "https://localhost:18443/#/campaigns",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Sur\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Campañas\n- checkbox \"Todas\" [checked]\n- checkbox \"ACTIVA\"\n- checkbox \"PAUSADA\"\n- checkbox \"COMPLETADA\"\n- checkbox \"ARCHIVADA\"\n- button \"Crear campaña\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - group \"Campaña 1 Demo Sur Activa Sin descripción Actualizada el 27/10/2026 Campaña 2 Demo Sur Activa Sin descripción Actualizada el 27/10/2026 Campaña 3 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 3 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "MEMBER-B users-permissions",
+      "data": {
+        "url": "https://localhost:18443/#/users",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Sur\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Usuarios\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - button \"Member Demo Sur member.demo-sur@demo.example · ACTIVO\"\n  - button \"Owner Demo Sur owner.demo-sur@demo.example · ACTIVO\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 2 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "MEMBER-B logout-protected-route",
+      "data": {
+        "url": "https://localhost:18443/#/login",
+        "aria": "- group:\n  - text: PLATAFORMA SaaS · BETA Bienvenido de nuevo Inicia sesión para gestionar tus campañas y tu organización.\n  - textbox \"Correo electrónico\"\n  - textbox \"Contraseña\"\n  - button \"Mostrar contraseña\"\n  - button \"Iniciar sesión\"\n  - text: ¿Necesitas acceso o recuperar tu contraseña? Contacta al administrador de tu organización.",
+        "errors": []
+      }
+    },
+    {
+      "name": "ADMIN tenant-discovery",
+      "data": {
+        "url": "https://localhost:18443/#/select-tenant",
+        "aria": "- heading \"Seleccionar organización\" [level=2]\n- button \"Crear organización\"\n- button \"Cerrar sesión\"\n- group:\n  - button \"A core-f9a147d9-3a6d-4dad-aa28-45d71ff4f01a\"\n  - button \"A core-701202e2-bee9-4755-b18a-2efff12cf923\"\n  - button \"B core-5860ae39-b202-47ac-947c-bc87e8a9de37\"\n  - button \"B core-ef0b95f3-354e-44d9-9793-d2488ccd30de\"\n  - button \"Demo Norte demo-norte\"\n  - button \"Demo Sur demo-sur\"",
+        "errors": []
+      }
+    }
+  ]
+}

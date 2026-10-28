@@ -1,0 +1,1 @@
+{"pass":true,"date":"2026-10-28T00:39:56.970Z","source":"Actual UsersService compiled in Dockerfile runtime; PostgreSQL16 dedicated","scenario":"Concurrent commit after SERIALIZABLE read and before first update; test-only query barrier","errorCode":"P2034","concurrentWritePreserved":true,"failedIdentityAndRoleUpdateRolledBack":true,"tenantIdFixture":"cmvre0pdg0000w4gidhr77aby"}

@@ -1,0 +1,455 @@
+{
+  "recordedAt": "2026-10-27T19:44:36.543Z",
+  "mode": "Public GET/OPTIONS only; no login/mutations; pure reviewed deploymentDocument function, no Nest/database",
+  "expectedSha": "3a3309398458ab333d7b00f16e9c2df6a09ef734",
+  "expectedVersion": "1.0.0",
+  "actualVersion": "1.0.0",
+  "actualTitle": "Platform API - alcance disponible",
+  "fieldsCompared": [
+    "openapi",
+    "info",
+    "paths",
+    "components",
+    "tags",
+    "servers"
+  ],
+  "expectedCanonicalSha256": "2d256a417394c2641266326f654bd2b2e58ac26a51185f2f444e9e87edf8c7a1",
+  "actualCanonicalSha256": "2d256a417394c2641266326f654bd2b2e58ac26a51185f2f444e9e87edf8c7a1",
+  "semanticContractMatch": true,
+  "differences": [],
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/api/v1/health",
+      "statuses": [
+        "200"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/live",
+      "statuses": [
+        "200"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/ready",
+      "statuses": [
+        "200",
+        "503"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "429"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "statuses": [
+        "200",
+        "401"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/select-tenant",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/me",
+      "statuses": [
+        "200",
+        "401"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants",
+      "statuses": [
+        "200",
+        "401"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tenants",
+      "statuses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants/{id}",
+      "statuses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/users",
+      "statuses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users/{id}",
+      "statuses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/users/{id}",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/users/{id}",
+      "statuses": [
+        "200",
+        "401",
+        "403",
+        "404"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "statuses": [
+        "200",
+        "401"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/campaigns",
+      "statuses": [
+        "201",
+        "400",
+        "401",
+        "409"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/{id}",
+      "statuses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/campaigns/{id}",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/campaigns/{id}",
+      "statuses": [
+        "200",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/{id}/prospects",
+      "statuses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects",
+      "statuses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "statuses": [
+        "200",
+        "401"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/preview",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "413"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/confirm",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409",
+        "413"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/{id}",
+      "statuses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/prospects/{id}",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "404",
+        "409"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospecting-jobs",
+      "statuses": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "requestBody": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs",
+      "statuses": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs/{id}",
+      "statuses": [
+        "200",
+        "401",
+        "403",
+        "404"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospecting-jobs/{id}/cancel",
+      "statuses": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospecting-jobs/{id}/persist",
+      "statuses": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "requestBody": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs/{id}/export",
+      "statuses": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "requestBody": false
+    }
+  ],
+  "probes": [
+    {
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/health/live",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "location": null,
+      "bodySha256": "980d21aa2d49936c5ee831d851d2dd316668a062fdd2eaebd11c66cc6a259ab3",
+      "spa": false,
+      "health": {
+        "success": true,
+        "data": {
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "url": "https://saas-platform-backend-l55n.onrender.com/api/v1/health/ready",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "location": null,
+      "bodySha256": "6d2d17d8564346ff5b0c9c82e04f36da179c6f043c9b4d87795765192e244ac9",
+      "spa": false,
+      "health": {
+        "success": true,
+        "data": {
+          "status": "ok",
+          "database": "up"
+        }
+      }
+    },
+    {
+      "url": "https://saas-platform-client-web.vercel.app/",
+      "status": 200,
+      "contentType": "text/html",
+      "location": null,
+      "bodySha256": "0e63b8b7b1052ec2024a8bc03aadd3742b84128a36cb1d90df57d549cb3d12b1",
+      "spa": true
+    },
+    {
+      "url": "https://saas-platform-client-web-git-fi-5adecc-carlos-armentas-projects.vercel.app/",
+      "status": 302,
+      "contentType": "text/plain",
+      "location": "https://vercel.com/sso-api",
+      "bodySha256": "078d44efe538819a52deef2d03cc221b5b81ea1ae1f577dc80710db061c3766f",
+      "spa": false
+    },
+    {
+      "url": "https://saas-platform-client-web.vercel.app/version.json",
+      "status": 200,
+      "contentType": "application/json",
+      "location": null,
+      "bodySha256": "b7c0a16ed6d8c4a61c9d4755c7ccd715fa35c28a30694900f85700acc19f890b",
+      "spa": false,
+      "version": {
+        "app_name": "saas_platform_client",
+        "version": "0.1.0",
+        "build_number": "1",
+        "package_name": "saas_platform_client"
+      }
+    }
+  ],
+  "cors": [
+    {
+      "origin": "https://saas-platform-client-web.vercel.app",
+      "status": 204,
+      "allowOrigin": "https://saas-platform-client-web.vercel.app"
+    },
+    {
+      "origin": "https://saas-platform-client-web-git-fi-5adecc-carlos-armentas-projects.vercel.app",
+      "status": 204,
+      "allowOrigin": null
+    },
+    {
+      "origin": "https://untrusted.example.invalid",
+      "status": 204,
+      "allowOrigin": null
+    }
+  ],
+  "attestation": "Owner identifies Backend main/Render/Supabase as baseline; public contract equality does not independently attest running commit or migration state"
+}

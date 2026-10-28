@@ -1,0 +1,109 @@
+{
+  "recordedAt": "2026-10-27T20:01:55.841Z",
+  "allChecksPass": true,
+  "gitUnchanged": true,
+  "documentChecks": [
+    {
+      "source": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\Plan de TrabajoAvance2.md",
+      "copy": "evidencias/PLAN_RECTOR_SNAPSHOT.md",
+      "sourceSha256": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09",
+      "copySha256": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09",
+      "matchesInitial": true
+    },
+    {
+      "source": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\Docs\\Planeacion\\entregado\\Plan de TrabajoAvance1.md",
+      "copy": "evidencias/PLAN_AVANCE_1_SNAPSHOT.md",
+      "sourceSha256": "afdbf821b98f5040d569aec44662f8414f32e4f55eb9fe44a7ebdb8e4a4fdb00",
+      "copySha256": "afdbf821b98f5040d569aec44662f8414f32e4f55eb9fe44a7ebdb8e4a4fdb00",
+      "matchesInitial": true
+    }
+  ],
+  "priorAuditUnchanged": [
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\AUDITORIA_RECONCILIACION_PROSPECTOR_V1.md",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_A_RAMAS_Y_PRS.md",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_B_PR6_BACKEND_POR_ARCHIVO.md",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_C_EVIDENCIA_CODIGO.md",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_D_HALLAZGOS.md",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\ANEXO_E_OPERACIONES_PUBLICAS.md",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\20_CLASIFICACION_PR6_BACKEND.json",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\21_COMPARACION_PRISMA_ESTATICA.json",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\22_REVIEWS_Y_JOBS_CI.json",
+      "unchanged": true
+    },
+    {
+      "file": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\00-Docs\\Analisis\\Auditoria_V1_2026-10-27\\23_REGISTRO_HALLAZGOS.json",
+      "unchanged": true
+    }
+  ],
+  "qa": {
+    "reports": [
+      {
+        "file": "PLAN_EJECUCION_CIERRE_AVANCE_2.md",
+        "bytes": 15854,
+        "hasEvidence": true,
+        "hasPending": true,
+        "hasG0Stop": true,
+        "noPlaceholder": true
+      },
+      {
+        "file": "MATRIZ_CAMBIOS_AUTORIZADOS.md",
+        "bytes": 15366,
+        "hasEvidence": true,
+        "hasPending": true,
+        "hasG0Stop": true,
+        "noPlaceholder": true
+      },
+      {
+        "file": "BASELINES_Y_RAMAS.md",
+        "bytes": 19525,
+        "hasEvidence": true,
+        "hasPending": true,
+        "hasG0Stop": true,
+        "noPlaceholder": true
+      },
+      {
+        "file": "GATES_DE_ACEPTACION.md",
+        "bytes": 13023,
+        "hasEvidence": true,
+        "hasPending": true,
+        "hasG0Stop": true,
+        "noPlaceholder": true
+      }
+    ],
+    "brokenLinks": [],
+    "invalidJson": [],
+    "secretPatterns": []
+  },
+  "functionalTestsExecutedThisPhase": 0,
+  "gate": {
+    "technical": "GO",
+    "ownerAuthorization": "PENDING",
+    "stoppedAt": "G0"
+  },
+  "note": "All writes confined to new reports/evidence directory; no existing source/docs modified."
+}

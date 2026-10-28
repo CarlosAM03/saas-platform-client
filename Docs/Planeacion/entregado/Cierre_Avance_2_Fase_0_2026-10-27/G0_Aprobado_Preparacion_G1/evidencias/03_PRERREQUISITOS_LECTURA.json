@@ -1,0 +1,14 @@
+{
+  "recordedAt": "2026-10-27T20:33:08.940Z",
+  "docker": {
+    "dockerVersion": "29.9.2",
+    "composeVersion": "5.6.1",
+    "serverOs": "linux",
+    "serverArch": "amd64",
+    "dockerDesktopVersion": "4.97.0 (244584)",
+    "mode": "Read-only docker version / docker compose version; server responded under approved read access; no container/build executed"
+  },
+  "hostNode": "v22.16.0; approved target Node20 remains unchanged",
+  "hostFlutterDart": "Not found on current PATH via Get-Command; no SDK initialized or installed",
+  "scope": "Read-only prerequisite inspection, no images/containers/compose builds or tests executed"
+}

@@ -1,0 +1,242 @@
+{
+  "date": "2026-10-28T00:25:24.370Z",
+  "backendSpec": "https://saas-platform-backend-l55n.onrender.com/api/docs-json",
+  "frontendSpec": "../flutter-dev-validated/Docs/Contracts/platform-api.v1.yaml",
+  "backendVersion": "1.0.0",
+  "frontendVersion": "1.0.0",
+  "operations": [
+    {
+      "method": "GET",
+      "path": "/api/v1/health",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/live",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health/ready",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/select-tenant",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/me",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tenants",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/users",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/users/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/users/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/users/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/campaigns",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/campaigns/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/campaigns/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/{id}/prospects",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/preview",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/confirm",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/prospects/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospecting-jobs",
+      "backend": true,
+      "frontend": true,
+      "enabled": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs/{id}",
+      "backend": true,
+      "frontend": true,
+      "enabled": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospecting-jobs/{id}/cancel",
+      "backend": true,
+      "frontend": true,
+      "enabled": false
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospecting-jobs/{id}/persist",
+      "backend": true,
+      "frontend": true,
+      "enabled": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospecting-jobs/{id}/export",
+      "backend": true,
+      "frontend": true,
+      "enabled": false
+    }
+  ],
+  "differences": [],
+  "pass": true
+}
