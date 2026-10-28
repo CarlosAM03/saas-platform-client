@@ -117,6 +117,7 @@ void main() {
     final repo = FakeUsers();
     await tester.pumpWidget(ProviderScope(
         overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
           usersRepositoryProvider.overrideWithValue(repo),
           currentTenantPermissionsProvider.overrideWith((ref) async =>
               const TenantPermissions(role: RoleName.MEMBER, hasTenant: true))
@@ -169,6 +170,7 @@ void main() {
     final repo = FakeUsers();
     await tester.pumpWidget(ProviderScope(
         overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
           usersRepositoryProvider.overrideWithValue(repo),
           currentTenantPermissionsProvider.overrideWith((ref) async =>
               const TenantPermissions(admin: true, hasTenant: true))

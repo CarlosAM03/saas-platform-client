@@ -1,3 +1,5 @@
+> Actualización 26-10-2026: conservar esta API tipada como única capa contractual. CSV UI y dashboard están implementados; Jobs sólo consulta/monitorea registros existentes. Mutaciones y exportación siguen sin integración Backend. Las respuestas exitosas futuras viven en x-target-responses del YAML y sus fixtures no prueban E2E. Ver [auditoría](../Auditorias/Auditoria_Reconciliacion_Dev_2026-10-26.md).
+
 # Platform API Client
 
 Backend de autoridad: `main@3a3309398458ab333d7b00f16e9c2df6a09ef734`. La copia `platform-api.v1.yaml` es idéntica al backend. Las pruebas contractuales recorren todos sus paths/métodos públicos; al actualizar backend hay que sincronizar esta copia y volver a ejecutar los tests.

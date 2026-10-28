@@ -2,10 +2,19 @@
 
 ## Plataforma SaaS — Cliente Flutter
 
-> Estado vigente: Foundation/Auth preservados; Tenants, Users, Campaigns y Prospects no-CSV implementados con API real. CSV PlatformApi está completo; CSV UI/file picker, Jobs UI, Prospector, polling/results cache y Dashboard real están diferidos deliberadamente. Autoridad: código de backend/main, su OpenAPI sincronizado y ADR-004; después código/ADRs frontend. El encargo de paridad core autoriza los cambios transversales del sprint.
+> Estado reconciliado 26-10-2026: CSV UI y dashboard usan Backend dev 967044e2. Jobs conserva historial/detalle/polling; crear/cancelar/persistir/exportar están deshabilitados por 503 PROSPECTOR_INTEGRATION_PENDING. Configurar Prospector no activa el adaptador NestJS. Ver Docs/Funciones-Pendientes-Implementadas.md y la auditoría de reconciliación. No se declara E2E.
+
+> Registro del sprint anterior: Foundation/Auth preservados; Tenants, Users, Campaigns y Prospects no-CSV implementados con API real. CSV PlatformApi está completo; CSV UI/file picker, Jobs UI, Prospector, polling/results cache y Dashboard real están diferidos deliberadamente. Autoridad: código de backend/main, su OpenAPI sincronizado y ADR-004; después código/ADRs frontend. El encargo de paridad core autoriza los cambios transversales del sprint.
 
 
 Guía para desarrollo de features sobre el baseline Flutter Foundation.
+
+Regla de integración vigente: conservar PlatformApi, DTOs, repositorios por feature,
+TenantPermissions y sessionScopeProvider. No introducir repositorios dinámicos paralelos,
+providers duplicados ni un router alternativo. Los componentes visuales se adaptan a
+las interfaces tipadas. Las respuestas objetivo de Jobs se documentan únicamente en
+x-target-responses del OpenAPI; las pruebas con fixtures comprueban preparación del
+cliente, sin certificar la ejecución real. Las pruebas de permisos no reemplazan al Backend.
 
 ---
 
@@ -665,7 +674,7 @@ CSV UI/file picker/wizard/drag-and-drop no forman parte del sprint. La futura UI
 
 # 19. ProspectingJobs
 
-> Diseño futuro, diferido en el sprint de paridad core. No implementar UI, polling ni caché mientras Prospector siga pendiente. PlatformApi conserva el contrato y propaga 503/PROSPECTOR_INTEGRATION_PENDING.
+> Implementado en la entrega CSV/Dashboard/Jobs. PlatformApi propaga 503 cuando la integración no está configurada; la UI no inventa una aceptación.
 
 ProspectingJobs será feature posterior al foundation.
 
@@ -694,7 +703,7 @@ Flutter no llama Prospector Engine.
 
 # 20. Jobs asíncronos y polling
 
-> Diseño futuro, diferido en el sprint de paridad core. No implementar UI, polling ni caché mientras Prospector siga pendiente. PlatformApi conserva el contrato y propaga 503/PROSPECTOR_INTEGRATION_PENDING.
+> Implementado en la entrega CSV/Dashboard/Jobs. PlatformApi propaga 503 cuando la integración no está configurada; la UI no inventa una aceptación.
 
 Los jobs largos pertenecen al backend, Prospector Service y Prospector Engine.
 
@@ -741,7 +750,7 @@ No se usarán background tasks en Flutter.
 
 # 21. Caché temporal
 
-> Diseño futuro, diferido en el sprint de paridad core. No implementar UI, polling ni caché mientras Prospector siga pendiente. PlatformApi conserva el contrato y propaga 503/PROSPECTOR_INTEGRATION_PENDING.
+> Implementado en la entrega CSV/Dashboard/Jobs. PlatformApi propaga 503 cuando la integración no está configurada; la UI no inventa una aceptación.
 
 Los resultados temporales viven en memoria con Riverpod.
 

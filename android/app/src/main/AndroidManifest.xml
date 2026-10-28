@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="saas_platform_client"
+        android:label="Plataforma SaaS"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

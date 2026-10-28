@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/api_exception.dart';
@@ -21,77 +22,124 @@ class AuthState {
   final AuthStatus status;
   final AuthContext? context;
   final Object? error;
+  bool get busy => status == AuthStatus.loading;
 
-  AuthState copyWith(
-      {AuthStatus? status,
-      AuthContext? context,
-      Object? error,
-      bool clearError = false}) {
+  AuthState copyWith({
+    AuthStatus? status,
+    AuthContext? context,
+    Object? error,
+    bool clearError = false,
+  }) {
     return AuthState(
-        status: status ?? this.status,
-        context: context ?? this.context,
-        error: clearError ? null : error ?? this.error);
+      status: status ?? this.status,
+      context: context ?? this.context,
+      error: clearError ? null : error ?? this.error,
+    );
   }
 }
 
 class AuthController extends Notifier<AuthState> {
+  int _operation = 0;
+  bool _alive = true;
+  bool _current(int operation) => _alive && operation == _operation;
+  SecureTokenStorage get _storage => ref.read(secureTokenStorageProvider);
+  int _begin() {
+    _storage.advanceSession();
+    return ++_operation;
+  }
+
   void sessionExpired() {
+    final operation = _begin();
     state = const AuthState(status: AuthStatus.sessionExpired);
+    unawaited(
+      _storage
+          .tokenOperation(() async {
+            if (_current(operation)) await _storage.clearToken();
+          })
+          .catchError((Object _) {}),
+    );
   }
 
   Future<void> acknowledgeSessionExpired() async {
-    await ref.read(secureTokenStorageProvider).clearToken();
-    state = const AuthState(status: AuthStatus.unauthenticated);
+    final operation = _begin();
+    await _storage.tokenOperation(() async {
+      if (!_current(operation)) return;
+      await _storage.clearToken();
+      if (_current(operation)) {
+        state = const AuthState(status: AuthStatus.unauthenticated);
+      }
+    });
   }
 
   @override
   AuthState build() {
-    Future<void>.microtask(restoreSession);
+    ref.onDispose(() {
+      _alive = false;
+      ++_operation;
+    });
+    Future<void>.microtask(() {
+      if (_alive && state.status == AuthStatus.unknown) restoreSession();
+    });
     return const AuthState.unknown();
   }
 
   Future<void> restoreSession() async {
-    if (state.status == AuthStatus.loading) return;
-    state = state.copyWith(status: AuthStatus.loading, clearError: true);
+    if (state.busy) return;
+    final operation = _begin();
+    state = const AuthState(status: AuthStatus.loading);
     try {
-      final token = await ref.read(secureTokenStorageProvider).readToken();
+      final token = await _storage.tokenOperation(_storage.readToken);
+      if (!_current(operation)) return;
       if (token == null || token.isEmpty) {
         state = const AuthState(status: AuthStatus.unauthenticated);
         return;
       }
       final context = await ref.read(authRepositoryProvider).me();
-      state = AuthState(status: AuthStatus.authenticated, context: context);
-    } on ApiException catch (error) {
-      final status = switch (error.kind) {
-        ApiErrorKind.unauthorized => AuthStatus.sessionExpired,
-        ApiErrorKind.serviceUnavailable ||
-        ApiErrorKind.network =>
-          AuthStatus.backendUnavailable,
-        _ => AuthStatus.failure,
-      };
-      if (status == AuthStatus.sessionExpired) {
-        await ref.read(secureTokenStorageProvider).clearToken();
+      if (_current(operation)) {
+        state = AuthState(status: AuthStatus.authenticated, context: context);
       }
-      state = AuthState(status: status, error: error);
     } catch (error) {
-      state = AuthState(status: AuthStatus.failure, error: error);
+      if (!_current(operation)) return;
+      final status = error is ApiException
+          ? switch (error.kind) {
+              ApiErrorKind.unauthorized => AuthStatus.sessionExpired,
+              ApiErrorKind.serviceUnavailable ||
+              ApiErrorKind.network => AuthStatus.backendUnavailable,
+              _ => AuthStatus.failure,
+            }
+          : AuthStatus.failure;
+      if (status == AuthStatus.sessionExpired) {
+        await _storage.tokenOperation(() async {
+          if (_current(operation)) await _storage.clearToken();
+        });
+      }
+      if (_current(operation)) state = AuthState(status: status, error: error);
     }
   }
 
   Future<void> login(String email, String password) async {
-    state = state.copyWith(status: AuthStatus.loading, clearError: true);
+    if (state.busy) return;
+    final operation = _begin();
+    state = const AuthState(status: AuthStatus.loading);
     try {
-      // A prior session must not be attached to the public login request.
-      await ref.read(secureTokenStorageProvider).clearToken();
+      await _storage.tokenOperation(() async {
+        if (_current(operation)) await _storage.clearToken();
+      });
+      if (!_current(operation)) return;
       final context = await ref
           .read(authRepositoryProvider)
           .login(email: email, password: password);
-      await ref
-          .read(secureTokenStorageProvider)
-          .writeToken(context.accessToken);
-      state = AuthState(status: AuthStatus.authenticated, context: context);
+      await _storage.tokenOperation(() async {
+        if (!_current(operation)) return;
+        await _storage.writeToken(context.accessToken);
+        if (_current(operation)) {
+          state = AuthState(status: AuthStatus.authenticated, context: context);
+        }
+      });
     } catch (error) {
-      final status = error is ApiException &&
+      if (!_current(operation)) return;
+      final status =
+          error is ApiException &&
               (error.kind == ApiErrorKind.serviceUnavailable ||
                   error.kind == ApiErrorKind.network)
           ? AuthStatus.backendUnavailable
@@ -101,45 +149,62 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> selectTenant(String tenantId) async {
-    final previousContext = state.context;
-    state = state.copyWith(status: AuthStatus.loading, clearError: true);
+    if (state.busy) return;
+    final previous = state.context;
+    if (previous == null || state.status != AuthStatus.authenticated) return;
+    final operation = _begin();
+    state = AuthState(status: AuthStatus.loading, context: previous);
     try {
-      final context =
-          await ref.read(authRepositoryProvider).selectTenant(tenantId);
-      await ref
-          .read(secureTokenStorageProvider)
-          .writeToken(context.accessToken);
-      state = AuthState(status: AuthStatus.authenticated, context: context);
+      final context = await ref
+          .read(authRepositoryProvider)
+          .selectTenant(tenantId);
+      await _storage.tokenOperation(() async {
+        if (!_current(operation)) return;
+        await _storage.writeToken(context.accessToken);
+        if (_current(operation)) {
+          state = AuthState(status: AuthStatus.authenticated, context: context);
+        }
+      });
     } catch (error) {
-      if ((error is ApiException && error.kind == ApiErrorKind.unauthorized) ||
-          state.status == AuthStatus.sessionExpired) {
-        await ref.read(secureTokenStorageProvider).clearToken();
-        state = AuthState(status: AuthStatus.sessionExpired, error: error);
+      if (!_current(operation)) return;
+      if (error is ApiException && error.kind == ApiErrorKind.unauthorized) {
+        await _storage.tokenOperation(() async {
+          if (_current(operation)) await _storage.clearToken();
+        });
+        if (_current(operation)) {
+          state = AuthState(status: AuthStatus.sessionExpired, error: error);
+        }
         return;
       }
       state = AuthState(
-        status: previousContext == null
-            ? AuthStatus.failure
-            : AuthStatus.authenticated,
-        context: previousContext,
+        status: AuthStatus.authenticated,
+        context: previous,
         error: error,
       );
     }
   }
 
   Future<void> logout() async {
+    final hadSession = state.context != null;
+    final repository = ref.read(authRepositoryProvider);
+    final storage = _storage;
+    final operation = _begin();
+    state = const AuthState(status: AuthStatus.unauthenticated);
     try {
-      if (state.context != null) {
-        await ref.read(authRepositoryProvider).logout();
-      }
+      if (hadSession) await repository.logout();
     } catch (_) {
       // Remote logout is best effort; local logout is mandatory.
     } finally {
-      try {
-        await ref.read(secureTokenStorageProvider).clearToken();
-      } finally {
-        state = const AuthState(status: AuthStatus.unauthenticated);
-      }
+      await storage.tokenOperation(() async {
+        if (!_current(operation)) return;
+        try {
+          await storage.clearToken();
+        } finally {
+          if (_current(operation)) {
+            state = const AuthState(status: AuthStatus.unauthenticated);
+          }
+        }
+      });
     }
   }
 }

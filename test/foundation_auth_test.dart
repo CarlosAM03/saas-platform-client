@@ -31,9 +31,12 @@ class MemoryTokenStorage extends SecureTokenStorage {
 
 class StubAuthRepository extends AuthRepository {
   StubAuthRepository(MemoryTokenStorage storage)
-      : super(ApiClient(
-            config: const AppConfig(apiBaseUrl: 'http://localhost'),
-            storage: storage));
+    : super(
+        ApiClient(
+          config: const AppConfig(apiBaseUrl: 'http://localhost'),
+          storage: storage,
+        ),
+      );
 
   AuthContext? result;
   Object? error;
@@ -52,9 +55,10 @@ class StubAuthRepository extends AuthRepository {
   Future<AuthContext> me() => _answer();
 
   @override
-  Future<AuthContext> login(
-          {required String email, required String password}) =>
-      _answer();
+  Future<AuthContext> login({
+    required String email,
+    required String password,
+  }) => _answer();
 
   @override
   Future<AuthContext> selectTenant(String tenantId) => _answer();
@@ -71,8 +75,11 @@ class StubAdapter implements HttpClientAdapter {
   String? bearer;
 
   @override
-  Future<ResponseBody> fetch(RequestOptions options,
-      Stream<Uint8List>? requestStream, Future<void>? cancelFuture) async {
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
     bearer = options.headers['Authorization']?.toString();
     return ResponseBody.fromString(
       statusCode == 200
@@ -80,7 +87,7 @@ class StubAdapter implements HttpClientAdapter {
           : '{"success":false,"error":{"message":"Rejected"}}',
       statusCode,
       headers: {
-        'content-type': ['application/json']
+        'content-type': ['application/json'],
       },
     );
   }
@@ -89,39 +96,44 @@ class StubAdapter implements HttpClientAdapter {
   void close({bool force = false}) {}
 }
 
-AuthContext contextFor(
-        {String? tenantId,
-        String? platformRole,
-        String token = 'new-token',
-        List<AuthTenant>? tenants}) =>
-    AuthContext(
-      accessToken: token,
-      user: AuthUser(
-        id: 'user-1',
-        name: 'User',
-        email: 'user@example.com',
-        platformRole: platformRole,
-        status: 'ACTIVO',
-        createdAt: DateTime.utc(2026),
-        updatedAt: DateTime.utc(2026),
-      ),
-      tenants: tenants ??
-          const [
-            AuthTenant(
-                id: 'tenant-1',
-                name: 'Tenant',
-                slug: 'tenant',
-                status: 'ACTIVO')
-          ],
-      currentTenantId: tenantId,
-    );
+AuthContext contextFor({
+  String? tenantId,
+  String? platformRole,
+  String token = 'new-token',
+  List<AuthTenant>? tenants,
+}) => AuthContext(
+  accessToken: token,
+  user: AuthUser(
+    id: 'user-1',
+    name: 'User',
+    email: 'user@example.com',
+    platformRole: platformRole,
+    status: 'ACTIVO',
+    createdAt: DateTime.utc(2026),
+    updatedAt: DateTime.utc(2026),
+  ),
+  tenants:
+      tenants ??
+      const [
+        AuthTenant(
+          id: 'tenant-1',
+          name: 'Tenant',
+          slug: 'tenant',
+          status: 'ACTIVO',
+        ),
+      ],
+  currentTenantId: tenantId,
+);
 
 ProviderContainer containerFor(
-        MemoryTokenStorage storage, StubAuthRepository repository) =>
-    ProviderContainer(overrides: [
-      secureTokenStorageProvider.overrideWithValue(storage),
-      authRepositoryProvider.overrideWithValue(repository),
-    ]);
+  MemoryTokenStorage storage,
+  StubAuthRepository repository,
+) => ProviderContainer(
+  overrides: [
+    secureTokenStorageProvider.overrideWithValue(storage),
+    authRepositoryProvider.overrideWithValue(repository),
+  ],
+);
 
 Future<void> settleRestore() async =>
     Future<void>.delayed(const Duration(milliseconds: 10));
@@ -134,8 +146,10 @@ void main() {
       addTearDown(container.dispose);
       container.read(authControllerProvider);
       await settleRestore();
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.unauthenticated);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.unauthenticated,
+      );
     });
 
     test('restores a valid token through auth/me', () async {
@@ -146,8 +160,10 @@ void main() {
       addTearDown(container.dispose);
       container.read(authControllerProvider);
       await settleRestore();
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.authenticated);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.authenticated,
+      );
       expect(storage.token, 'existing-token');
     });
 
@@ -155,29 +171,36 @@ void main() {
       final storage = MemoryTokenStorage(token: 'expired-token');
       final repository = StubAuthRepository(storage)
         ..error = const ApiException(
-            kind: ApiErrorKind.unauthorized,
-            statusCode: 401,
-            message: 'Expired');
+          kind: ApiErrorKind.unauthorized,
+          statusCode: 401,
+          message: 'Expired',
+        );
       final container = containerFor(storage, repository);
       addTearDown(container.dispose);
       container.read(authControllerProvider);
       await settleRestore();
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.sessionExpired);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.sessionExpired,
+      );
       expect(storage.token, isNull);
     });
 
     test('backend unavailable preserves token for a later restore', () async {
       final storage = MemoryTokenStorage(token: 'existing-token');
       final repository = StubAuthRepository(storage)
-        ..error =
-            const ApiException(kind: ApiErrorKind.network, message: 'Offline');
+        ..error = const ApiException(
+          kind: ApiErrorKind.network,
+          message: 'Offline',
+        );
       final container = containerFor(storage, repository);
       addTearDown(container.dispose);
       container.read(authControllerProvider);
       await settleRestore();
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.backendUnavailable);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.backendUnavailable,
+      );
       expect(storage.token, 'existing-token');
     });
 
@@ -191,11 +214,16 @@ void main() {
       await container
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.authenticated);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.authenticated,
+      );
       expect(storage.token, 'new-token');
       repository.error = const ApiException(
-          kind: ApiErrorKind.unauthorized, statusCode: 401, message: 'Invalid');
+        kind: ApiErrorKind.unauthorized,
+        statusCode: 401,
+        message: 'Invalid',
+      );
       await container
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'wrong');
@@ -214,15 +242,21 @@ void main() {
       await container
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
-      repository.result =
-          contextFor(tenantId: 'tenant-1', token: 'tenant-token');
+      repository.result = contextFor(
+        tenantId: 'tenant-1',
+        token: 'tenant-token',
+      );
       await container
           .read(authControllerProvider.notifier)
           .selectTenant('tenant-1');
-      expect(container.read(authControllerProvider).context?.currentTenantId,
-          'tenant-1');
-      expect(container.read(authControllerProvider).context?.accessToken,
-          'tenant-token');
+      expect(
+        container.read(authControllerProvider).context?.currentTenantId,
+        'tenant-1',
+      );
+      expect(
+        container.read(authControllerProvider).context?.accessToken,
+        'tenant-token',
+      );
       expect(storage.token, 'tenant-token');
     });
 
@@ -239,16 +273,21 @@ void main() {
             .login('user@example.com', 'password');
         final previous = container.read(authControllerProvider).context;
         repository.error = ApiException(
-            kind: kind,
-            statusCode: kind == ApiErrorKind.forbidden ? 403 : null,
-            message: 'Rejected');
+          kind: kind,
+          statusCode: kind == ApiErrorKind.forbidden ? 403 : null,
+          message: 'Rejected',
+        );
         await container
             .read(authControllerProvider.notifier)
             .selectTenant('foreign-tenant');
-        expect(container.read(authControllerProvider).status,
-            AuthStatus.authenticated);
-        expect(container.read(authControllerProvider).context?.currentTenantId,
-            isNull);
+        expect(
+          container.read(authControllerProvider).status,
+          AuthStatus.authenticated,
+        );
+        expect(
+          container.read(authControllerProvider).context?.currentTenantId,
+          isNull,
+        );
         expect(storage.token, 'new-token');
         expect(container.read(authControllerProvider).context, same(previous));
       });
@@ -265,18 +304,22 @@ void main() {
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
       // Reproduce the interceptor callback before the repository future throws.
-      repository.beforeError = () => container.read(authControllerProvider.notifier).sessionExpired();
+      repository.beforeError = () =>
+          container.read(authControllerProvider.notifier).sessionExpired();
       repository.error = const ApiException(
-          kind: ApiErrorKind.unauthorized,
-          statusCode: 401,
-          message: 'Unauthorized');
+        kind: ApiErrorKind.unauthorized,
+        statusCode: 401,
+        message: 'Unauthorized',
+      );
       await container
           .read(authControllerProvider.notifier)
           .selectTenant('tenant-1');
       expect(storage.token, isNull);
       expect(container.read(authControllerProvider).context, isNull);
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.sessionExpired);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.sessionExpired,
+      );
     });
 
     test('successful logout clears token, context and state', () async {
@@ -294,11 +337,14 @@ void main() {
       expect(repository.logoutCalled, isTrue);
       expect(storage.token, isNull);
       expect(container.read(authControllerProvider).context, isNull);
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.unauthenticated);
       expect(
-          redirectForAuth(container.read(authControllerProvider), '/dashboard'),
-          '/login');
+        container.read(authControllerProvider).status,
+        AuthStatus.unauthenticated,
+      );
+      expect(
+        redirectForAuth(container.read(authControllerProvider), '/dashboard'),
+        '/login',
+      );
     });
 
     test('logout clears local session even if backend fails', () async {
@@ -312,13 +358,17 @@ void main() {
       await container
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
-      repository.error =
-          const ApiException(kind: ApiErrorKind.network, message: 'Offline');
+      repository.error = const ApiException(
+        kind: ApiErrorKind.network,
+        message: 'Offline',
+      );
       await container.read(authControllerProvider.notifier).logout();
       expect(repository.logoutCalled, isTrue);
       expect(storage.token, isNull);
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.unauthenticated);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.unauthenticated,
+      );
       expect(container.read(authControllerProvider).context, isNull);
     });
 
@@ -334,56 +384,78 @@ void main() {
           .read(authControllerProvider.notifier)
           .login('user@example.com', 'password');
       container.read(authControllerProvider.notifier).sessionExpired();
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.sessionExpired);
-      expect(redirectForAuth(container.read(authControllerProvider), '/login'),
-          '/session-expired');
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.sessionExpired,
+      );
+      expect(
+        redirectForAuth(container.read(authControllerProvider), '/login'),
+        '/session-expired',
+      );
       await container
           .read(authControllerProvider.notifier)
           .acknowledgeSessionExpired();
       expect(storage.token, isNull);
       expect(container.read(authControllerProvider).context, isNull);
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.unauthenticated);
-      expect(redirectForAuth(container.read(authControllerProvider), '/login'),
-          isNull);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.unauthenticated,
+      );
+      expect(
+        redirectForAuth(container.read(authControllerProvider), '/login'),
+        isNull,
+      );
     });
   });
 
   group('routing', () {
     test('unknown/loading route to splash', () {
       expect(
-          redirectForAuth(const AuthState.unknown(), '/dashboard'), '/splash');
+        redirectForAuth(const AuthState.unknown(), '/dashboard'),
+        '/splash',
+      );
       expect(
-          redirectForAuth(
-              const AuthState(status: AuthStatus.loading), '/login'),
-          '/splash');
+        redirectForAuth(const AuthState(status: AuthStatus.loading), '/login'),
+        '/splash',
+      );
     });
 
     test(
-        'unauthenticated, expired and backend unavailable have dedicated routes',
-        () {
-      expect(
-          redirectForAuth(const AuthState(status: AuthStatus.unauthenticated),
-              '/dashboard'),
-          '/login');
-      expect(
+      'unauthenticated, expired and backend unavailable have dedicated routes',
+      () {
+        expect(
           redirectForAuth(
-              const AuthState(status: AuthStatus.sessionExpired), '/dashboard'),
-          '/session-expired');
-      expect(
+            const AuthState(status: AuthStatus.unauthenticated),
+            '/dashboard',
+          ),
+          '/login',
+        );
+        expect(
           redirectForAuth(
-              const AuthState(status: AuthStatus.backendUnavailable),
-              '/dashboard'),
-          '/backend-unavailable');
-    });
+            const AuthState(status: AuthStatus.sessionExpired),
+            '/dashboard',
+          ),
+          '/session-expired',
+        );
+        expect(
+          redirectForAuth(
+            const AuthState(status: AuthStatus.backendUnavailable),
+            '/dashboard',
+          ),
+          '/backend-unavailable',
+        );
+      },
+    );
 
     test('tenant selection and dashboard redirects', () {
-      final withoutTenant =
-          AuthState(status: AuthStatus.authenticated, context: contextFor());
+      final withoutTenant = AuthState(
+        status: AuthStatus.authenticated,
+        context: contextFor(),
+      );
       final withTenant = AuthState(
-          status: AuthStatus.authenticated,
-          context: contextFor(tenantId: 'tenant-1'));
+        status: AuthStatus.authenticated,
+        context: contextFor(tenantId: 'tenant-1'),
+      );
       expect(redirectForAuth(withoutTenant, '/login'), '/select-tenant');
       expect(redirectForAuth(withTenant, '/login'), '/dashboard');
       expect(redirectForAuth(withTenant, '/select-tenant'), '/dashboard');
@@ -392,55 +464,68 @@ void main() {
       expect(redirectForAuth(withoutTenant, '/users'), '/select-tenant');
     });
 
-    test('ADMIN without tenant can authenticate but not enter tenant routes',
-        () {
-      final admin = AuthState(
+    test(
+      'ADMIN without tenant can authenticate but not enter tenant routes',
+      () {
+        final admin = AuthState(
           status: AuthStatus.authenticated,
-          context: contextFor(platformRole: 'ADMIN'));
-      expect(redirectForAuth(admin, '/login'), '/select-tenant');
-      expect(redirectForAuth(admin, '/dashboard'), '/select-tenant');
-      expect(redirectForAuth(admin, '/campaigns'), '/select-tenant');
-      expect(redirectForAuth(admin, '/prospects'), '/select-tenant');
-      expect(redirectForAuth(admin, '/generate'), '/select-tenant');
-      expect(redirectForAuth(admin, '/profile'), isNull);
-    });
+          context: contextFor(platformRole: 'ADMIN'),
+        );
+        expect(redirectForAuth(admin, '/login'), '/select-tenant');
+        expect(redirectForAuth(admin, '/dashboard'), '/select-tenant');
+        expect(redirectForAuth(admin, '/campaigns'), '/select-tenant');
+        expect(redirectForAuth(admin, '/prospects'), '/select-tenant');
+        expect(redirectForAuth(admin, '/generate'), '/select-tenant');
+        expect(redirectForAuth(admin, '/profile'), isNull);
+      },
+    );
   });
 
   group('network session', () {
-    test('Bearer is sent and an authenticated 401 clears the global session',
-        () async {
-      final storage = MemoryTokenStorage();
-      final repository = StubAuthRepository(storage)
-        ..result = contextFor(tenantId: 'tenant-1');
-      final adapter = StubAdapter();
-      final dio = Dio(BaseOptions(baseUrl: 'http://localhost'))
-        ..httpClientAdapter = adapter;
-      final container = ProviderContainer(overrides: [
-        secureTokenStorageProvider.overrideWithValue(storage),
-        authRepositoryProvider.overrideWithValue(repository),
-        apiClientProvider.overrideWith((ref) => ApiClient(
-              config: const AppConfig(apiBaseUrl: 'http://localhost'),
-              storage: storage,
-              dio: dio,
-              onUnauthorized: () async =>
-                  ref.read(authControllerProvider.notifier).sessionExpired(),
-            )),
-      ]);
-      addTearDown(container.dispose);
-      container.read(authControllerProvider);
-      await settleRestore();
-      await container
-          .read(authControllerProvider.notifier)
-          .login('user@example.com', 'password');
-      await container.read(apiClientProvider).get('/protected');
-      expect(adapter.bearer, 'Bearer new-token');
-      adapter.statusCode = 401;
-      await expectLater(container.read(apiClientProvider).get('/protected'),
-          throwsA(isA<ApiException>()));
-      expect(storage.token, isNull);
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.sessionExpired);
-    });
+    test(
+      'Bearer is sent and an authenticated 401 clears the global session',
+      () async {
+        final storage = MemoryTokenStorage();
+        final repository = StubAuthRepository(storage)
+          ..result = contextFor(tenantId: 'tenant-1');
+        final adapter = StubAdapter();
+        final dio = Dio(BaseOptions(baseUrl: 'http://localhost'))
+          ..httpClientAdapter = adapter;
+        final container = ProviderContainer(
+          overrides: [
+            secureTokenStorageProvider.overrideWithValue(storage),
+            authRepositoryProvider.overrideWithValue(repository),
+            apiClientProvider.overrideWith(
+              (ref) => ApiClient(
+                config: const AppConfig(apiBaseUrl: 'http://localhost'),
+                storage: storage,
+                dio: dio,
+                onUnauthorized: () async =>
+                    ref.read(authControllerProvider.notifier).sessionExpired(),
+              ),
+            ),
+          ],
+        );
+        addTearDown(container.dispose);
+        container.read(authControllerProvider);
+        await settleRestore();
+        await container
+            .read(authControllerProvider.notifier)
+            .login('user@example.com', 'password');
+        await container.read(apiClientProvider).get('/protected');
+        expect(adapter.bearer, 'Bearer new-token');
+        adapter.statusCode = 401;
+        await expectLater(
+          container.read(apiClientProvider).get('/protected'),
+          throwsA(isA<ApiException>()),
+        );
+        expect(storage.token, isNull);
+        expect(
+          container.read(authControllerProvider).status,
+          AuthStatus.sessionExpired,
+        );
+      },
+    );
 
     test('403 is forbidden and preserves the authenticated session', () async {
       final storage = MemoryTokenStorage(token: 'existing-token');
@@ -449,28 +534,39 @@ void main() {
       final adapter = StubAdapter()..statusCode = 403;
       final dio = Dio(BaseOptions(baseUrl: 'http://localhost'))
         ..httpClientAdapter = adapter;
-      final container = ProviderContainer(overrides: [
-        secureTokenStorageProvider.overrideWithValue(storage),
-        authRepositoryProvider.overrideWithValue(repository),
-        apiClientProvider.overrideWith((ref) => ApiClient(
+      final container = ProviderContainer(
+        overrides: [
+          secureTokenStorageProvider.overrideWithValue(storage),
+          authRepositoryProvider.overrideWithValue(repository),
+          apiClientProvider.overrideWith(
+            (ref) => ApiClient(
               config: const AppConfig(apiBaseUrl: 'http://localhost'),
               storage: storage,
               dio: dio,
               onUnauthorized: () async =>
                   ref.read(authControllerProvider.notifier).sessionExpired(),
-            )),
-      ]);
+            ),
+          ),
+        ],
+      );
       addTearDown(container.dispose);
       container.read(authControllerProvider);
       await settleRestore();
       await expectLater(
         container.read(apiClientProvider).get('/protected'),
-        throwsA(isA<ApiException>()
-            .having((e) => e.kind, 'kind', ApiErrorKind.forbidden)),
+        throwsA(
+          isA<ApiException>().having(
+            (e) => e.kind,
+            'kind',
+            ApiErrorKind.forbidden,
+          ),
+        ),
       );
       expect(storage.token, 'existing-token');
-      expect(container.read(authControllerProvider).status,
-          AuthStatus.authenticated);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.authenticated,
+      );
     });
   });
 }

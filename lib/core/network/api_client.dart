@@ -16,37 +16,91 @@ class ApiClient {
     Future<void> Function()? onUnauthorized,
     Dio? dio,
     Logger? logger,
-  })  : _storage = storage,
-        _onUnauthorized = onUnauthorized,
-        _logger = logger ?? Logger(),
-        _dio = dio ??
-            Dio(BaseOptions(
-              baseUrl: config.apiBaseUrl,
-              connectTimeout: const Duration(seconds: 10),
-              receiveTimeout: const Duration(seconds: 30),
-              sendTimeout: const Duration(seconds: 30),
-              headers: {'Accept': 'application/json'},
-            )) {
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        final token = await _storage.readToken();
-        if (token != null && token.isNotEmpty) {
-          options.headers['Authorization'] = 'Bearer $token';
-        }
-        handler.next(options);
-      },
-      onError: (error, handler) async {
-        if (error.response?.statusCode == 401) {
-          await _storage.clearToken();
-          if (error.requestOptions.headers['Authorization'] != null) {
-            await _onUnauthorized?.call();
+  }) : _storage = storage,
+       _onUnauthorized = onUnauthorized,
+       _logger = logger ?? Logger(),
+       _dio =
+           dio ??
+           Dio(
+             BaseOptions(
+               baseUrl: config.apiBaseUrl,
+               connectTimeout: const Duration(seconds: 10),
+               receiveTimeout: const Duration(seconds: 30),
+               sendTimeout: const Duration(seconds: 30),
+               headers: {'Accept': 'application/json'},
+             ),
+           ) {
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          try {
+            await _storage.tokenOperation(() async {
+              if (options.extra['sessionRevision'] !=
+                  _storage.sessionRevision) {
+                throw DioException(
+                  requestOptions: options,
+                  type: DioExceptionType.cancel,
+                  message: 'Session replaced before dispatch',
+                );
+              }
+              final token = options.path == '/api/v1/auth/login'
+                  ? null
+                  : await _storage.readToken();
+              if (options.extra['sessionRevision'] !=
+                  _storage.sessionRevision) {
+                throw DioException(
+                  requestOptions: options,
+                  type: DioExceptionType.cancel,
+                  message: 'Session replaced while reading token',
+                );
+              }
+              if (token != null && token.isNotEmpty) {
+                options.headers['Authorization'] = 'Bearer $token';
+              }
+            });
+            handler.next(options);
+          } catch (error) {
+            handler.reject(
+              error is DioException
+                  ? error
+                  : DioException(requestOptions: options, error: error),
+            );
           }
-          _logger.w(
-              'API returned 401 for ${error.requestOptions.method} ${error.requestOptions.path}');
-        }
-        handler.next(error);
-      },
-    ));
+        },
+        onError: (error, handler) async {
+          if (error.response?.statusCode == 401) {
+            try {
+              await _storage.tokenOperation(() async {
+                final currentToken = await _storage.readToken();
+                if (currentToken != null &&
+                    error.requestOptions.extra['sessionRevision'] ==
+                        _storage.sessionRevision &&
+                    error.requestOptions.headers['Authorization'] ==
+                        'Bearer $currentToken') {
+                  _storage.advanceSession();
+                  final invalidatedRevision = _storage.sessionRevision;
+                  try {
+                    await _storage.clearToken();
+                  } finally {
+                    if (_storage.sessionRevision == invalidatedRevision) {
+                      await _onUnauthorized?.call();
+                    }
+                  }
+                }
+              });
+            } catch (_) {
+              _logger.w(
+                'Local session invalidation could not clear secure storage',
+              );
+            }
+            _logger.w(
+              'API returned 401 for ${error.requestOptions.method} ${error.requestOptions.path}',
+            );
+          }
+          handler.next(error);
+        },
+      ),
+    );
   }
 
   final Dio _dio;
@@ -54,66 +108,114 @@ class ApiClient {
   final Future<void> Function()? _onUnauthorized;
   final Logger _logger;
 
-  Future<Object?> get(String path,
-      {Map<String, dynamic>? queryParameters}) async {
+  Options _options({
+    Map<String, String>? headers,
+    ResponseType? responseType,
+  }) => Options(
+    headers: headers,
+    responseType: responseType,
+    extra: {'sessionRevision': _storage.sessionRevision},
+  );
+
+  Future<Object?> get(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
     final response = await _request(
-        () => _dio.get<Object?>(path, queryParameters: queryParameters));
+      () => _dio.get<Object?>(
+        path,
+        queryParameters: queryParameters,
+        options: _options(),
+      ),
+    );
     return response.data;
   }
 
-  Future<Object?> post(String path,
-      {Object? data, Map<String, String>? headers}) async {
-    final response = await _request(() => _dio.post<Object?>(path,
-        data: data, options: Options(headers: headers)));
+  Future<Object?> post(
+    String path, {
+    Object? data,
+    Map<String, String>? headers,
+  }) async {
+    final response = await _request(
+      () => _dio.post<Object?>(
+        path,
+        data: data,
+        options: _options(headers: headers),
+      ),
+    );
     return response.data;
   }
 
-  Future<Object?> postMultipart(String path,
-      {required Map<String, String> fields,
-      required ApiUploadFile file}) async {
+  Future<Object?> postMultipart(
+    String path, {
+    required Map<String, String> fields,
+    required ApiUploadFile file,
+  }) async {
     final data = FormData.fromMap({
       ...fields,
-      'file': MultipartFile.fromBytes(file.bytes, filename: file.filename)
+      'file': MultipartFile.fromBytes(file.bytes, filename: file.filename),
     });
-    final response = await _request(() => _dio.post<Object?>(path, data: data));
+    final response = await _request(
+      () => _dio.post<Object?>(path, data: data, options: _options()),
+    );
     return response.data;
   }
 
   Future<Object?> patch(String path, {Object? data}) async {
-    final response =
-        await _request(() => _dio.patch<Object?>(path, data: data));
+    final response = await _request(
+      () => _dio.patch<Object?>(path, data: data, options: _options()),
+    );
     return response.data;
   }
 
-  Future<Object?> delete(String path,
-      {Map<String, dynamic>? queryParameters}) async {
+  Future<Object?> delete(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
     final response = await _request(
-        () => _dio.delete<Object?>(path, queryParameters: queryParameters));
+      () => _dio.delete<Object?>(
+        path,
+        queryParameters: queryParameters,
+        options: _options(),
+      ),
+    );
     return response.data;
   }
 
   Future<Response<Object?>> download(String path) {
-    return _request(() => _dio.get<Object?>(path,
-        options: Options(responseType: ResponseType.bytes)));
+    return _request(
+      () => _dio.get<Object?>(
+        path,
+        options: _options(responseType: ResponseType.bytes),
+      ),
+    );
   }
 
-  Future<ApiDownload> downloadBytes(String path,
-      {Map<String, dynamic>? queryParameters}) async {
-    final response = await _request(() => _dio.get<Object?>(path,
+  Future<ApiDownload> downloadBytes(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    final response = await _request(
+      () => _dio.get<Object?>(
+        path,
         queryParameters: queryParameters,
-        options: Options(responseType: ResponseType.bytes)));
+        options: _options(responseType: ResponseType.bytes),
+      ),
+    );
     final data = response.data;
     if (data is! List<int>) {
       throw const FormatException('Expected binary response');
     }
     return ApiDownload(
-        bytes: List<int>.unmodifiable(data),
-        contentType: response.headers.value('content-type'),
-        contentDisposition: response.headers.value('content-disposition'));
+      bytes: List<int>.unmodifiable(data),
+      contentType: response.headers.value('content-type'),
+      contentDisposition: response.headers.value('content-disposition'),
+    );
   }
 
   Future<Response<Object?>> _request(
-      Future<Response<Object?>> Function() request) async {
+    Future<Response<Object?>> Function() request,
+  ) async {
     try {
       return await request();
     } on DioException catch (error) {
@@ -132,8 +234,9 @@ class ApiClient {
         body = null;
       }
     }
-    final errorBody =
-        body is Map && body['error'] is Map ? body['error'] as Map : null;
+    final errorBody = body is Map && body['error'] is Map
+        ? body['error'] as Map
+        : null;
     final code = errorBody?['code'];
     final message = errorBody?['message'];
     final details = errorBody?['details'];

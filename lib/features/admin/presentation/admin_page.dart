@@ -6,12 +6,18 @@ class AdminPage extends StatelessWidget {
   const AdminPage({super.key});
   @override
   Widget build(BuildContext context) => FeaturePage(
-      title: 'Administración',
-      child: ListView(children: [
+    title: 'Administración',
+    child: ListView(
+      children: [
         ListTile(
-            title: const Text('Organizaciones'),
-            onTap: () => context.go('/tenants')),
+          title: const Text('Organizaciones'),
+          onTap: () => context.go('/tenants'),
+        ),
         ListTile(
-            title: const Text('Usuarios'), onTap: () => context.go('/users'))
-      ]));
+          title: const Text('Usuarios'),
+          onTap: () => context.go('/users'),
+        ),
+      ],
+    ),
+  );
 }

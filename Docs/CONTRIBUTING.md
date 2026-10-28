@@ -2,7 +2,7 @@
 
 ## Alcance
 
-Este repositorio implementa el cliente Flutter de la Plataforma SaaS universitaria. Foundation se conserva y el sprint de paridad core implementa Tenants, Users, Campaigns y Prospects no-CSV; CSV UI, Jobs y Dashboard real quedan diferidos.
+Este repositorio implementa el cliente Flutter de la Plataforma SaaS universitaria. Foundation se conserva y el sprint de paridad core implementa Tenants, Users, Campaigns y Prospects no-CSV; CSV UI, Jobs y Dashboard real se implementan en la entrega Funciones-Pendientes-Implementadas.md.
 
 ## Fuentes de verdad
 
@@ -78,6 +78,6 @@ Si una feature requiere un campo, endpoint, permiso o codigo HTTP que no existe 
 
 ## Estado de paridad core
 
-PlatformApi incluye creación manual y CSV multipart preview/confirm. PersistedProspectSource admite google_maps/manual/csv; ProspectingSource sólo google_maps. CSV UI y selección de archivo quedan diferidos.
+PlatformApi incluye creación manual y CSV multipart preview/confirm. PersistedProspectSource admite google_maps/manual/csv; ProspectingSource sólo google_maps. CSV UI y selección de archivo están implementados.
 
 Tenants/Users/Campaigns/Prospects productivos usan API real y estado invalidado por sesión/tenant. OWNER/MEMBER se derivan del usuario actual en UsersApi; no decodificar JWT. MEMBER puede gestionar campañas y editar prospectos. Ver la matriz vigente y rutas en `FEATURE-DEVELOPMENT.md`.

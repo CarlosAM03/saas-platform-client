@@ -1,11 +1,11 @@
 {
-    "name": "Prospector SaaS",
-    "short_name": "Prospector SaaS",
+    "name": "Plataforma SaaS · Beta",
+    "short_name": "SaaS Beta",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "Plataforma SaaS para gestión de campañas y prospección automatizada.",
+    "background_color": "#F8FAFC",
+    "theme_color": "#2563EB",
+    "description": "Campañas, prospectos y equipo en tu espacio de trabajo.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

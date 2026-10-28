@@ -25,7 +25,7 @@ por Vercel; CSP queda pendiente de evaluar scripts y CanvasKit de Flutter.
 
 Foundation y Auth se conservan. Tenants, Users, Campaigns y Prospects no-CSV usan API real, con listados, detalles, formularios, permisos visibles y estado por sesión/tenant.
 
-PlatformApi representa las operaciones públicas de backend/main `3a3309398458ab333d7b00f16e9c2df6a09ef734`, incluida creación manual y CSV preview/confirm. La UI CSV, Jobs, Prospector, polling/caché de resultados y Dashboard real quedan deliberadamente postergados. El Dashboard conserva temporalmente datos demo.
+Estado reconciliado del 26-10-2026: CSV y dashboard consumen las APIs reales de Backend **dev 967044e2**. Jobs permite historial, detalle y polling de registros existentes. Crear, cancelar, persistir y exportar están deshabilitados: Backend devuelve 503 por integración pendiente. No existe un flag de configuración que active esa integración. [Alcance y pruebas](Docs/Funciones-Pendientes-Implementadas.md), [auditoría](Docs/Auditorias/Auditoria_Reconciliacion_Dev_2026-10-26.md) y [configuración Web/Vercel](Docs/Despliegue-Web.md).
 
 ## Papel de Flutter
 
@@ -53,7 +53,9 @@ El backend es la autoridad para tenant context, autorizacion, persistencia, regl
 - Users: listado/búsqueda/paginación/orden, detalle, creación, edición y desactivación ADMIN. La creación omite `roleId`; backend asigna MEMBER. Sin selector de roles inventado.
 - Campaigns: listado/búsqueda/paginación/orden, creación, detalle, edición/estado, archivo, eliminación permanente ADMIN confirmada y prospectos por campaña.
 - Prospects: listado/búsqueda/paginación, detalle, edición y creación manual ADMIN/OWNER. Sources persistidos: `google_maps`, `manual`, `csv`.
-- CSV: sólo PlatformApi multipart tipado; sin file picker, wizard ni ruta de importación visible.
+- CSV: selector de archivo, vista previa, decisiones por fila, confirmación y resumen.
+- Dashboard: totales de meta.total, campañas, prospectos y trabajos recientes del tenant.
+- Jobs: listar y consultar registros; polling cada 4 segundos sin solapamiento. Cliente preparado para otras operaciones, con acciones deshabilitadas hasta verificar una implementación Backend compatible.
 
 Las rutas CRUD manejan carga, vacíos, errores y permisos. Los datos y formularios se reinician al cambiar sesión o tenant. Backend sigue autorizando cada operación.
 
@@ -69,7 +71,7 @@ Las rutas CRUD manejan carga, vacíos, errores y permisos. Los datos y formulari
 - `API_BASE_URL` se configura con `--dart-define`; `.env.example` es referencia documental y no se carga automaticamente. La dependencia `envied` permanece instalada, pero no se usa para esta configuracion F5.
 - `logger` se usa para logs seguros.
 - No hay refresh token, OAuth ni self-register publico.
-- Jobs/Prospector y polling/caché quedan postergados; PlatformApi conserva el contrato y sus errores 503.
+- Jobs monitorea cada 4 segundos y limpia estado por sesión/tenant. Backend actual conserva respuestas 503 para mutaciones; configurar variables no las habilita.
 - No hay WebSocket, SSE, workers Flutter, background tasks u offline avanzado.
 
 ## Tenant y roles
@@ -159,7 +161,7 @@ flutter test
 
 Si `.dart_tool` ya existe, no recrear el enlace. `lib/shared/models/api_models.g.dart` es salida ignorada de `build_runner`, nunca un archivo escrito a mano. Para cambiar de backend, sustituir la URL en `--dart-define`. El backend NestJS debe estar disponible por separado para probar login real; sin backend, el cliente Web aun debe compilar y arrancar.
 
-El alcance funcional y la matriz MEMBER vigente están descritos arriba y en `FEATURE-DEVELOPMENT.md`. Dashboard y Jobs siguen fuera del sprint de paridad core.
+El alcance funcional y la matriz MEMBER vigente están descritos arriba y en `FEATURE-DEVELOPMENT.md`. El alcance de CSV, dashboard y consulta de Jobs se detalla en Docs/Funciones-Pendientes-Implementadas.md; no hay validación E2E contra despliegues.
 ## Inicio con Docker
 
 Requisitos en host: Git, Docker y Docker Compose. El SDK Linux oficial está fijado en Flutter 3.47.5 / Dart 3.13.4 y se verifica mediante SHA-256 dentro de la imagen.
