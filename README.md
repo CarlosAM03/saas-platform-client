@@ -210,3 +210,13 @@ Para una prueba rápida del frontend se recomienda:
 `owner.demo-norte@demo.example` / `DevOnlyPass123!`
 
 La operación de PostgreSQL, migraciones y restauración del dataset pertenece al [backend](https://github.com/CarlosAM03/saas-platform-backend/blob/main/Docs/DevelopmentEnvironment.md). El cliente no necesita credenciales de base de datos.
+
+## Sprint Core — 28 octubre 2026
+
+Candidato de estabilización en [PR #10](https://github.com/CarlosAM03/saas-platform-client/pull/10), basado en main7731649 y Backend main b51b265 (contrato Core1.0.0). Incluye PATCH diferencial de usuarios, discovery ADMIN con memberships, presentación conforme al JWT snapshot, restauración de deep links y dashboard resiliente con Jobs tipados.
+
+Verificación:279 pruebas Flutter, análisis y CI; P2C real;32 escenarios locales en dos corridas limpias con SQL y relectura; seis negativos HTTP/SQL; smoke remoto autenticado de solo lectura. Estos resultados no constituyen aceptación productiva ni prueban por sí solos los SHA desplegados.
+
+Frontend productivo informado por el owner: [saas-platform-client-web.vercel.app](https://saas-platform-client-web.vercel.app/#/login). La URL histórica sin -web no corresponde al frontend verificado.
+
+Procedimiento en [tool/sprint/README.md](tool/sprint/README.md), resultados y riesgos en [codex/evidencias/handoff-qa.md](codex/evidencias/handoff-qa.md). ADR-006 adjunto es referencia futura; el contrato activo permanece separado.

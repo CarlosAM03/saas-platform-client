@@ -1,0 +1,2532 @@
+# ADR-006 APROBADO (diseño contractual futuro). NO IMPLEMENTADO / NO PUBLICADO EN SWAGGER.
+# NO sustituir el contrato core main ni usar como fuente de disponibilidad operativa.
+openapi: 3.0.3
+info:
+  title: Platform API — extensión aprobada ADR-006 (NO IMPLEMENTADA)
+  version: 1.1.0-approved
+  description: >
+    Extensión contractual APROBADA para el registro asistido de tenants y activación de primer OWNER. Actualmente
+    el Backend main core 1.0.0 implementa Auth, Tenants, Users, Campaigns, Prospects, CSV, Health y lectura
+    de Jobs; las mutaciones de Jobs siguen deshabilitadas con 503. Este documento conserva las 33 operaciones
+    existentes, añade cinco operaciones futuras, y NO altera el login normal. No está integrado en deploymentDocument,
+    /api/docs ni /api/docs-json. La activación emplea un enlace secreto de 24 horas de un solo uso, canjeado
+    por desafío de 15 minutos y cambio de contraseña. No se envían contraseñas por correo; el proveedor debe
+    tener un plan gratuito real sin cargos automáticos. Ver ADR-006-TenantRegistration-APROBADO.md.
+servers:
+  - url: https://api.example.invalid
+    description: Placeholder; el entorno real se configura fuera del contrato.
+tags:
+  - name: Auth
+  - name: Tenants
+  - name: Users
+  - name: Campaigns
+  - name: Prospects
+  - name: Prospecting Jobs
+paths:
+  /api/v1/health:
+    get:
+      tags:
+        - Health
+      security: []
+      operationId: health
+      responses:
+        '200':
+          $ref: '#/components/responses/HealthResponse'
+  /api/v1/health/live:
+    get:
+      tags:
+        - Health
+      security: []
+      operationId: liveness
+      responses:
+        '200':
+          $ref: '#/components/responses/HealthResponse'
+  /api/v1/health/ready:
+    get:
+      tags:
+        - Health
+      security: []
+      operationId: readiness
+      responses:
+        '200':
+          $ref: '#/components/responses/HealthResponse'
+        '503':
+          description: PostgreSQL no disponible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/auth/login:
+    post:
+      tags:
+        - Auth
+      security: []
+      summary: Inicia sesión
+      operationId: login
+      description: >-
+        JWT HS256 de 8 h; máximo 5 intentos/60 s/IP; sin refresh token. Cuentas pendientes de primer acceso
+        no pueden iniciar sesión ni recibir JWT (401 genérico). Usuarios anteriores conservan AuthContext y
+        el contrato 1.0.0.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/LoginResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          description: Límite de autenticación excedido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Cierra la sesión actual
+      operationId: logout
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySuccess'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v1/auth/select-tenant:
+    post:
+      tags:
+        - Auth
+      summary: Selecciona el tenant de la sesión
+      operationId: selectTenant
+      description: Valida membership activa o autoridad global ADMIN. ADMIN conserva tenantRole null.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelectTenantRequest'
+      responses:
+        '200':
+          description: Tenant seleccionado y contexto actualizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessAuthContext'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/auth/me:
+    get:
+      tags:
+        - Auth
+      summary: Obtiene la identidad y contexto actuales
+      operationId: getCurrentUser
+      description: Devuelve el token presentado sin renovarlo y el contexto autenticado. No requiere 
+        tenant seleccionado.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Contexto autenticado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessAuthContext'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v1/tenants:
+    get:
+      tags:
+        - Tenants
+      summary: Lista los tenants accesibles al usuario
+      operationId: listTenants
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Tenants del usuario autenticado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Tenant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - Tenants
+      summary: Crea un tenant
+      operationId: createTenant
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenantRequest'
+      responses:
+        '201':
+          description: Tenant creado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Tenant'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/tenants/{id}:
+    get:
+      tags:
+        - Tenants
+      summary: Obtiene un tenant
+      operationId: getTenant
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '200':
+          description: Tenant encontrado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Tenant'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/users:
+    get:
+      tags:
+        - Users
+      summary: Lista usuarios del tenant autenticado
+      operationId: listUsers
+      description: >-
+        Requiere tenant seleccionado incluso para ADMIN. sortBy admite name, email, status, createdAt y
+        updatedAt.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+      responses:
+        '200':
+          $ref: '#/components/responses/UserPage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags:
+        - Users
+      summary: Crea un usuario y lo asocia al contexto actual
+      operationId: createUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      responses:
+        '201':
+          description: Usuario creado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Obtiene un usuario
+      operationId: getUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '200':
+          description: Usuario encontrado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+        - Users
+      summary: Actualiza parcialmente un usuario
+      description: Campo omitido no se modifica; null solo es válido para campos anulables.
+      operationId: updateUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: Usuario actualizado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    delete:
+      tags:
+        - Users
+      summary: ADMIN desactiva un usuario del tenant seleccionado estableciendo INACTIVO. No realiza 
+        borrado físico.
+      operationId: deleteUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySuccess'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/campaigns:
+    get:
+      tags:
+        - Campaigns
+      summary: Lista campañas del tenant autenticado
+      operationId: listCampaigns
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+      responses:
+        '200':
+          $ref: '#/components/responses/CampaignPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - Campaigns
+      summary: Crea una campaña en el tenant actual
+      operationId: createCampaign
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCampaignRequest'
+      responses:
+        '201':
+          description: Campaña creada.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Campaign'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/campaigns/{id}:
+    parameters:
+      - $ref: '#/components/parameters/CampaignId'
+    get:
+      tags:
+        - Campaigns
+      summary: Obtiene una campaña
+      operationId: getCampaign
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Campaña encontrada.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Campaign'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+        - Campaigns
+      summary: Actualiza parcialmente una campaña
+      description: Campo omitido no se modifica; null solo es válido para description.
+      operationId: updateCampaign
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCampaignRequest'
+      responses:
+        '200':
+          description: Campaña actualizada.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Campaign'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Campaigns
+      summary: Archiva o elimina físicamente una campaña
+      description: Sin permanent archiva; permanent=true queda reservado a ADMIN para borrado físico.
+      operationId: deleteCampaign
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: permanent
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptySuccess'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/campaigns/{id}/prospects:
+    get:
+      tags:
+        - Campaigns
+        - Prospects
+      summary: Lista prospectos de una campaña
+      operationId: listCampaignProspects
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CampaignId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+      responses:
+        '200':
+          $ref: '#/components/responses/ProspectPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/prospects:
+    post:
+      tags:
+        - Prospects
+      summary: Crea un prospecto manual
+      description: |
+        Disponible para ADMIN y OWNER con una organización seleccionada.
+        La campaña debe pertenecer a esa organización.
+        El backend asigna source=manual y sourceIdentifier=null.
+      operationId: createProspect
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProspectRequest'
+      responses:
+        '201':
+          description: Prospecto creado y asociado a la campaña.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Prospect'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    get:
+      tags:
+        - Prospects
+      summary: Lista prospectos del tenant autenticado
+      operationId: listProspects
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+      responses:
+        '200':
+          $ref: '#/components/responses/ProspectPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v1/prospects/import/preview:
+    post:
+      tags:
+        - Prospects
+      operationId: previewProspectImport
+      summary: Previsualiza una importación CSV sin escrituras
+      description: |
+        ADMIN y OWNER con tenant seleccionado. UTF-8 con/sin BOM, coma o punto y coma;
+        encabezados exactos name,category,address,phone,email,website,language,status.
+        name obligatorio. Máximo 5 MB, 1000 registros y 2000 caracteres por celda.
+        Máximo 5 MB de resultados de preview; dividir el archivo si se supera.
+        No admite metadata ni campos controlados por el backend. Las filas completamente
+        vacías se ignoran. Registro lógico desde 1 después del encabezado; saltos dentro
+        de comillas no crean registros. Columna nullable vacía equivale a null; ausente
+        se conserva al actualizar. status vacío es inválido y ausente usa ACTIVO al crear.
+        Candidatos por nombre en todo el tenant, ignorando mayúsculas y espacios sobrantes,
+        conservando acentos y signos; no sustituye la identidad del baseline.
+        Todos los nombres repetidos en el archivo son inválidos; varias coincidencias
+        existentes son conflicto. La referencia firmada vence en 15 minutos.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - campaignId
+                - file
+              properties:
+                campaignId:
+                  type: string
+                  pattern: ^\S+$
+                  maxLength: 200
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Previsualización; no guarda datos.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ProspectImportPreview'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '413':
+          description: El archivo supera 5 MB.
+  /api/v1/prospects/import/confirm:
+    post:
+      tags:
+        - Prospects
+      operationId: confirmProspectImport
+      summary: Confirma una importación CSV atómica
+      description: |
+        ADMIN y OWNER con tenant seleccionado. Reenviar el mismo archivo del preview.
+        decisions es un array JSON codificado como texto multipart, con exactamente una
+        decisión por registro NEW o MATCH; no incluir registros INVALID ni CONFLICT.
+        NEW admite CREATE o SKIP. MATCH admite LINK_EXISTING, UPDATE_EXISTING o SKIP.
+        LINK_EXISTING solo asegura la asociación, sin editar ni reactivar una asociación
+        existente. UPDATE_EXISTING edita los campos importables presentes y asegura la
+        asociación; requiere selección explícita y afecta a todas las campañas que
+        comparten el prospecto. Conserva metadata, origen e identificadores protegidos.
+        SKIP no cambia atributos ni asociaciones. Todo se guarda en una transacción
+        Serializable, hasta tres intentos ante conflictos de serialización.
+        Cambios en coincidencias, atributos o asociaciones desde el preview devuelven 409.
+        No existe idempotencia durable: repetir la confirmación reevalúa la base actual,
+        no recupera el resultado anterior. Errores de infraestructura revierten todo el lote.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - campaignId
+                - file
+                - previewReference
+                - decisions
+              properties:
+                campaignId:
+                  type: string
+                  pattern: ^\S+$
+                  maxLength: 200
+                file:
+                  type: string
+                  format: binary
+                previewReference:
+                  type: string
+                  maxLength: 4096
+                decisions:
+                  type: string
+                  maxLength: 100000
+                  example: '[{"record":1,"action":"CREATE"},{"record":2,"action":"LINK_EXISTING"}]'
+      responses:
+        '200':
+          description: Resultado del lote confirmado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ProspectImportResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '413':
+          description: El archivo supera 5 MB.
+  /api/v1/prospects/{id}:
+    parameters:
+      - $ref: '#/components/parameters/EntityId'
+    get:
+      tags:
+        - Prospects
+      summary: Obtiene un prospecto
+      operationId: getProspect
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Prospecto encontrado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Prospect'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+        - Prospects
+      summary: Actualiza parcialmente un prospecto
+      description: Campo omitido no se modifica; null es válido en campos nullable.
+      operationId: updateProspect
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProspectRequest'
+      responses:
+        '200':
+          description: Prospecto actualizado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Prospect'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/prospecting-jobs:
+    post:
+      tags:
+        - Prospecting Jobs
+      summary: Crea y encola un Job de prospección
+      description: El tenant se obtiene del contexto JWT. La operación es idempotente por 
+        Idempotency-Key.
+      operationId: createProspectingJob
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProspectingJobRequest'
+      responses:
+        '201':
+          description: Job creado con estado QUEUED.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ProspectingJobDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '503':
+          $ref: '#/components/responses/ServiceUnavailable'
+    get:
+      tags:
+        - Prospecting Jobs
+      summary: Lista Jobs del tenant autenticado
+      operationId: listProspectingJobs
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortOrder'
+      responses:
+        '200':
+          $ref: '#/components/responses/JobPage'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/v1/prospecting-jobs/{id}:
+    get:
+      tags:
+        - Prospecting Jobs
+      summary: Obtiene el detalle de un Job
+      operationId: getProspectingJob
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '200':
+          description: Detalle del Job, incluyendo datos temporales cuando existan.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ProspectingJobDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/prospecting-jobs/{id}/cancel:
+    post:
+      tags:
+        - Prospecting Jobs
+      summary: Solicita la cancelación de un Job
+      operationId: cancelProspectingJob
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '200':
+          description: Job cancelado o solicitud de cancelación aceptada.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ProspectingJobDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/prospecting-jobs/{id}/persist:
+    post:
+      tags:
+        - Prospecting Jobs
+      summary: Persiste los resultados temporales de un Job
+      description: Mapea BusinessResult a Prospect y CampaignProspect aplicando la deduplicación definida
+        por Platform.
+      operationId: persistProspectingJob
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '200':
+          description: Resultados persistidos.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PersistResultsResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/prospecting-jobs/{id}/export:
+    get:
+      tags:
+        - Prospecting Jobs
+      summary: Exporta resultados en CSV o XLSX
+      description: Respuesta binaria; no utiliza el wrapper JSON estándar. ADR-002 define GET para esta 
+        operación.
+      operationId: exportProspectingJob
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/EntityId'
+        - name: format
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/ExportFormat'
+      responses:
+        '200':
+          description: Archivo de exportación.
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/tenants/register:
+    post:
+      security:
+        - bearerAuth: []
+      x-required-roles:
+        - ADMIN
+      x-implementation-status: approved-not-implemented
+      tags:
+        - Tenants
+      summary: 'Registra una organización y su primer OWNER (futuro; no implementado)'
+      operationId: registerTenant
+      description: >-
+        Operación global ADMIN sin tenant seleccionado obligatorio. Una transacción crea tenant ACTIVO, roles,
+        usuario, membership OWNER, onboarding, enlace hasheado e intento de entrega. Enlace HTTPS de 24 h enviado
+        tras commit; NUNCA contraseña ni enlace en respuestas. Retorna 201 también si envío FAILED/UNKNOWN.
+        Correo/slug existente: 409. POST /tenants permanece sin cambios. Feature flag apagado: 503 sin escritura.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterTenantRequest'
+      responses:
+        '201':
+          description: Organización registrada; el estado de envío se informa por separado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessTenantRegistration'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: JWT Bearer faltante o inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Requiere ADMIN.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Correo o slug ya existentes; no se crearon datos parciales.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Límite operativo de intentos excedido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Fallo inesperado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Registro desactivado o no disponible; sin escrituras.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/tenants/{id}/onboarding:
+    get:
+      security:
+        - bearerAuth: []
+      x-required-roles:
+        - ADMIN
+      x-implementation-status: approved-not-implemented
+      tags:
+        - Tenants
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: ^\S+$
+          description: ID de tenant; no requiere que sea el tenant seleccionado.
+      summary: 'Consulta el estado del alta (futuro; no implementado)'
+      operationId: getTenantOnboarding
+      description: >-
+        Solo ADMIN, sin selección de tenant; aun con feature flag apagado. No revela enlace, token, credenciales
+        ni detalles internos del proveedor. Tenant sin onboarding: 404.
+      responses:
+        '200':
+          description: Estado de activación y entrega.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessTenantOnboarding'
+        '401':
+          description: JWT Bearer faltante o inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Requiere ADMIN.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Onboarding no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Fallo inesperado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/tenants/{id}/resend-welcome:
+    post:
+      security:
+        - bearerAuth: []
+      x-required-roles:
+        - ADMIN
+      x-implementation-status: approved-not-implemented
+      tags:
+        - Tenants
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: ^\S+$
+          description: ID de tenant; no requiere que sea el tenant seleccionado.
+      summary: 'Regenera y reenvía enlace de activación (futuro; no implementado)'
+      operationId: resendTenantWelcome
+      description: >-
+        Solo ADMIN, onboarding pendiente, sin body ni destinatario alternativo. Crea nueva generación y enlace
+        único de 24 h, invalida enlaces/desafíos anteriores. Límites persistidos: al menos 60 s entre intentos,
+        máximo 5/hora incluyendo el envío inicial. 409 si completado o lease activo, 429 si cuota interna;
+        200 con deliveryStatus incluso si FAILED/UNKNOWN. Si flag apagado responde 503 sin escrituras.
+      responses:
+        '200':
+          description: Intento procesado; ACCEPTED no garantiza entrega.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessTenantOnboarding'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: JWT Bearer faltante o inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Requiere ADMIN.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Onboarding no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Onboarding completado o intento de envío concurrente activo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Límite persistente de envíos excedido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Fallo inesperado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Reenvío desactivado o no disponible; sin escrituras.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/auth/redeem-first-access:
+    post:
+      tags:
+        - Auth
+      security: []
+      x-implementation-status: approved-not-implemented
+      summary: Canjea enlace de activación por desafío breve (futuro; no implementado)
+      operationId: redeemFirstAccess
+      description: 'Autorizado exclusivamente mediante activationToken opaco de 32+ bytes aleatorios en el
+        body (no JWT). Solo un canje de enlace por generación; consume enlace y crea desafío separado válido
+        hasta 15 min y nunca más allá de la expiración original del enlace. Requiere cuenta/tenant ACTIVO y
+        onboarding PENDING_FIRST_ACCESS. Sin Bearer, sin sesión normal. Disponible aunque TENANT_REGISTRATION_ENABLED=false
+        para cuentas pendientes ya creadas. Token desconocido, consumido, vencido o generación inválida: 401
+        genérico. Máximo 5 intentos/60 s/IP, con límite complementario por token/identificador.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RedeemFirstAccessRequest'
+      responses:
+        '200':
+          description: Enlace canjeado; se emite un desafío limitado, NO JWT.
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+              example: no-store
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessFirstAccessRequired'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          description: Límite de intentos excedido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Fallo inesperado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/auth/complete-first-access:
+    post:
+      tags:
+        - Auth
+      security: []
+      x-implementation-status: approved-not-implemented
+      summary: 'Establece contraseña definitiva tras canje (futuro; no implementado)'
+      operationId: completeFirstAccess
+      description: >-
+        Autorización solo mediante firstAccessToken de desafío de 15 min en body, no Bearer. En transacción
+        verifica generación, usuario y tenant activos, onboarding pendiente, consumo único; cambia hash bcrypt
+        costo 12, limpia mustChangePassword y completa onboarding. No entrega JWT; respuesta LOGIN_REQUIRED.
+        Debe seguir operando para pendientes existentes con flag apagado. Límite 5 intentos/60s/IP y controles
+        por desafío.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteFirstAccessRequest'
+      responses:
+        '200':
+          description: Contraseña establecida, iniciar sesión.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessFirstAccessCompleted'
+          headers:
+            Cache-Control:
+              schema:
+                type: string
+              example: no-store
+        '400':
+          description: Entrada inválida.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Desafío inválido, consumido, expirado o generación anterior.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Límite excedido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Fallo inesperado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      description: >-
+        Identificador de campaña; admite CUID e identificadores del dataset local. La campaña debe pertenecer
+        al tenant autenticado.
+      schema:
+        type: string
+        pattern: ^\S+$
+    EntityId:
+      name: id
+      in: path
+      required: true
+      description: Identificador persistente CUID.
+      schema:
+        type: string
+        pattern: ^c[a-z0-9]{20,}$
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    Search:
+      name: search
+      in: query
+      required: false
+      schema:
+        type: string
+    SortBy:
+      name: sortBy
+      in: query
+      required: false
+      schema:
+        type: string
+    SortOrder:
+      name: sortOrder
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: asc
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: Misma key y mismo payload devuelve el mismo Job; misma key con payload distinto 
+        responde 409.
+      schema:
+        type: string
+        minLength: 1
+  responses:
+    HealthResponse:
+      description: Proceso disponible; readiness incluye database up tras consultar PostgreSQL.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SuccessResponse'
+              - type: object
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - status
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - ok
+                      database:
+                        type: string
+                        enum:
+                          - up
+    BadRequest:
+      description: Solicitud inválida.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Credenciales ausentes o inválidas.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Operación no permitida para el rol o tenant actual.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Recurso no encontrado en el tenant actual.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Conflicto de estado, unicidad o idempotencia.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServiceUnavailable:
+      description: Prospector Service no pudo aceptar el Job.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    EmptySuccess:
+      description: Operación completada.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SuccessResponse'
+              - type: object
+                properties:
+                  data:
+                    type: object
+                    maxProperties: 0
+    LoginResponse:
+      description: Sesión normal iniciada; no aplica a cuentas pendientes de activación.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuccessAuthContext'
+    UserPage:
+      description: Usuarios paginados.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserPageResponse'
+    CampaignPage:
+      description: Campañas paginadas.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CampaignPageResponse'
+    ProspectPage:
+      description: Prospectos paginados.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ProspectPageResponse'
+    JobPage:
+      description: Jobs paginados.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/JobPageResponse'
+  schemas:
+    SuccessResponse:
+      type: object
+      required:
+        - success
+        - data
+      properties:
+        success:
+          type: boolean
+          enum:
+            - true
+        data: {}
+        meta:
+          $ref: '#/components/schemas/Meta'
+    Meta:
+      type: object
+      additionalProperties: true
+    PaginationMeta:
+      type: object
+      required:
+        - page
+        - limit
+        - total
+        - totalPages
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        total:
+          type: integer
+          minimum: 0
+        totalPages:
+          type: integer
+          minimum: 0
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          enum:
+            - false
+        error:
+          $ref: '#/components/schemas/ErrorBody'
+    ErrorBody:
+      type: object
+      required:
+        - code
+        - message
+        - details
+        - timestamp
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 UTC.
+    Id:
+      type: string
+      pattern: ^c[a-z0-9]{20,}$
+      description: CUID persistente.
+    DateTime:
+      type: string
+      format: date-time
+      description: ISO 8601 UTC.
+    TenantStatus:
+      type: string
+      enum:
+        - ACTIVO
+        - SUSPENDIDO
+    UserStatus:
+      type: string
+      enum:
+        - ACTIVO
+        - INACTIVO
+    RoleName:
+      type: string
+      enum:
+        - OWNER
+        - MEMBER
+    CampaignStatus:
+      type: string
+      enum:
+        - ACTIVA
+        - PAUSADA
+        - COMPLETADA
+        - ARCHIVADA
+    ProspectStatus:
+      type: string
+      enum:
+        - ACTIVO
+        - INACTIVO
+    ProspectingJobStatus:
+      type: string
+      enum:
+        - QUEUED
+        - RUNNING
+        - COMPLETED
+        - FAILED
+        - CANCELLED
+    Tenant:
+      type: object
+      required:
+        - id
+        - name
+        - slug
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        slug:
+          type: string
+        status:
+          $ref: '#/components/schemas/TenantStatus'
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+    Role:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          $ref: '#/components/schemas/RoleName'
+        tenantId:
+          $ref: '#/components/schemas/Id'
+        description:
+          type: string
+          nullable: true
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - role
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        platformRole:
+          type: string
+          enum:
+            - ADMIN
+            - 
+          nullable: true
+        tenants:
+          type: array
+          description: Memberships visibles limitadas al tenant operativo.
+          items:
+            type: object
+            required:
+              - tenantId
+              - tenantName
+              - tenantSlug
+              - role
+            properties:
+              tenantId:
+                $ref: '#/components/schemas/Id'
+              tenantName:
+                type: string
+              tenantSlug:
+                type: string
+              role:
+                $ref: '#/components/schemas/Role'
+        role:
+          $ref: '#/components/schemas/Role'
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+      description: passwordHash nunca se expone.
+    Campaign:
+      type: object
+      required:
+        - id
+        - name
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/CampaignStatus'
+        createdBy:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+    Prospect:
+      type: object
+      required:
+        - id
+        - campaignId
+        - name
+        - source
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        campaignId:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        category:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        website:
+          type: string
+          format: uri
+          nullable: true
+        source:
+          type: string
+          enum:
+            - google_maps
+            - manual
+            - csv
+        sourceIdentifier:
+          type: string
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ProspectStatus'
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+    ProspectingQuery:
+      type: object
+      required:
+        - keyword
+        - location
+        - source
+        - limit
+      properties:
+        keyword:
+          type: string
+        location:
+          type: string
+        source:
+          type: string
+          enum:
+            - google_maps
+        limit:
+          type: integer
+          minimum: 1
+    PipelineProgress:
+      type: object
+      nullable: true
+      required:
+        - source
+        - stage
+        - message
+        - percentage
+      properties:
+        source:
+          type: string
+          enum:
+            - google_maps
+        stage:
+          type: string
+        message:
+          type: string
+        percentage:
+          type: number
+          minimum: 0
+          maximum: 100
+      description: DTO de integración; no es persistencia.
+    BusinessResult:
+      type: object
+      required:
+        - name
+        - source
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        website:
+          type: string
+          format: uri
+          nullable: true
+        source:
+          type: string
+          enum:
+            - google_maps
+        sourceIdentifier:
+          type: string
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+      description: DTO temporal de integración, no tabla ProspectingResult.
+    ProspectingJobSummary:
+      type: object
+      required:
+        - id
+        - campaignId
+        - status
+        - createdAt
+        - startedAt
+        - completedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        campaignId:
+          $ref: '#/components/schemas/Id'
+        status:
+          $ref: '#/components/schemas/ProspectingJobStatus'
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        startedAt:
+          type: string
+          format: date-time
+          nullable: true
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+    ProspectingJobDetail:
+      allOf:
+        - $ref: '#/components/schemas/ProspectingJobSummary'
+        - type: object
+          required:
+            - tenantId
+            - requestedBy
+            - query
+            - requestedLimit
+            - error
+            - updatedAt
+            - resultsAvailable
+            - results
+            - progress
+          properties:
+            tenantId:
+              $ref: '#/components/schemas/Id'
+            requestedBy:
+              $ref: '#/components/schemas/Id'
+            query:
+              $ref: '#/components/schemas/ProspectingQuery'
+            requestedLimit:
+              type: integer
+              nullable: true
+            error:
+              type: string
+              nullable: true
+            updatedAt:
+              $ref: '#/components/schemas/DateTime'
+            resultsAvailable:
+              type: boolean
+              description: Computed/cache-only.
+            results:
+              type: array
+              nullable: true
+              items:
+                $ref: '#/components/schemas/BusinessResult'
+              description: Temporal/cache-only; no es una relación Prisma.
+            progress:
+              $ref: '#/components/schemas/PipelineProgress'
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    SelectTenantRequest:
+      type: object
+      required:
+        - tenantId
+      properties:
+        tenantId:
+          $ref: '#/components/schemas/Id'
+    AuthContext:
+      type: object
+      required:
+        - accessToken
+        - user
+        - tenants
+        - currentTenantId
+      properties:
+        accessToken:
+          type: string
+        user:
+          $ref: '#/components/schemas/AuthUser'
+        tenants:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthTenant'
+        currentTenantId:
+          type: string
+          pattern: ^c[a-z0-9]{20,}$
+          nullable: true
+    SuccessAuthContext:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/AuthContext'
+    AuthUser:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - platformRole
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        platformRole:
+          type: string
+          enum:
+            - ADMIN
+            - 
+          nullable: true
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        createdAt:
+          $ref: '#/components/schemas/DateTime'
+        updatedAt:
+          $ref: '#/components/schemas/DateTime'
+    AuthTenant:
+      type: object
+      required:
+        - id
+        - name
+        - slug
+        - status
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        slug:
+          type: string
+        status:
+          $ref: '#/components/schemas/TenantStatus'
+    CreateTenantRequest:
+      type: object
+      required:
+        - name
+        - slug
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+    CreateUserRequest:
+      type: object
+      description: roleId es opcional; se utiliza MEMBER del tenant autenticado si se omite (plan F4, 
+        bloque 5).
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        roleId:
+          $ref: '#/components/schemas/Id'
+    UpdateUserRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        roleId:
+          $ref: '#/components/schemas/Id'
+        status:
+          $ref: '#/components/schemas/UserStatus'
+    CreateCampaignRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+    UpdateCampaignRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/CampaignStatus'
+    ProspectImportValues:
+      type: object
+      description: >-
+        Valores leídos del CSV; las filas INVALID pueden conservar celdas de más de 2000 caracteres y reportar
+        el error correspondiente.
+      additionalProperties: false
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+            - ACTIVO
+            - INACTIVO
+    ProspectImportErrors:
+      type: array
+      items:
+        type: object
+        required:
+          - field
+          - message
+        properties:
+          field:
+            type: string
+          message:
+            type: string
+    ProspectImportPreview:
+      type: object
+      required:
+        - previewReference
+        - expiresAt
+        - summary
+        - rows
+      properties:
+        previewReference:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+        summary:
+          type: object
+          properties:
+            total:
+              type: integer
+            new:
+              type: integer
+            matches:
+              type: integer
+            invalid:
+              type: integer
+            conflicts:
+              type: integer
+        rows:
+          type: array
+          maxItems: 1000
+          items:
+            type: object
+            properties:
+              record:
+                type: integer
+                minimum: 1
+              classification:
+                type: string
+                enum:
+                  - NEW
+                  - MATCH
+                  - INVALID
+                  - CONFLICT
+              values:
+                $ref: '#/components/schemas/ProspectImportValues'
+              errors:
+                $ref: '#/components/schemas/ProspectImportErrors'
+              matches:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    campaignIds:
+                      type: array
+                      items:
+                        type: string
+                    sharedWithOtherCampaigns:
+                      type: boolean
+                    differences:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          field:
+                            type: string
+                          existing:
+                            type: string
+                            nullable: true
+                          imported:
+                            type: string
+                            nullable: true
+    ProspectImportResult:
+      type: object
+      properties:
+        summary:
+          type: object
+          properties:
+            total:
+              type: integer
+            created:
+              type: integer
+            linked:
+              type: integer
+            updated:
+              type: integer
+            skipped:
+              type: integer
+            rejected:
+              type: integer
+        rows:
+          type: array
+          items:
+            type: object
+            properties:
+              record:
+                type: integer
+              action:
+                type: string
+                enum:
+                  - CREATE
+                  - LINK_EXISTING
+                  - UPDATE_EXISTING
+                  - SKIP
+                  - REJECTED
+              prospectId:
+                type: string
+              errors:
+                $ref: '#/components/schemas/ProspectImportErrors'
+    CreateProspectRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - name
+      properties:
+        campaignId:
+          type: string
+          pattern: ^\S+$
+          description: Identificador de campaña; debe existir en el tenant actual.
+        name:
+          type: string
+          pattern: \S
+          description: Nombre obligatorio; no puede contener solamente espacios.
+        category:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        website:
+          type: string
+          format: uri
+          nullable: true
+          description: URL con protocolo, por ejemplo https://ejemplo.com.
+        language:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+            - ACTIVO
+            - INACTIVO
+          default: ACTIVO
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+    UpdateProspectRequest:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        website:
+          type: string
+          format: uri
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/ProspectStatus'
+        metadata:
+          type: object
+          nullable: true
+          additionalProperties: true
+    CreateProspectingJobRequest:
+      type: object
+      required:
+        - campaignId
+        - query
+      properties:
+        campaignId:
+          $ref: '#/components/schemas/Id'
+        query:
+          $ref: '#/components/schemas/ProspectingQuery'
+    PersistResultsResult:
+      type: object
+      required:
+        - persisted
+        - skipped
+      properties:
+        persisted:
+          type: integer
+          minimum: 0
+        skipped:
+          type: integer
+          minimum: 0
+    ExportFormat:
+      type: string
+      enum:
+        - csv
+        - xlsx
+    UserPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+            meta:
+              $ref: '#/components/schemas/PaginationMeta'
+    CampaignPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Campaign'
+            meta:
+              $ref: '#/components/schemas/PaginationMeta'
+    ProspectPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Prospect'
+            meta:
+              $ref: '#/components/schemas/PaginationMeta'
+    JobPageResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProspectingJobSummary'
+            meta:
+              $ref: '#/components/schemas/PaginationMeta'
+    RegisterTenantRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - tenantName
+        - tenantSlug
+        - ownerName
+        - ownerEmail
+      properties:
+        tenantName:
+          type: string
+          minLength: 1
+          maxLength: 120
+          pattern: \S
+          description: Se recortan espacios exteriores antes de validar.
+        tenantSlug:
+          type: string
+          minLength: 3
+          maxLength: 63
+          pattern: ^[a-z0-9](?:[a-z0-9-]*[a-z0-9])$
+        ownerName:
+          type: string
+          minLength: 1
+          maxLength: 120
+          pattern: \S
+          description: Se recortan espacios exteriores antes de validar.
+        ownerEmail:
+          type: string
+          format: email
+          maxLength: 254
+          description: >-
+            Recortar y normalizar a minúsculas. Cuenta existente produce 409, no vinculación ni
+            restablecimiento.
+    TenantOnboarding:
+      type: object
+      additionalProperties: false
+      required:
+        - tenantId
+        - ownerUserId
+        - ownerEmail
+        - activationStatus
+        - deliveryStatus
+        - createdAt
+        - lastAttemptAt
+        - providerAcceptedAt
+        - activationLinkExpiresAt
+        - completedAt
+      properties:
+        tenantId:
+          type: string
+        ownerUserId:
+          type: string
+        ownerEmail:
+          type: string
+          format: email
+        activationStatus:
+          type: string
+          enum:
+            - PENDING_FIRST_ACCESS
+            - COMPLETED
+        deliveryStatus:
+          type: string
+          enum:
+            - PENDING
+            - SENDING
+            - ACCEPTED
+            - FAILED
+            - UNKNOWN
+          description: ACCEPTED indica aceptación del transporte, no entrega al buzón.
+        createdAt:
+          type: string
+          format: date-time
+        lastAttemptAt:
+          type: string
+          format: date-time
+          nullable: true
+        providerAcceptedAt:
+          type: string
+          format: date-time
+          nullable: true
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        activationLinkExpiresAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Metadato del enlace vigente; el valor del token nunca se expone.
+    TenantRegistrationResult:
+      type: object
+      additionalProperties: false
+      required:
+        - tenant
+        - onboarding
+      properties:
+        tenant:
+          $ref: '#/components/schemas/Tenant'
+        onboarding:
+          $ref: '#/components/schemas/TenantOnboarding'
+    SuccessTenantRegistration:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: '#/components/schemas/TenantRegistrationResult'
+    SuccessTenantOnboarding:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: '#/components/schemas/TenantOnboarding'
+    FirstAccessRequired:
+      type: object
+      additionalProperties: false
+      required:
+        - action
+        - firstAccessToken
+        - expiresAt
+      properties:
+        action:
+          type: string
+          enum:
+            - CHANGE_PASSWORD_REQUIRED
+        firstAccessToken:
+          type: string
+          minLength: 1
+          description: >-
+            Desafío opaco de 15 minutos, emitido únicamente al canjear un enlace de activación. NO es JWT ni
+            permite usar otras rutas. Solo en memoria; sin URLs ni logs.
+        expiresAt:
+          type: string
+          format: date-time
+          description: Máximo 15 minutos desde el canje y no posterior al vencimiento del enlace.
+    SuccessFirstAccessRequired:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: '#/components/schemas/FirstAccessRequired'
+    RedeemFirstAccessRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - activationToken
+      properties:
+        activationToken:
+          type: string
+          minLength: 40
+          writeOnly: true
+          description: Token secreto del enlace de 24 h; transportar solo en el JSON body; jamás en 
+            headers de autorización, URL del Backend o logs.
+    CompleteFirstAccessRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - firstAccessToken
+        - newPassword
+      properties:
+        firstAccessToken:
+          type: string
+          minLength: 1
+          writeOnly: true
+        newPassword:
+          type: string
+          format: password
+          writeOnly: true
+          minLength: 10
+          description: >-
+            Contraseña elegida por OWNER: mínimo 10 caracteres Unicode, letra, número y especial, máximo 72
+            bytes UTF-8; validación obligatoria backend. Sin comparación contra contraseña temporal porque
+            no existe.
+    FirstAccessCompleted:
+      type: object
+      additionalProperties: false
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum:
+            - LOGIN_REQUIRED
+    SuccessFirstAccessCompleted:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: '#/components/schemas/FirstAccessCompleted'
+x-proposal-status: proposed-not-implemented

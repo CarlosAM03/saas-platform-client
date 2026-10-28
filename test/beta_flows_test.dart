@@ -57,7 +57,34 @@ class BetaTestAuth extends AuthController {
   BetaTestAuth(this.initial);
   final AuthState initial;
   @override
-  AuthState build() => initial;
+  AuthState build() {
+    final c = initial.context;
+    if (c == null) return initial;
+    String part(Object value) =>
+        base64Url.encode(utf8.encode(jsonEncode(value))).replaceAll('=', '');
+    return initial.copyWith(
+      context: AuthContext(
+        accessToken: [
+          part({'alg': 'HS256'}),
+          part({
+            'sub': c.user.id,
+            'tenantId': c.currentTenantId,
+            'platformRole': c.user.platformRole,
+            'tenantRole':
+                c.currentTenantId == null || c.user.platformRole == 'ADMIN'
+                ? null
+                : 'OWNER',
+            'exp': 4102444800,
+          }),
+          'synthetic-signature',
+        ].join('.'),
+        user: c.user,
+        tenants: c.tenants,
+        currentTenantId: c.currentTenantId,
+      ),
+    );
+  }
+
   @override
   Future<void> selectTenant(String tenantId) async {
     final current = state.context!;

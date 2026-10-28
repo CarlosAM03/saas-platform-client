@@ -156,8 +156,7 @@ class SelectTenantPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authControllerProvider);
     final contextTenants = auth.context?.tenants ?? const [];
-    final needsDiscovery =
-        auth.context?.user.platformRole == 'ADMIN' && contextTenants.isEmpty;
+    final needsDiscovery = auth.context?.user.platformRole == 'ADMIN';
     final discovery = needsDiscovery
         ? ref.watch(tenantDiscoveryProvider)
         : null;

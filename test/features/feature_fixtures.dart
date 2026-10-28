@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:saas_platform_client/core/config/app_config.dart';
 import 'package:saas_platform_client/core/network/api_client.dart';
@@ -6,12 +7,37 @@ import 'package:saas_platform_client/features/auth/state/auth_state.dart';
 import '../platform_api/fixtures.dart';
 export '../platform_api/fixtures.dart';
 
-AuthContext session({String? tenant = 'a', String? platformRole}) =>
-    AuthContext.fromJson({
-      ...authJson,
-      'user': {...(authJson['user'] as Map), 'platformRole': platformRole},
-      'currentTenantId': tenant
-    });
+AuthContext session({
+  String? tenant = 'a',
+  String? platformRole,
+  RoleName role = RoleName.OWNER,
+  String? tokenTenant,
+}) => AuthContext.fromJson({
+  ...authJson,
+  'accessToken': [
+    base64Url
+        .encode(utf8.encode(jsonEncode({'alg': 'HS256'})))
+        .replaceAll('=', ''),
+    base64Url
+        .encode(
+          utf8.encode(
+            jsonEncode({
+              'sub': entityId,
+              'tenantId': tokenTenant ?? tenant,
+              'platformRole': platformRole,
+              'tenantRole': platformRole == 'ADMIN' || tenant == null
+                  ? null
+                  : role.name,
+              'exp': 4102444800,
+            }),
+          ),
+        )
+        .replaceAll('=', ''),
+    'synthetic-signature',
+  ].join('.'),
+  'user': {...(authJson['user'] as Map), 'platformRole': platformRole},
+  'currentTenantId': tenant,
+});
 
 class FeatureAuthController extends AuthController {
   @override
@@ -24,8 +50,11 @@ class FeatureAuthController extends AuthController {
   Future<void> selectTenant(String id) async => setSession(session(tenant: id));
 }
 
-PlatformApi testApi(ContractAdapter adapter) => PlatformApi(ApiClient(
+PlatformApi testApi(ContractAdapter adapter) => PlatformApi(
+  ApiClient(
     config: const AppConfig(apiBaseUrl: 'http://localhost'),
     storage: TestTokenStorage(),
     dio: Dio(BaseOptions(baseUrl: 'http://localhost'))
-      ..httpClientAdapter = adapter));
+      ..httpClientAdapter = adapter,
+  ),
+);

@@ -1,0 +1,647 @@
+{
+  "date": "2026-10-28T08:26:26.708Z",
+  "backendSha": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+  "operations": [
+    {
+      "operation": "GET /api/v1/health",
+      "operationId": "health",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200"
+      ],
+      "clientResponses": [
+        "200"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/health/live",
+      "operationId": "liveness",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200"
+      ],
+      "clientResponses": [
+        "200"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/health/ready",
+      "operationId": "readiness",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "503"
+      ],
+      "clientResponses": [
+        "200",
+        "503"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/auth/login",
+      "operationId": "login",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "429"
+      ],
+      "clientResponses": [
+        "200",
+        "400",
+        "401",
+        "429"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/auth/logout",
+      "operationId": "logout",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401"
+      ],
+      "clientResponses": [
+        "200",
+        "401"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/auth/select-tenant",
+      "operationId": "selectTenant",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/auth/me",
+      "operationId": "getCurrentUser",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401"
+      ],
+      "clientResponses": [
+        "200",
+        "401"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/tenants",
+      "operationId": "listTenants",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401"
+      ],
+      "clientResponses": [
+        "200",
+        "401"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/tenants",
+      "operationId": "createTenant",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "clientResponses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/tenants/{id}",
+      "operationId": "getTenant",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/users",
+      "operationId": "listUsers",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "clientResponses": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/users",
+      "operationId": "createUser",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "clientResponses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/users/{id}",
+      "operationId": "getUser",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "PATCH /api/v1/users/{id}",
+      "operationId": "updateUser",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "clientResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "DELETE /api/v1/users/{id}",
+      "operationId": "deleteUser",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "403",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "403",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/campaigns",
+      "operationId": "listCampaigns",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401"
+      ],
+      "clientResponses": [
+        "200",
+        "401"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/campaigns",
+      "operationId": "createCampaign",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "201",
+        "400",
+        "401",
+        "409"
+      ],
+      "clientResponses": [
+        "201",
+        "400",
+        "401",
+        "409"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/campaigns/{id}",
+      "operationId": "getCampaign",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "PATCH /api/v1/campaigns/{id}",
+      "operationId": "updateCampaign",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "DELETE /api/v1/campaigns/{id}",
+      "operationId": "deleteCampaign",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/campaigns/{id}/prospects",
+      "operationId": "listCampaignProspects",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/prospects",
+      "operationId": "listProspects",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401"
+      ],
+      "clientResponses": [
+        "200",
+        "401"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/prospects",
+      "operationId": "createProspect",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "clientResponses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/prospects/import/preview",
+      "operationId": "previewProspectImport",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "413"
+      ],
+      "clientResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "413"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/prospects/import/confirm",
+      "operationId": "confirmProspectImport",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409",
+        "413"
+      ],
+      "clientResponses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409",
+        "413"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/prospects/{id}",
+      "operationId": "getProspect",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "PATCH /api/v1/prospects/{id}",
+      "operationId": "updateProspect",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "404",
+        "409"
+      ],
+      "clientResponses": [
+        "200",
+        "400",
+        "401",
+        "404",
+        "409"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/prospecting-jobs",
+      "operationId": "listProspectingJobs",
+      "availability": "AVAILABLE",
+      "requestParity": false,
+      "targetResponses": [
+        "200",
+        "401"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "403"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/prospecting-jobs",
+      "operationId": "createProspectingJob",
+      "availability": "DISABLED_503",
+      "requestParity": true,
+      "targetResponses": [
+        "201",
+        "400",
+        "401",
+        "409",
+        "503"
+      ],
+      "clientResponses": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "targetPreserved": true,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/prospecting-jobs/{id}",
+      "operationId": "getProspectingJob",
+      "availability": "AVAILABLE",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "404"
+      ],
+      "clientResponses": [
+        "200",
+        "401",
+        "403",
+        "404"
+      ],
+      "targetPreserved": false,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/prospecting-jobs/{id}/cancel",
+      "operationId": "cancelProspectingJob",
+      "availability": "DISABLED_503",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "404",
+        "409"
+      ],
+      "clientResponses": [
+        "401",
+        "403",
+        "503"
+      ],
+      "targetPreserved": true,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "POST /api/v1/prospecting-jobs/{id}/persist",
+      "operationId": "persistProspectingJob",
+      "availability": "DISABLED_503",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "401",
+        "404",
+        "409"
+      ],
+      "clientResponses": [
+        "401",
+        "403",
+        "503"
+      ],
+      "targetPreserved": true,
+      "runtime": "NOT RUN"
+    },
+    {
+      "operation": "GET /api/v1/prospecting-jobs/{id}/export",
+      "operationId": "exportProspectingJob",
+      "availability": "DISABLED_503",
+      "requestParity": true,
+      "targetResponses": [
+        "200",
+        "400",
+        "401",
+        "404",
+        "409"
+      ],
+      "clientResponses": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "targetPreserved": true,
+      "runtime": "NOT RUN"
+    }
+  ],
+  "componentDifferences": [
+    "ProspectingJobDetail"
+  ]
+}

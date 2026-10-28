@@ -1,0 +1,258 @@
+00:00 +0: loading C:/w/test/sprint_core_regression_test.dart
+00:00 +0: FE-01 differential user PATCH: none
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <0>
+  Actual: <1>
+Shared identity no-op must not send global fields
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/w/test/sprint_core_regression_test.dart:64:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/w/test/sprint_core_regression_test.dart line 64
+The test description was:
+  FE-01 differential user PATCH: none
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: FE-01 differential user PATCH: none [E]
+  Test failed. See exception logs above.
+  The test description was: FE-01 differential user PATCH: none
+
+00:01 +0 -1: FE-01 differential user PATCH: name
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: {'name': 'New name'}
+  Actual: {'name': 'New name', 'email': '[SYNTHETIC_EMAIL]', 'status': 'ACTIVO'}
+   Which: has different length and has extra map key 'email'
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/w/test/sprint_core_regression_test.dart:67:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/w/test/sprint_core_regression_test.dart line 67
+The test description was:
+  FE-01 differential user PATCH: name
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -2: FE-01 differential user PATCH: name [E]
+  Test failed. See exception logs above.
+  The test description was: FE-01 differential user PATCH: name
+
+00:01 +0 -2: FE-01 differential user PATCH: email
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: {'email': '[SYNTHETIC_EMAIL]'}
+  Actual: {'name': 'Owner', 'email': '[SYNTHETIC_EMAIL]', 'status': 'ACTIVO'}
+   Which: has different length and has extra map key 'name'
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/w/test/sprint_core_regression_test.dart:67:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/w/test/sprint_core_regression_test.dart line 67
+The test description was:
+  FE-01 differential user PATCH: email
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -3: FE-01 differential user PATCH: email [E]
+  Test failed. See exception logs above.
+  The test description was: FE-01 differential user PATCH: email
+
+00:02 +0 -3: FE-01 differential user PATCH: password
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: {'password': 'Synthetic123!'}
+  Actual: {
+            'name': 'Owner',
+            'email': '[SYNTHETIC_EMAIL]',
+            'password': 'Synthetic123!',
+            'status': 'ACTIVO'
+          }
+   Which: has different length and has extra map key 'name'
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/w/test/sprint_core_regression_test.dart:67:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/w/test/sprint_core_regression_test.dart line 67
+The test description was:
+  FE-01 differential user PATCH: password
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -4: FE-01 differential user PATCH: password [E]
+  Test failed. See exception logs above.
+  The test description was: FE-01 differential user PATCH: password
+
+00:02 +0 -4: FE-01 differential user PATCH: status
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: {'status': 'INACTIVO'}
+  Actual: {'name': 'Owner', 'email': '[SYNTHETIC_EMAIL]', 'status': 'INACTIVO'}
+   Which: has different length and has extra map key 'name'
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/w/test/sprint_core_regression_test.dart:67:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/w/test/sprint_core_regression_test.dart line 67
+The test description was:
+  FE-01 differential user PATCH: status
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -5: FE-01 differential user PATCH: status [E]
+  Test failed. See exception logs above.
+  The test description was: FE-01 differential user PATCH: status
+
+00:02 +0 -5: FE-01 differential user PATCH: trim
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <0>
+  Actual: <1>
+Shared identity no-op must not send global fields
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/w/test/sprint_core_regression_test.dart:64:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/w/test/sprint_core_regression_test.dart line 64
+The test description was:
+  FE-01 differential user PATCH: trim
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -6: FE-01 differential user PATCH: trim [E]
+  Test failed. See exception logs above.
+  The test description was: FE-01 differential user PATCH: trim
+
+00:02 +0 -6: FE-02 ADMIN discovery with existing membership
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <1>
+  Actual: <0>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/w/test/sprint_core_regression_test.dart:91:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/w/test/sprint_core_regression_test.dart line 91
+The test description was:
+  FE-02 ADMIN discovery with existing membership
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -7: FE-02 ADMIN discovery with existing membership [E]
+  Test failed. See exception logs above.
+  The test description was: FE-02 ADMIN discovery with existing membership
+
+00:03 +0 -7: FE-02 OWNER discovery with existing membership
+00:03 +1 -7: FE-02 MEMBER discovery with existing membership
+00:03 +2 -7: FE-02 ADMIN discovery retry with memberships
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "Reintentar": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///C:/w/test/sprint_core_regression_test.dart:108:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///C:/w/test/sprint_core_regression_test.dart line 108
+The test description was:
+  FE-02 ADMIN discovery retry with memberships
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +2 -8: FE-02 ADMIN discovery retry with memberships [E]
+  Test failed. See exception logs above.
+  The test description was: FE-02 ADMIN discovery retry with memberships
+
+00:03 +2 -8: FE-03 JWT OWNER remains presentation authority after DB role change
+00:03 +2 -9: FE-03 JWT OWNER remains presentation authority after DB role change [E]
+  Expected: 'OWNER'
+    Actual: 'MEMBER'
+     Which: is different.
+            Expected: OWNER
+              Actual: MEMBER
+                      ^
+             Differ at offset 0
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\sprint_core_regression_test.dart 125:7         main.<fn>
+
+00:03 +2 -9: FE-03 JWT MEMBER remains presentation authority after DB role change
+00:03 +2 -10: FE-03 JWT MEMBER remains presentation authority after DB role change [E]
+  Expected: 'MEMBER'
+    Actual: 'OWNER'
+     Which: is different.
+            Expected: MEMBER
+              Actual: OWNER
+                      ^
+             Differ at offset 0
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\sprint_core_regression_test.dart 125:7         main.<fn>
+
+00:03 +2 -10: FE-03 rejects invalid presentation claims {sub: another-user}
+00:03 +3 -10: FE-03 rejects invalid presentation claims {tenantId: b}
+00:03 +4 -10: FE-03 rejects invalid presentation claims {tenantRole: ADMIN}
+00:03 +5 -10: FE-03 rejects invalid presentation claims {exp: 1}
+00:03 +6 -10: FE-03 rejects invalid presentation claims {exp: invalid}
+00:03 +7 -10: FE-03 rejects invalid presentation claims {tenantRole: null}
+00:03 +8 -10: FE-03 malformed token fails closed
+00:03 +9 -10: Some tests failed.
+
+Failing tests:
+  C:/w/test/sprint_core_regression_test.dart: FE-01 differential user PATCH: email
+  C:/w/test/sprint_core_regression_test.dart: FE-01 differential user PATCH: name
+  C:/w/test/sprint_core_regression_test.dart: FE-01 differential user PATCH: none
+  C:/w/test/sprint_core_regression_test.dart: FE-01 differential user PATCH: password
+  ... and 6 more

@@ -23,6 +23,10 @@ class ErrorMapper {
         ApiErrorKind.unknown => 'No fue posible completar la operación.',
       };
     }
+    if (error is FormatException || error is TypeError) {
+      // Never include parser messages: they may contain response values or secrets.
+      return 'La respuesta del servidor no coincide con el formato esperado.';
+    }
     return 'No fue posible completar la operación.';
   }
 }

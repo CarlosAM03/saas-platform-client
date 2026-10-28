@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-28T10:15:51.593Z",
+  "frontend": {
+    "sourceSha": "7b5320c2a61e2f4170f23f5637cf630a9902de7d",
+    "containerImage": "sha256:5033d8f264f0b8ebef297fc16ab8a0819b13fb859be5e8e2c6354393d5a2b89e",
+    "tagMatchesActiveContainer": true
+  },
+  "backend": {
+    "sourceSha": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+    "containerImage": "sha256:891d1b8df9e4e431d9d4223a1805d57ef072e64e2de194d10c127625f5350484",
+    "remoteMain": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+    "buildCheckoutCommit": "69c73365f0547e994f57cad7fb83269023db4b8e",
+    "completeTreeEquivalentToMain": true,
+    "workingTreeUnchanged": true
+  },
+  "frontendRemoteMain": "7731649a2c69b45cb9776d02de4a6105d6fd9886",
+  "currentBranch": "sprint/frontend-core-v1-parity",
+  "testedCodeSha": "7b5320c2a61e2f4170f23f5637cf630a9902de7d",
+  "postgres": "avance2_core:16",
+  "scope": "Local container identity only; does not certify remote deployment revisions",
+  "healthRootStatus": 200,
+  "runtimeSwagger": {
+    "status": 200,
+    "version": "1.0.0",
+    "publicOperations": 33,
+    "adr006Available": false
+  },
+  "stackStop": {
+    "status": "PASS",
+    "volumesPreserved": true
+  }
+}

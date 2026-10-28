@@ -1,0 +1,80 @@
+BASELINE FE-05 FAIL exit=1
+00:00 +0: loading C:/w/test/sprint_dashboard_regression_test.dart
+00:00 +0: FE-05 Jobs failure preserves real campaign and prospect totals and offers retry
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following ApiException was thrown while running async test code:
+ApiException(503, HTTP_503): unavailable
+
+When the exception was thrown, this was the stack:
+#0      ApiClient._request (package:saas_platform_client/core/network/api_client.dart:222:7)
+<asynchronous suspension>
+#1      ApiClient.get (package:saas_platform_client/core/network/api_client.dart:124:22)
+<asynchronous suspension>
+#2      ProspectingJobsApi.list (package:saas_platform_client/platform_api/prospecting_jobs_api.dart:16:5)
+<asynchronous suspension>
+<asynchronous suspension>
+#4      ApiDashboardRepository.load (package:saas_platform_client/features/dashboard/data/dashboard_repository.dart:26:20)
+<asynchronous suspension>
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///C:/w/test/sprint_dashboard_regression_test.dart:68:21)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 3 frames from dart:async and package:stack_trace)
+
+The exception was caught asynchronously.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following _TypeError was thrown running a test:
+Null check operator used on a null value
+
+When the exception was thrown, this was the stack:
+#0      main.<anonymous closure> (file:///C:/w/test/sprint_dashboard_regression_test.dart:70:9)
+<asynchronous suspension>
+#1      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#2      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  FE-05 Jobs failure preserves real campaign and prospect totals and offers retry
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: FE-05 Jobs failure preserves real campaign and prospect totals and offers retry [E]
+  Test failed. See exception logs above.
+  The test description was: FE-05 Jobs failure preserves real campaign and prospect totals and offers retry
+
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  C:/w/test/sprint_dashboard_regression_test.dart: FE-05 Jobs failure preserves real campaign and prospect totals and offers retry
+
+BASELINE FE-08 FAIL exit=1
+00:00 +0: loading C:/w/test/sprint_dashboard_regression_test.dart
+00:00 +0: FE-08 parser diagnostics never expose the response value
+00:00 +0 -1: FE-08 parser diagnostics never expose the response value [E]
+  Expected: 'La respuesta del servidor no coincide con el formato esperado.'
+    Actual: 'No fue posible completar la operación.'
+     Which: is different.
+            Expected: La respues ...
+              Actual: No fue pos ...
+                      ^
+             Differ at offset 0
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\sprint_dashboard_regression_test.dart 95:5     main.<fn>
+
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  C:/w/test/sprint_dashboard_regression_test.dart: FE-08 parser diagnostics never expose the response value

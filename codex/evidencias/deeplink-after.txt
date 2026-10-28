@@ -1,0 +1,46 @@
+00:00 +0: loading C:/w/test/sprint_deeplink_regression_test.dart
+00:00 +0: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +1: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +2: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +3: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +4: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +5: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +6: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +7: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +8: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +9: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +10: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +11: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +12: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +13: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +14: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +15: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +16: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +16: C:/w/test/foundation_auth_test.dart: network session Bearer [REDACTED] sent and an authenticated 401 clears the global session
+[38;5;208m┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;208m│ #0   new ApiClient.<anonymous closure> (package:saas_platform_client/core/network/api_client.dart:96:21)[0m
+[38;5;208m│ #1   <asynchronous suspension>[0m
+[38;5;208m├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄[0m
+[38;5;208m│ ⚠️ API returned 401 for GET /protected[0m
+[38;5;208m└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+00:00 +17: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +18: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +19: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +20: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +21: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +22: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +23: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +24: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +25: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +26: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +27: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +28: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:00 +29: C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query
+00:02 +30: C:/w/test/features/core_flows_test.dart: all CRUD routes and mobile layouts render; router survives context changes
+00:07 +31: C:/w/test/features/core_flows_test.dart: campaign create sends real fields and navigates to detail
+00:07 +32: C:/w/test/features/core_flows_test.dart: campaign edit preserves unchanged nullable description
+00:07 +33: C:/w/test/features/core_flows_test.dart: user update does not preload or send an unchanged password
+00:08 +34: C:/w/test/features/core_flows_test.dart: manual create selects a campaign from the paged API list
+00:08 +35: C:/w/test/features/core_flows_test.dart: prospect edit clears only changed nullable field
+00:08 +36: C:/w/test/features/core_flows_test.dart: tenant create and detail use the repository
+00:09 +37: All tests passed!

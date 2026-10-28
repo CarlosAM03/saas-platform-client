@@ -1,0 +1,22 @@
+# Local test acceleration only. Production CI continues to build Dockerfile.vercel.
+FROM prospector-avance2-flutter:toolchain AS build
+WORKDIR /sprint-app
+RUN flutter --version | tee /tmp/sprint-sdk.txt \
+    && grep -q 'Flutter 3.47.5' /tmp/sprint-sdk.txt \
+    && grep -q 'Dart 3.13.4' /tmp/sprint-sdk.txt
+COPY pubspec.yaml pubspec.lock ./
+RUN flutter pub get
+COPY analysis_options.yaml ./
+COPY lib ./lib
+COPY web ./web
+COPY assets ./assets
+COPY tool/validate_api_origin.dart ./tool/validate_api_origin.dart
+ARG API_BASE_URL=https://localhost:18543
+RUN dart run tool/validate_api_origin.dart "$API_BASE_URL" \
+    && dart run build_runner build \
+    && flutter build web --release --no-pub --no-wasm-dry-run --dart-define=API_BASE_URL="$API_BASE_URL"
+FROM nginx:1.28.0-alpine
+ENV PORT=80 NGINX_ENVSUBST_FILTER=^PORT$
+COPY docker/nginx.vercel.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=build /sprint-app/build/web /usr/share/nginx/html
+EXPOSE 80

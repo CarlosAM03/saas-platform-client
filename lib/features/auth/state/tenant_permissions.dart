@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/app_providers.dart';
 import '../../../platform_api/platform_api.dart';
@@ -13,13 +14,16 @@ final sessionScopeProvider = Provider<SessionScope?>((ref) {
   return (
     userId: context.user.id,
     tenantId: context.currentTenantId,
-    session: context
+    session: context,
   );
 });
 
 class TenantPermissions {
-  const TenantPermissions(
-      {this.admin = false, this.role, this.hasTenant = false});
+  const TenantPermissions({
+    this.admin = false,
+    this.role,
+    this.hasTenant = false,
+  });
   final bool admin, hasTenant;
   final RoleName? role;
   bool get canRead => hasTenant && (admin || role != null);
@@ -35,15 +39,49 @@ class TenantPermissions {
 
 final currentTenantPermissionsProvider =
     FutureProvider.autoDispose<TenantPermissions>((ref) async {
-  final scope = ref.watch(sessionScopeProvider);
-  final context = ref.watch(authControllerProvider).context;
-  if (scope == null || context == null) return const TenantPermissions();
-  if (context.user.platformRole == 'ADMIN') {
-    return TenantPermissions(admin: true, hasTenant: scope.tenantId != null);
+      final scope = ref.watch(sessionScopeProvider);
+      final context = ref.watch(authControllerProvider).context;
+      if (scope == null || context == null) return const TenantPermissions();
+      return permissionsForAuthenticatedContext(context);
+    });
+
+/// Presentation only: the server validates the signature and authorizes requests.
+/// Reading these claims does not authenticate a token or grant server authority.
+/// Owner-approved FE-03 exception: do not replace the snapshot with a live DB role.
+TenantPermissions permissionsForAuthenticatedContext(AuthContext context) {
+  try {
+    final parts = context.accessToken.split('.');
+    if (parts.length != 3 || parts.any((part) => part.isEmpty)) {
+      return const TenantPermissions();
+    }
+    Object? decode(String value) =>
+        jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(value))));
+    final header = decode(parts[0]);
+    final claims = decode(parts[1]);
+    if (header is! Map ||
+        header['alg'] != 'HS256' ||
+        claims is! Map ||
+        claims['sub'] != context.user.id ||
+        claims['tenantId'] != context.currentTenantId ||
+        claims['exp'] is! int ||
+        (claims['exp'] as int) <=
+            DateTime.now().millisecondsSinceEpoch ~/ 1000) {
+      return const TenantPermissions();
+    }
+    final hasTenant = context.currentTenantId != null;
+    if (claims['platformRole'] == 'ADMIN' && claims['tenantRole'] == null) {
+      return TenantPermissions(admin: true, hasTenant: hasTenant);
+    }
+    if (claims['platformRole'] != null || !hasTenant) {
+      return const TenantPermissions();
+    }
+    final role = switch (claims['tenantRole']) {
+      'OWNER' => RoleName.OWNER,
+      'MEMBER' => RoleName.MEMBER,
+      _ => null,
+    };
+    return TenantPermissions(role: role, hasTenant: hasTenant);
+  } on FormatException {
+    return const TenantPermissions();
   }
-  if (scope.tenantId == null) return const TenantPermissions();
-  final user = await ref.watch(platformApiProvider).users.get(scope.userId);
-  // Fail closed if the returned role belongs to another tenant.
-  final role = user.role?.tenantId == scope.tenantId ? user.role?.name : null;
-  return TenantPermissions(role: role, hasTenant: true);
-});
+}

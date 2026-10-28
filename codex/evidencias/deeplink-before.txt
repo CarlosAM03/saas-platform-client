@@ -1,0 +1,31 @@
+00:00 +0: loading C:/w/test/sprint_deeplink_regression_test.dart
+00:00 +0: FE-09 session restoration preserves the protected deep link and its query
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+pumpAndSettle timed out
+
+When the exception was thrown, this was the stack:
+#0      WidgetTester.pumpAndSettle.<anonymous closure> (package:flutter_test/src/widget_tester.dart:717:11)
+<asynchronous suspension>
+#1      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#2      main.<anonymous closure> (file:///C:/w/test/sprint_deeplink_regression_test.dart:34:5)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  FE-09 session restoration preserves the protected deep link and its query
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +0 -1: FE-09 session restoration preserves the protected deep link and its query [E]
+  Test failed. See exception logs above.
+  The test description was: FE-09 session restoration preserves the protected deep link and its query
+
+00:08 +0 -1: Some tests failed.
+
+Failing tests:
+  C:/w/test/sprint_deeplink_regression_test.dart: FE-09 session restoration preserves the protected deep link and its query

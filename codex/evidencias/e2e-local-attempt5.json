@@ -1,0 +1,489 @@
+{
+  "date": "2026-10-28T09:16:07.658Z",
+  "runId": "sprint391ef4561f59ec",
+  "environment": "local-isolated",
+  "frontendSha": "2b478397885a378a1ce27c036ae4a5fa1756457d",
+  "frontendImageSha": "2b478397885a378a1ce27c036ae4a5fa1756457d",
+  "backendSha": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+  "postgres": "16",
+  "tls": "CA confined to browser container; ignore_https_errors=false",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "AUTH-OWNER",
+      "scope": "UI_HTTP",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "status": 200,
+        "requestId": "7d905261-c0d8-4653-b5cc-053b2d2c9857",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "password"
+        ]
+      },
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-CREATE-OWNER",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrw89a5000z60owg4efzglw",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 201,
+        "requestId": "7144bb3c-367f-40d1-8bd5-ff739eb9bb0a",
+        "id": "cmvrw89a5000z60owg4efzglw",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "dbAssertions": [
+        "User and tenant MEMBER membership persisted atomically"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-PATCH-DIFFERENTIAL",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "PATCH",
+        "path": "/api/v1/users/cmvrw89a5000z60owg4efzglw",
+        "status": 200,
+        "requestId": "1f13a4a3-e207-4121-afce-0149f3b62afb",
+        "id": "cmvrw89a5000z60owg4efzglw",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "Only changed name persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-DUPLICATE-409",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 409,
+        "requestId": "28b84634-47d2-4be5-a889-10077c0fae7a",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "dbAssertions": [
+        "No partial User or UserTenant writes"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-SEC01-GLOBAL-403",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "PATCH",
+        "path": "/api/v1/users/sprint391ef4561f59ecshared",
+        "status": 403,
+        "requestId": "0bd48b24-3149-454c-a0ef-09e374614398",
+        "id": null,
+        "summary": null,
+        "reason": "GLOBAL_IDENTITY_PROTECTED",
+        "requestKeys": [
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "SEC-01 leaves shared global identity intact"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-SHARED-NOOP",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": [],
+      "dbAssertions": [
+        "No-op leaves shared identity unchanged"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-CREATE",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrw9xxu001560owg94mwv8r",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/campaigns",
+        "status": 201,
+        "requestId": "220c134d-4e3e-492f-a354-0e5a41168613",
+        "id": "cmvrw9xxu001560owg94mwv8r",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "description",
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "Campaign tenant and creator persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-CREATE-CSV-TARGET",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwaecc001760ow5vdy8j8x",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/campaigns",
+        "status": 201,
+        "requestId": "8d078d65-a50c-4873-8f7c-232a5e6e0929",
+        "id": "cmvrwaecc001760ow5vdy8j8x",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "description",
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "Campaign tenant and creator persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "PRO-MANUAL",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwaufv001a60owc0colnhj",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/prospects",
+        "status": 201,
+        "requestId": "48f64639-4b91-4079-8b39-33a4048313bb",
+        "id": "cmvrwaufv001a60owc0colnhj",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "campaignId",
+          "email",
+          "name",
+          "phone",
+          "status"
+        ]
+      },
+      "dbAssertions": [
+        "Manual prospect, tenant and origin campaign persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "PRO-NULLABLE-PATCH",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Missing browser HTTP PATCH /api/v1/prospects/cmvrwaufv001a60owc0colnhj",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CSV-CREATE",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/preview",
+          "status": 200,
+          "requestId": "ac002790-cb41-42de-842a-2bccbcc7a5ce",
+          "id": null,
+          "summary": {
+            "total": 1,
+            "new": 1,
+            "matches": 0,
+            "invalid": 0,
+            "conflicts": 0
+          },
+          "reason": null,
+          "fileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/confirm",
+          "status": 200,
+          "requestId": "cfb81499-1452-4f76-80ef-a0bfae08f3ef",
+          "id": null,
+          "summary": {
+            "total": 1,
+            "created": 1,
+            "linked": 0,
+            "updated": 0,
+            "skipped": 0,
+            "rejected": 0
+          },
+          "reason": null,
+          "fileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "dbAssertions": [
+        "CSV prospect and source persisted"
+      ],
+      "uiReread": "PASS",
+      "originalBytes": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CSV-SKIP",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "status": "FAIL",
+      "error": "Error: ValueError: Dropdown option is not exposed semantically",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CSV-LINK",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "status": "FAIL",
+      "error": "Error: TimeoutError: Expected semantic text is absent: Seleccionar CSV",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CSV-UPDATE",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "status": "FAIL",
+      "error": "Error: TimeoutError: Expected semantic text is absent: Seleccionar CSV",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "JWT-OWNER-SNAPSHOT",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwd75w001h60owdqvgi5n0",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 201,
+        "requestId": "0dfa221e-4ed3-435e-b346-0cf3d5e0ec88",
+        "id": "cmvrwd75w001h60owdqvgi5n0",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "dbAssertions": [
+        "User and tenant MEMBER membership persisted atomically"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "AUTH-MEMBER",
+      "scope": "UI_HTTP",
+      "role": "member",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-MEMBER-403",
+      "scope": "UI_ACCESS_CONTROL_AND_HTTP_SQL",
+      "role": "member",
+      "status": "FAIL",
+      "error": "Error: Error: APIRequestContext.fetch: unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca\nCall log:\n  - → POST https://localhost:18543/api/v1/users\n    - user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\n    - accept: */*\n    - accept-encoding: gzip,deflate,br\n    - Authorization: B",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "TEN-CROSS-READ",
+      "scope": "UI_TO_DB_READ",
+      "role": "other",
+      "tenantFixture": "B",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/campaigns/cmvrw9xxu001560owg94mwv8r",
+        "status": 404,
+        "requestId": "9edd299a-50be-48a0-b87a-192b758891e7",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "dbAssertions": [
+        "Campaign remains scoped to A"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "ADMIN-DISCOVERY-MEMBERSHIP",
+      "scope": "UI_HTTP_SQL",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/tenants",
+        "status": 200,
+        "requestId": "52471031-b1fb-4df0-beca-639080b11dc5",
+        "reason": null
+      },
+      "dbAssertions": [
+        "ADMIN discovers B without membership"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-CREATE-ADMIN",
+      "scope": "UI_TO_DB",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwffbm001j60owecvuf16u",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 201,
+        "requestId": "d47c8987-7f86-4ef1-8e43-267c691ed3f3",
+        "id": "cmvrwffbm001j60owecvuf16u",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "dbAssertions": [
+        "User and tenant MEMBER membership persisted atomically"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-DEACTIVATE-ADMIN",
+      "scope": "UI_TO_DB",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "DELETE",
+        "path": "/api/v1/users/cmvrw89a5000z60owg4efzglw",
+        "status": 200,
+        "requestId": "2f3637b7-0852-40ff-abbc-46ed112e15d4",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "dbAssertions": [
+        "ADMIN deactivation persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-ARCHIVE",
+      "scope": "UI_TO_DB",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "DELETE",
+        "path": "/api/v1/campaigns/cmvrw9xxu001560owg94mwv8r",
+        "status": 200,
+        "requestId": "ee740d56-1dfa-4aac-b92e-67d38e3a6e32",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "dbAssertions": [
+        "Campaign archived"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "JOBS-DISABLED-503",
+      "scope": "HTTP_SQL",
+      "role": "admin",
+      "status": "FAIL",
+      "error": "Error: Error: APIRequestContext.fetch: unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca\nCall log:\n  - → POST https://localhost:18543/api/v1/prospecting-jobs\n    - user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36\n    - accept: */*\n    - accept-encoding: gzip,deflate,br\n    - Autho",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "AUTH-LOGOUT-DEEPLINK",
+      "scope": "UI_HTTP",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/logout",
+        "status": 200,
+        "requestId": "df3b4bb0-cb6d-4fc3-a345-f0b386e85321",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    }
+  ]
+}

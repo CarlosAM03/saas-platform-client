@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-28T09:55:27.563Z",
+  "sources": [
+    {
+      "file": "Docs/Contracts/platform-api.tenant-registration.approved.yaml",
+      "sha256": "5f2e2a70f87c57289d10aaf0fd37737d03e841ff44b71328bf01608ced2721dc"
+    },
+    {
+      "file": "Docs/ADRs/ADR-006-TenantRegistration-APROBADO.md",
+      "sha256": "5be9757af462510d7f30d8d41ea9539fc8bde9fba5944cbbdf574c62a4a456b1"
+    }
+  ],
+  "operations": [
+    {
+      "method": "POST",
+      "path": "/api/v1/tenants/register",
+      "operationId": "registerTenant",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "fields": [
+        "tenantName",
+        "tenantSlug",
+        "ownerName",
+        "ownerEmail"
+      ],
+      "required": [
+        "tenantName",
+        "tenantSlug",
+        "ownerName",
+        "ownerEmail"
+      ],
+      "responses": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409",
+        "429",
+        "500",
+        "503"
+      ],
+      "availability": "TARGET_ONLY",
+      "execution": "NOT RUN"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tenants/{id}/onboarding",
+      "operationId": "getTenantOnboarding",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "fields": [],
+      "required": [],
+      "responses": [
+        "200",
+        "401",
+        "403",
+        "404",
+        "500"
+      ],
+      "availability": "TARGET_ONLY",
+      "execution": "NOT RUN"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tenants/{id}/resend-welcome",
+      "operationId": "resendTenantWelcome",
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "fields": [],
+      "required": [],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409",
+        "429",
+        "500",
+        "503"
+      ],
+      "availability": "TARGET_ONLY",
+      "execution": "NOT RUN"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/redeem-first-access",
+      "operationId": "redeemFirstAccess",
+      "security": [],
+      "fields": [
+        "activationToken"
+      ],
+      "required": [
+        "activationToken"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "429",
+        "500"
+      ],
+      "availability": "TARGET_ONLY",
+      "execution": "NOT RUN"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/complete-first-access",
+      "operationId": "completeFirstAccess",
+      "security": [],
+      "fields": [
+        "firstAccessToken",
+        "newPassword"
+      ],
+      "required": [
+        "firstAccessToken",
+        "newPassword"
+      ],
+      "responses": [
+        "200",
+        "400",
+        "401",
+        "429",
+        "500"
+      ],
+      "availability": "TARGET_ONLY",
+      "execution": "NOT RUN"
+    }
+  ]
+}

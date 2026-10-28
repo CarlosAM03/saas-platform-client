@@ -1,0 +1,680 @@
+{
+  "date": "2026-10-28T09:31:10.689Z",
+  "runId": "sprint0fee7f7c2abde2",
+  "environment": "local-isolated",
+  "frontendSha": "2b478397885a378a1ce27c036ae4a5fa1756457d",
+  "frontendImageSha": "2b478397885a378a1ce27c036ae4a5fa1756457d",
+  "backendSha": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+  "postgres": "16",
+  "tls": "CA confined to browser container; ignore_https_errors=false",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "AUTH-OWNER",
+      "scope": "UI_HTTP",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "status": 200,
+        "requestId": "a5392d02-d6a5-4492-80fa-060771b35bdc",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "password"
+        ]
+      },
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-CREATE-OWNER",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwpoku001l60owgd49ztdf",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 201,
+        "requestId": "34118afb-948d-44da-83c8-fd90f0be4589",
+        "id": "cmvrwpoku001l60owgd49ztdf",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "dbAssertions": [
+        "User and tenant MEMBER membership persisted atomically"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-PATCH-DIFFERENTIAL",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "PATCH",
+        "path": "/api/v1/users/cmvrwpoku001l60owgd49ztdf",
+        "status": 200,
+        "requestId": "273768b9-f157-4d20-9a66-8f2ba1ea4b91",
+        "id": "cmvrwpoku001l60owgd49ztdf",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "Only changed name persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-DUPLICATE-409",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 409,
+        "requestId": "410e68e3-3274-4a09-bbe8-fc5f867282de",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "dbAssertions": [
+        "No partial User or UserTenant writes"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-SEC01-GLOBAL-403",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "PATCH",
+        "path": "/api/v1/users/sprint0fee7f7c2abde2shared",
+        "status": 403,
+        "requestId": "e55eace9-5bf0-4558-b177-dbc2547881fa",
+        "id": null,
+        "summary": null,
+        "reason": "GLOBAL_IDENTITY_PROTECTED",
+        "requestKeys": [
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "SEC-01 leaves shared global identity intact"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-SHARED-NOOP",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": [],
+      "dbAssertions": [
+        "No-op leaves shared identity unchanged"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-CREATE",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwr6fa001r60owldfhd31r",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/campaigns",
+        "status": 201,
+        "requestId": "3b49ebe4-1feb-4dfb-8ebc-8801f00dd137",
+        "id": "cmvrwr6fa001r60owldfhd31r",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "description",
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "Campaign tenant and creator persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-CREATE-CSV-TARGET",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwrieh001t60owd6etr3f0",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/campaigns",
+        "status": 201,
+        "requestId": "8209381a-650b-4a23-abff-420b26d98377",
+        "id": "cmvrwrieh001t60owd6etr3f0",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "description",
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "Campaign tenant and creator persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "PRO-MANUAL",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwrxdf001w60ow9i7xvpwn",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/prospects",
+        "status": 201,
+        "requestId": "37b68a4d-84e9-4445-bfea-4024af3f02b5",
+        "id": "cmvrwrxdf001w60ow9i7xvpwn",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "campaignId",
+          "email",
+          "name",
+          "phone",
+          "status"
+        ]
+      },
+      "dbAssertions": [
+        "Manual prospect, tenant and origin campaign persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "PRO-NULLABLE-PATCH",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "PATCH",
+        "path": "/api/v1/prospects/cmvrwrxdf001w60ow9i7xvpwn",
+        "status": 200,
+        "requestId": "1c655dc0-958c-4f14-bfad-ede4eba90969",
+        "id": "cmvrwrxdf001w60ow9i7xvpwn",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "phone"
+        ]
+      },
+      "dbAssertions": [
+        "Explicit null clears phone, omitted email preserved"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CSV-CREATE",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/preview",
+          "status": 200,
+          "requestId": "baa7d1d8-fa52-4208-ab50-1402c126c929",
+          "id": null,
+          "summary": {
+            "total": 1,
+            "new": 1,
+            "matches": 0,
+            "invalid": 0,
+            "conflicts": 0
+          },
+          "reason": null,
+          "fileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/confirm",
+          "status": 200,
+          "requestId": "31ccdce1-6a01-468d-a71e-221ef8d957b4",
+          "id": null,
+          "summary": {
+            "total": 1,
+            "created": 1,
+            "linked": 0,
+            "updated": 0,
+            "skipped": 0,
+            "rejected": 0
+          },
+          "reason": null,
+          "fileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "dbAssertions": [
+        "CSV prospect and source persisted"
+      ],
+      "uiReread": "PASS",
+      "originalBytes": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CSV-SKIP",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/preview",
+          "status": 200,
+          "requestId": "0a76c587-27fc-4346-a40d-4dd84c3f08e3",
+          "id": null,
+          "summary": {
+            "total": 1,
+            "new": 1,
+            "matches": 0,
+            "invalid": 0,
+            "conflicts": 0
+          },
+          "reason": null,
+          "fileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/confirm",
+          "status": 200,
+          "requestId": "1adef851-4649-4401-b27f-45cca4e01353",
+          "id": null,
+          "summary": {
+            "total": 1,
+            "created": 0,
+            "linked": 0,
+            "updated": 0,
+            "skipped": 1,
+            "rejected": 0
+          },
+          "reason": null,
+          "fileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "dbAssertions": [
+        "SKIP creates no rows"
+      ],
+      "uiReread": "PASS",
+      "originalBytes": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CSV-LINK",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": [
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/preview",
+          "status": 200,
+          "requestId": "dfffb03a-ea02-4660-b6bd-16e1d1916bc7",
+          "id": null,
+          "summary": {
+            "total": 1,
+            "new": 0,
+            "matches": 1,
+            "invalid": 0,
+            "conflicts": 0
+          },
+          "reason": null,
+          "fileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/prospects/import/confirm",
+          "status": 200,
+          "requestId": "aae4127c-4159-4563-9f68-e53f6572d7b5",
+          "id": null,
+          "summary": {
+            "total": 1,
+            "created": 0,
+            "linked": 1,
+            "updated": 0,
+            "skipped": 0,
+            "rejected": 0
+          },
+          "reason": null,
+          "fileSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "dbAssertions": [
+        "Existing prospect linked to target campaign"
+      ],
+      "uiReread": "PASS",
+      "originalBytes": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CSV-UPDATE",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "status": "FAIL",
+      "error": "Error: TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for get_by_role(\"button\", name=\"Omitir\")\n",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-EDIT-STATUS",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "PATCH",
+        "path": "/api/v1/campaigns/cmvrwr6fa001r60owldfhd31r",
+        "status": 200,
+        "requestId": "b986b375-74ff-4efa-8664-171b5f53acdb",
+        "id": "cmvrwr6fa001r60owldfhd31r",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "description",
+          "name",
+          "status"
+        ]
+      },
+      "dbAssertions": [
+        "Campaign changes and status persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "JWT-OWNER-SNAPSHOT",
+      "scope": "UI_TO_DB",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwvgrm002760ow61cv610q",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 201,
+        "requestId": "53be9d6e-572a-4a18-977d-5b65a815b17b",
+        "id": "cmvrwvgrm002760ow61cv610q",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "dbAssertions": [
+        "User and tenant MEMBER membership persisted atomically"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "AUTH-MEMBER",
+      "scope": "UI_HTTP",
+      "role": "member",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-CREATE-MEMBER",
+      "scope": "UI_TO_DB",
+      "role": "member",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrww9z7002960ow9qksa5ej",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/campaigns",
+        "status": 201,
+        "requestId": "ad8349c5-da5c-4af5-8451-95d9e79f8dc5",
+        "id": "cmvrww9z7002960ow9qksa5ej",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "description",
+          "name"
+        ]
+      },
+      "dbAssertions": [
+        "Campaign tenant and creator persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-MEMBER-403",
+      "scope": "UI_ACCESS_CONTROL_AND_HTTP_SQL",
+      "role": "member",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 403,
+        "source": "complementary HTTP, not UI mutation"
+      },
+      "dbAssertions": [
+        "No partial writes; UI MEMBER remains snapshot despite DB promotion"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "TEN-CROSS-READ",
+      "scope": "UI_TO_DB_READ",
+      "role": "other",
+      "tenantFixture": "B",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/campaigns/cmvrwr6fa001r60owldfhd31r",
+        "status": 404,
+        "requestId": "816d117e-7078-44c7-b4b3-5c9cd2554e11",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "dbAssertions": [
+        "Campaign remains scoped to A"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "ADMIN-DISCOVERY-MEMBERSHIP",
+      "scope": "UI_HTTP_SQL",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/tenants",
+        "status": 200,
+        "requestId": "ff32600b-be53-47d0-bc84-260bf0327a79",
+        "reason": null
+      },
+      "dbAssertions": [
+        "ADMIN discovers B without membership"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-CREATE-ADMIN",
+      "scope": "UI_TO_DB",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "id": "cmvrwy2if002b60ow8n1a420j",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/users",
+        "status": 201,
+        "requestId": "60bb18c3-017c-4e29-93af-647961f3fe74",
+        "id": "cmvrwy2if002b60ow8n1a420j",
+        "summary": null,
+        "reason": null,
+        "requestKeys": [
+          "email",
+          "name",
+          "password"
+        ]
+      },
+      "dbAssertions": [
+        "User and tenant MEMBER membership persisted atomically"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-DEACTIVATE-ADMIN",
+      "scope": "UI_TO_DB",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "DELETE",
+        "path": "/api/v1/users/cmvrwpoku001l60owgd49ztdf",
+        "status": 200,
+        "requestId": "e50967f4-cd19-4b0d-b9f0-66cdbff01aa1",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "dbAssertions": [
+        "ADMIN deactivation persisted"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-ARCHIVE",
+      "scope": "UI_TO_DB",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "DELETE",
+        "path": "/api/v1/campaigns/cmvrwr6fa001r60owldfhd31r",
+        "status": 200,
+        "requestId": "a878ac03-d1f3-4abe-a0cf-ef0bf342e21a",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "dbAssertions": [
+        "Campaign archived"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "JOBS-DISABLED-503",
+      "scope": "HTTP_SQL",
+      "role": "admin",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n400 !== 503\n",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "CAM-DELETE-ADMIN",
+      "scope": "UI_TO_DB",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "DELETE",
+        "path": "/api/v1/campaigns/cmvrwyzzc002d60ow5yhbrx0j",
+        "status": 200,
+        "requestId": "7c734563-e1b8-497a-a23b-bbba72527a22",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "dbAssertions": [
+        "Permanent deletion removes the campaign"
+      ],
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "AUTH-LOGOUT-DEEPLINK",
+      "scope": "UI_HTTP",
+      "role": "admin",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/logout",
+        "status": 200,
+        "requestId": "0c3f9f48-5382-482c-92a0-10ded5c42288",
+        "id": null,
+        "summary": null,
+        "reason": null
+      },
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-INVALID-400",
+      "status": "NOT RUN",
+      "reason": "Prerequisite scenario did not complete",
+      "cleanup": "PASS"
+    },
+    {
+      "caseId": "USR-CONCURRENT-CREATE",
+      "status": "NOT RUN",
+      "reason": "Prerequisite scenario did not complete",
+      "cleanup": "PASS"
+    }
+  ]
+}
