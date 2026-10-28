@@ -1,4 +1,4 @@
-param([Parameter(Mandatory=$true)][string]$BackendPath,[string]$StatePath=(Join-Path ([IO.Path]::GetTempPath()) 'prospector-frontend-sprint'),[switch]$SkipBuild)
+param([Parameter(Mandatory=$true)][string]$BackendPath,[string]$StatePath=(Join-Path ([IO.Path]::GetTempPath()) 'prospector-frontend-sprint'),[switch]$SkipBuild,[switch]$CachedToolchain)
 $ErrorActionPreference='Stop'
 function Invoke-SprintDocker { & docker.exe @args; if($LASTEXITCODE -ne 0){throw 'Docker operation failed; see sanitized build output'} }
 $frontend=(Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
@@ -48,7 +48,8 @@ if(-not $SkipBuild){
  }
  $source=& git -C $frontend rev-parse HEAD
  if((& git -C $frontend diff --name-only -- lib pubspec.yaml pubspec.lock web assets Dockerfile.vercel)){throw 'Commit application sources before building evidence'}
- Invoke-SprintDocker build -f (Join-Path $frontend 'Dockerfile.vercel') --build-arg API_BASE_URL=https://localhost:18543 --label ("org.opencontainers.image.revision="+$source.Trim()) -t sprint-frontend-core-web:local $frontend
+ $webDockerfile=if($CachedToolchain){Join-Path $PSScriptRoot 'Dockerfile.e2e'}else{Join-Path $frontend 'Dockerfile.vercel'}
+ Invoke-SprintDocker build -f $webDockerfile --build-arg API_BASE_URL=https://localhost:18543 --label ("org.opencontainers.image.revision="+$source.Trim()) -t sprint-frontend-core-web:local $frontend
 }
 Invoke-SprintDocker compose -p $project --env-file $envFile -f (Join-Path $StatePath 'compose.yml') config --quiet
 Invoke-SprintDocker compose -p $project --env-file $envFile -f (Join-Path $StatePath 'compose.yml') up -d --no-build --wait --wait-timeout 180 browser

@@ -15,6 +15,7 @@ pwsh -File tool/sprint/Start-Sprint.ps1 -BackendPath <checkout-backend>
 $state = Join-Path ([IO.Path]::GetTempPath()) 'prospector-frontend-sprint'
 pwsh -File tool/sprint/Run-P2C.ps1 -StatePath $state
 node tool/sprint/e2e.mjs $state codex/evidencias/e2e-local.json
+node tool/sprint/api-negative.mjs $state
 ```
 
 Ejecutar P2C y UI→DB en secuencia: comparten esta DB dedicada. El adaptador P2C valida etiqueta del contenedor, nombre avance2_core y PostgreSQL16; su modo heredado saas_local se conserva. Solo admite HTTP loopback.
@@ -44,3 +45,6 @@ docker compose -p prospector-frontend-sprint --env-file (Join-Path $state 'core.
 Smoke remoto público: `node tool/sprint/remote-smoke.mjs https://saas-platform-client-web.vercel.app`. Smoke UI autenticado: `remote-ui.mjs` recibe exclusivamente JSON por stdin protegido; nunca pasar credenciales en argv, guardar ejemplos reales ni activar HAR/traces/screenshots. El runner permite solo GET/HEAD/OPTIONS y POST de login, selección y logout. No registra cuenta, token, organizaciones ni datos de negocio. Requiere autorización explícita para la cuenta y origen; no crea fixtures productivos.
 
 Los SHA desplegados deben probarse mediante metadatos autorizados de hosting. El smoke y Swagger no permiten inferirlos. ADR-006 y Prospector Service quedan fuera de esta suite Core.
+
+Para iteraciones locales puede usarse -CachedToolchain: Dockerfile.e2e verifica Flutter3.47.5/Dart3.13.4 de la imagen existente y compila en /sprint-app vacío, sin reutilizar fuentes de otra rama. El artefacto final contiene solo Nginx y el bundle actual. La validación productiva sigue usando Dockerfile.vercel en CI.
+Los negativos HTTP_SQL verifican JWT expirado, CSV expirado/alterado,413,replay409 y429 con SQL y cleanup, sin sustituir los escenarios UI_TO_DB.

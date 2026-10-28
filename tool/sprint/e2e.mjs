@@ -118,8 +118,8 @@ async function importCsv(campaign,campaignName,csv,decision='CREATE',existingId=
  if(decision==='SKIP')assertions.push(sqlAssert('NOT EXISTS(SELECT 1 FROM prospects WHERE name='+q(name)+')','SKIP creates no rows'));
  else if(existingId)assertions.push(sqlAssert('EXISTS(SELECT 1 FROM campaign_prospects WHERE campaign_id='+q(campaign)+' AND prospect_id='+q(existingId)+')','Existing prospect linked to target campaign'));
  else assertions.push(sqlAssert("EXISTS(SELECT 1 FROM prospects WHERE name="+q(name)+" AND tenant_id="+q(a)+" AND campaign_id="+q(campaign)+" AND source='csv')",'CSV prospect and source persisted'));
- if(decision==='UPDATE_EXISTING')assertions.push(sqlAssert('EXISTS(SELECT 1 FROM prospects WHERE id='+q(existingId)+' AND name='+q(name)+')','Existing prospect changed'));
- if(existingId)reread('/prospects/'+existingId,decision==='UPDATE_EXISTING'?name:runId+' manual');
+ if(decision==='UPDATE_EXISTING')assertions.push(sqlAssert('EXISTS(SELECT 1 FROM prospects WHERE id='+q(existingId)+' AND name='+q(name)+" AND category='Updated category')",'Existing prospect category changed without changing the normalized-name match'));
+ if(existingId)reread('/prospects/'+existingId,decision==='UPDATE_EXISTING'?'Updated category':runId+' manual');
  else{go('/campaigns/'+campaign);click('Prospectos',{role:'tab'});act({action:'reload'});click('Prospectos',{role:'tab'});if(decision!=='SKIP')text(name);}
  return {http:[preview,confirm],dbAssertions:assertions,uiReread:'PASS',originalBytes:'PASS'};
 }
@@ -186,7 +186,7 @@ try{
  if(campaign)await caseRun('CSV-CREATE','UI_TO_DB','owner',()=>importCsv(campaign.id,runId+' campaign','name,email\n'+runId+' csv,'+email('csv')+'\n'));
  if(campaign)await caseRun('CSV-SKIP','UI_TO_DB','owner',()=>importCsv(campaign.id,runId+' campaign','name,email\n'+runId+' skipped,'+email('skipped')+'\n','SKIP'));
  if(campaign2&&manual)await caseRun('CSV-LINK','UI_TO_DB','owner',()=>importCsv(campaign2.id,runId+' csv-target','name,email\n'+runId+' manual,'+email('prospect')+'\n','LINK_EXISTING',manual.id));
- if(campaign2&&manual)await caseRun('CSV-UPDATE','UI_TO_DB','owner',()=>importCsv(campaign2.id,runId+' csv-target','name,email\n'+runId+' imported-edit,'+email('prospect')+'\n','UPDATE_EXISTING',manual.id));
+ if(campaign2&&manual)await caseRun('CSV-UPDATE','UI_TO_DB','owner',()=>importCsv(campaign2.id,runId+' csv-target','name,email,category\n'+runId+' manual,'+email('prospect')+',Updated category\n','UPDATE_EXISTING',manual.id));
  if(campaign)await caseRun('CAM-EDIT-STATUS','UI_TO_DB','owner',async()=>{
   go('/campaigns/'+campaign.id+'/edit','Guardar');fill('Descripción','Edited synthetic fixture');
   act({action:'select',role:'button',name:'ACTIVA',exact:false,option:'PAUSADA'});
