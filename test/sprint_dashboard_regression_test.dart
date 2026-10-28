@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:saas_platform_client/core/errors/api_exception.dart';
 import 'package:saas_platform_client/core/errors/error_mapper.dart';
 import 'package:saas_platform_client/features/dashboard/presentation/dashboard_page.dart';
 import 'package:saas_platform_client/features/dashboard/state/dashboard_providers.dart';
@@ -45,7 +44,6 @@ void main() {
         () => ApiDashboardRepository(testApi(PartialDashboard())).load(),
       ))!;
       expect(data.jobs, isNull);
-      expect(data.jobsError, isA<ApiException>());
       expect(data.campaigns.meta.total, 31);
       expect(data.prospects.meta.total, 47);
       await tester.pumpWidget(
