@@ -5,7 +5,9 @@ import {spawnSync,execFileSync} from 'node:child_process';
 const project='prospector-frontend-g1',state='codex/frontend-adr006/.local',base='https://localhost:18643';
 const cfg=Object.fromEntries(fs.readFileSync(state+'/core.env','utf8').trim().split(/\r?\n/).map(line=>[line.slice(0,line.indexOf('=')),line.slice(line.indexOf('=')+1)]));
 const password=crypto.randomBytes(20).toString('hex')+'Aa1!';
-const runId='g1fe'+crypto.randomBytes(6).toString('hex'),ownerEmail=runId+'@example.invalid';
+const recovery=process.argv.find(value=>value.startsWith('--cleanup='))?.slice(10);
+if(recovery&&!/^g1fe[a-f0-9]{12}$/.test(recovery))throw Error('Invalid owned recovery identifier');
+const runId=recovery||'g1fe'+crypto.randomBytes(6).toString('hex'),ownerEmail=runId+'@example.invalid';
 const cases=[];
 const docker=(args,input)=>{const r=spawnSync('docker',args,{input,encoding:'utf8',timeout:120000});if(r.status!==0)throw Error('Dedicated Docker operation failed');return r.stdout.trim()};
 const container=name=>{const id=docker(['ps','-q','--filter','label=com.docker.compose.project='+project,'--filter','label=com.docker.compose.service='+name]);assert(id&&!id.includes('\n'));return id};
@@ -27,6 +29,7 @@ function checksum(){
 }
 let before,tenantId,ownerId,cleanup='NOT RUN';
 try{
+ if(!recovery){
  assert.equal(sql("SELECT current_database()||':'||current_setting('server_version_num')::int/10000;"),'avance2_core:16');
  assert.equal(docker(['volume','inspect','--format','{{index .Labels "prospector.owner"}}',project+'_core-pg']),'frontend-g1-exclusive');
  before=checksum();
@@ -87,19 +90,29 @@ try{
  const cross=act({action:'http',method:'GET',path:'/api/v1/users/demo-owner-demo-norte'});
  assert([403,404].includes(cross.status));
  record('REG-CROSS-TENANT-ISOLATION','HTTP_SQL',{http:{method:'GET',path:'/api/v1/users/[OTHER_TENANT_USER]',status:cross.status}});
+ }
 }catch(error){
  const message=String(error).replaceAll(password,'[REDACTED]').replaceAll(cfg.LOCAL_DEMO_PASSWORD,'[REDACTED]').replace(/code=[^\s"'<>]+/g,'code=[REDACTED]').replace(/[A-Za-z0-9_.+-]+@[A-Za-z0-9.-]+/g,'[SYNTHETIC_EMAIL]');
  cases.push({caseId:'E2E-EXECUTION',scope:'UI_TO_DB',status:'FAIL',error:message.slice(0,700)});
  try{cases.at(-1).uiDiagnostic=act({action:'snapshot'});cases.at(-1).recentHttp=network(0).slice(-5);}catch{}
  console.log('E2E FAIL '+message.slice(0,300));
 }finally{
+ let cleanupStep='delete-owned-fixtures';
  try{
   // Cleanup by this exact random slug/email, in FK order; no global deletes.
-  sql('BEGIN; '+['activation_links','first_access_challenges','delivery_attempts'].map(t=>'DELETE FROM '+t+' WHERE onboarding_id IN(SELECT id FROM tenant_onboardings WHERE tenant_id IN(SELECT id FROM tenants WHERE slug='+q(runId)+'));').join(' ')+
+  sql('BEGIN; '+['first_access_challenges','activation_links','delivery_attempts'].map(t=>'DELETE FROM '+t+' WHERE onboarding_id IN(SELECT id FROM tenant_onboardings WHERE tenant_id IN(SELECT id FROM tenants WHERE slug='+q(runId)+'));').join(' ')+
   ' DELETE FROM tenant_onboardings WHERE tenant_id IN(SELECT id FROM tenants WHERE slug='+q(runId)+'); DELETE FROM user_tenants WHERE tenant_id IN(SELECT id FROM tenants WHERE slug='+q(runId)+'); DELETE FROM users WHERE email='+q(ownerEmail)+'; DELETE FROM roles WHERE tenant_id IN(SELECT id FROM tenants WHERE slug='+q(runId)+'); DELETE FROM tenants WHERE slug='+q(runId)+'; COMMIT;');
-  if(before)assert.equal(checksum(),before);
+  cleanupStep='seed-checksum';
+  if(before) {
+    const after=checksum();
+    if(after!==before) {
+      const tables=['tenants','roles','users','user_tenants','campaigns','prospects','campaign_prospects','prospecting_jobs'];
+      cases.push({caseId:'CLEANUP-INTEGRITY',status:'FAIL',changedTables:tables.filter((_,i)=>before.split('|')[i]!==after.split('|')[i])});
+    }
+    assert.equal(after,before);
+  }
   cleanup='PASS';
- }catch{cleanup='FAIL';}
+ }catch{cleanup='FAIL';cases.push({caseId:'CLEANUP',status:'FAIL',step:cleanupStep});}
  const report={date:new Date().toISOString(),runId,frontendSha:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),workingTree:true,backendSha:fs.readFileSync(state+'/backend-sha.txt','utf8').trim(),backendStatus:'VERIFIED_PR_CANDIDATE',postgres:'16',cleanup,cases};
  const out='codex/frontend-adr006/evidencias/e2e-adr006.json';
  if(fs.existsSync(out)){

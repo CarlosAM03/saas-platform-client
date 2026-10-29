@@ -28,7 +28,10 @@ foreach($volume in @($project+'_core-pg',$project+'_core-tls')){
  }
 }
 $ops=Join-Path $snapshot 'ops/avance2'
-$compose=[IO.File]::ReadAllText((Join-Path $ops 'compose.core.yml'))
+$compose=[IO.File]::ReadAllText((Join-Path $ops 'compose.core.yml')).Replace("`r`n","`n")
+foreach($service in @('db','api','web')) {
+ $compose=$compose.Replace("  ${service}:`n", "  ${service}:`n    networks:`n      default:`n        aliases: [${service}]`n")
+}
 $compose=$compose.Replace('prospector-avance2-core',$project).Replace('avance2-core-exclusive','frontend-g1-exclusive').Replace('prospector-avance2-backend:core','prospector-frontend-g1-backend:'+ $BackendSha.Substring(0,7)).Replace('prospector-avance2-flutter:core-local','nginx:1.28.0-alpine').Replace('55447','55647').Replace('18441','18641').Replace('18443','18643').Replace('18450','18650')
 $compose=$compose.Replace("environment: { PORT: '80' }",("volumes: ['"+(Join-Path $frontend 'build/web').Replace('\','/')+":/usr/share/nginx/html:ro']"))
 $registration=@'
@@ -54,13 +57,14 @@ $mail=@'
     entrypoint: [python, /opt/mailbox.py]
     networks:
       default:
-        aliases: [api.brevo.com]
+        aliases: [mail, api.brevo.com]
     volumes: ['./mailbox.py:/opt/mailbox.py:ro', 'core-tls:/certs:ro']
     depends_on:
       tls-init: { condition: service_completed_successfully }
     restart: 'no'
 '@
 $compose=$compose.Replace("`nvolumes:", "`n"+$mail+"`nvolumes:")
+$compose += "`nnetworks:`n  default:`n    internal: true`n"
 $compose=$compose.Replace("'./browser_agent.py:/opt/browser_agent.py:ro',", "'./browser_agent.py:/opt/browser_agent.py:ro', './browser_qa.py:/opt/browser_qa.py:ro',")
 [IO.File]::WriteAllText((Join-Path $state 'compose.yml'),$compose,[Text.UTF8Encoding]::new($false))
 foreach($file in @('init-tls.sh','nginx-https.conf','start-browser.sh')){

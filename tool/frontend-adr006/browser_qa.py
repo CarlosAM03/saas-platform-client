@@ -18,7 +18,12 @@ async def ready(page, text=None):
     if await placeholder.count():
         await placeholder.evaluate("(e)=>e.click()")
     if text:
-        await page.get_by_text(text, exact=False).first.wait_for(timeout=30000)
+        for _ in range(120):
+            if text in await page.locator('body').aria_snapshot():
+                break
+            await asyncio.sleep(.25)
+        else:
+            raise TimeoutError('Expected accessible state did not appear')
 
 
 async def open_activation(page, recipient, secret_values):
@@ -31,6 +36,9 @@ async def open_activation(page, recipient, secret_values):
     if not re.fullmatch(r"[A-Za-z0-9_-]{43}", code):
         raise RuntimeError("Laboratory transport parsed an invalid code shape")
     secret_values.add(code)
+    # An email link opens a document. A same-origin hash-only page.goto keeps
+    # the existing Flutter instance and never executes the startup handoff.
+    await page.goto('about:blank', wait_until='domcontentloaded')
     await page.goto(BASE + "/#/activate?code=" + code, wait_until="domcontentloaded")
     await page.wait_for_function("location.hash === '#/activate'", timeout=30000)
     await ready(page)
@@ -203,7 +211,9 @@ async def audit(_existing_context):
                 await page.goto(link)
                 await ready(page, "Nueva contraseña")
                 field = page.get_by_label("Nueva contraseña", exact=True)
-                await field.fill(secrets.token_hex(12)+"Aa1!")
+                await field.click()
+                await page.keyboard.type(secrets.token_hex(12)+"Aa1!", delay=5)
+                await page.keyboard.press('Tab')
                 await page.get_by_text("Establecer contraseña", exact=True).click()
                 await ready(page, "Iniciar sesión")
                 assert "#/login" in page.url, "server success must win over device clock"

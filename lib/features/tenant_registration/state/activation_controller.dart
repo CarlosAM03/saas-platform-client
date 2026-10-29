@@ -61,7 +61,7 @@ class ActivationController extends StateNotifier<ActivationViewState> {
   Future<void> begin() async {
     if (!mounted || _started) return;
     _started = true;
-    final code = _bootstrap.takeCode();
+    final code = _bootstrap.takeCode() ?? captureActivationLink().takeCode();
     if (code == null) {
       _fail(invalidActivationMessage);
       return;
