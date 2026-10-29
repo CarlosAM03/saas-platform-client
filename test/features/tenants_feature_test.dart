@@ -153,7 +153,7 @@ void main() {
       }
       if (mode == 'success') {
         expect(find.text('Demo'), findsOneWidget);
-        expect(find.text('Crear organización'), findsOneWidget);
+        expect(find.text('Registrar organización'), findsOneWidget);
       }
     });
   }

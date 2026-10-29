@@ -1,0 +1,42 @@
+{
+  "cases": [
+    {
+      "caseId": "HISTORY-REPLACE-BACK-FORWARD-RELOAD",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "HISTORY-NEW-TAB-INVALID-DUPLICATE-SESSION-STORAGE",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "HISTORY-REPLACE-FAILURE-NO-REDEEM",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-HTTP-ERRORS-NETWORK-NO-RETRY",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-LATE-RESPONSE-AFTER-LEAVING",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-DEVICE-CLOCK-PLUS-MINUS-24H",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-MOBILE-KEYBOARD-VALIDATION-FOCUS",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    }
+  ],
+  "date": "2026-10-29T06:27:41.1391757Z",
+  "frontendSha": "2590aa423c2f329d3309507bf08975db435b63c1",
+  "browser": "Chromium real, Playwright, Docker aislado, TLS verificado"
+}

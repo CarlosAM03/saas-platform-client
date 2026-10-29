@@ -33,6 +33,13 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          if (options.extra['publicActivation'] == true) {
+            options.headers.removeWhere(
+              (key, _) => key.toLowerCase() == 'authorization',
+            );
+            handler.next(options);
+            return;
+          }
           try {
             await _storage.tokenOperation(() async {
               if (options.extra['sessionRevision'] !=
@@ -68,6 +75,10 @@ class ApiClient {
           }
         },
         onError: (error, handler) async {
+          if (error.requestOptions.extra['publicActivation'] == true) {
+            handler.next(error);
+            return;
+          }
           if (error.response?.statusCode == 401) {
             try {
               await _storage.tokenOperation(() async {
@@ -141,6 +152,28 @@ class ApiClient {
         path,
         data: data,
         options: _options(headers: headers),
+      ),
+    );
+    return response.data;
+  }
+
+  /// Only ADR-006 body-authorized operations bypass normal session handling.
+  /// Same Dio, no JWT read, no global 401 callback, no caller-supplied headers.
+  Future<Object?> postPublicActivation(
+    String path, {
+    required Object data,
+  }) async {
+    if (!const {
+      '/api/v1/auth/redeem-first-access',
+      '/api/v1/auth/complete-first-access',
+    }.contains(path)) {
+      throw ArgumentError('Unsupported public activation operation');
+    }
+    final response = await _request(
+      () => _dio.post<Object?>(
+        path,
+        data: data,
+        options: Options(extra: {'publicActivation': true}),
       ),
     );
     return response.data;
@@ -260,11 +293,19 @@ class ApiClient {
     return ApiException(
       kind: kind,
       statusCode: status,
-      code: code is String ? code : null,
-      message: message is String && message.isNotEmpty
+      code: error.requestOptions.extra['publicActivation'] == true
+          ? null
+          : code is String
+          ? code
+          : null,
+      message: error.requestOptions.extra['publicActivation'] == true
+          ? 'No se pudo completar la activación.'
+          : message is String && message.isNotEmpty
           ? message
           : 'Error de comunicación con el backend.',
-      details: details,
+      details: error.requestOptions.extra['publicActivation'] == true
+          ? null
+          : details,
     );
   }
 }

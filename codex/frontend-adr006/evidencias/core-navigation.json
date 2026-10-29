@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-29T06:39:04.047Z",
+  "runId": "sprinta521e1ad15dacb",
+  "environment": "local-isolated",
+  "frontendSha": "2590aa423c2f329d3309507bf08975db435b63c1",
+  "runnerSha": "f981a839781b6415af51805cf4f0724b16a022f4",
+  "frontendImageSha": "2590aa423c2f329d3309507bf08975db435b63c1",
+  "sourceMatches": true,
+  "backendSha": "5e214420394101ae7079f8e844cc759b01cce2a3",
+  "postgres": "16",
+  "tls": "CA confined to browser container; ignore_https_errors=false",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "CORE-PAGINATION-SEARCH-SORT-RESTORE",
+      "scope": "UI_HTTP_SQL",
+      "role": "owner",
+      "tenantFixture": "A",
+      "status": "PASS",
+      "secondPage": {
+        "method": "GET",
+        "path": "/api/v1/users",
+        "status": 200,
+        "requestId": "58a831a8-104b-4f72-8f75-a95489a1e958",
+        "authorizationPresent": true,
+        "reason": null,
+        "total": 29,
+        "requestBodyPresent": false
+      },
+      "searched": {
+        "method": "GET",
+        "path": "/api/v1/users",
+        "status": 200,
+        "requestId": "a6c6b88a-7b65-4405-bacb-8dd548ab43bb",
+        "authorizationPresent": true,
+        "reason": null,
+        "total": 1,
+        "requestBodyPresent": false
+      },
+      "dbAssertions": [
+        "25 synthetic members produce more than one real API page",
+        "Search returns one own-tenant member"
+      ],
+      "restoredSession": true,
+      "uiReread": "PASS",
+      "cleanup": "PASS"
+    }
+  ]
+}

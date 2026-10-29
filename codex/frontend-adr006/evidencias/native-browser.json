@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-28T22:41:23.017Z",
+  "frontendSha": "919ce033f76a0f04aebe9dc2bed4c159d6fb86ca",
+  "browser": "installed Edge headless, CDP, normal host sandbox",
+  "scope": "MOCK_HTTP_NOT_E2E",
+  "cases": [
+    {
+      "caseId": "NATIVE-BOOTSTRAP-HANDOFF",
+      "status": "PASS",
+      "scope": "REAL_EDGE_MOCK_HTTP"
+    },
+    {
+      "caseId": "NATIVE-BROWSER",
+      "status": "FAIL",
+      "error": "Error: Timed out: Flutter editing element focus",
+      "accessibleState": "SaaS Platform\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nVolver al login\n\nActiva tu cuenta\nEste enlace no inicia una sesión. Al terminar deberás usar el login habitual.\n\n\n\n\nEstablecer contraseña\nVolver al login\nSi perdiste la respuesta o venció el desafío, solicita un nuevo enlace al administrador. No recargues ni reutilices el enlace.\nActiva tu cuenta\nEste enlace no inicia una sesión. Al terminar deberás usar el login habitual.\nVencimiento indicado por el servidor: 2026-10-28 15:55:56.951\nMínimo 10 caracteres Unicode, letra, número y especial; máximo 72 bytes UTF-8.\nEl servidor valida el vencimiento al enviar; la hora del dispositivo puede ser diferente.\nNueva contraseña\nEstablecer contraseña\nVolver al login\nSi perdiste la respuesta o venció el desafío, solicita un nuevo enlace al administrador. No recargues ni reutilices el enlace.\nVencimiento indicado por el servidor: 2026-10-28 15:55:56.951\nMínimo 10 caracteres Unicode, letra, número y especial; máximo 72 bytes UTF-8.\nEl servidor valida el vencimiento al enviar; la hora del dispositivo puede ser diferente.\n\n\n\nEstablecer contraseña"
+    }
+  ],
+  "observed": [
+    {
+      "operation": "redeem",
+      "codePreserved": true,
+      "bearerPresent": false
+    }
+  ]
+}

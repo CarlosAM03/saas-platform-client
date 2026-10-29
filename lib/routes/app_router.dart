@@ -18,6 +18,9 @@ import '../features/prospecting_jobs/presentation/jobs_pages.dart';
 import '../features/prospecting_jobs/presentation/generate_page.dart';
 
 import '../features/dashboard/presentation/dashboard_page.dart';
+import '../features/tenant_registration/presentation/registration_pages.dart';
+import '../features/tenant_registration/presentation/activation_page.dart';
+import '../features/tenant_registration/state/activation_controller.dart';
 
 /// Scope sits inside the route Navigator: its global key must not preserve old forms.
 class ScopedFeaturePage extends ConsumerWidget {
@@ -33,18 +36,40 @@ class ScopedFeaturePage extends ConsumerWidget {
 final appRouterProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier(0);
   Uri? restoringLocation;
-  ref.listen(authControllerProvider, (_, __) => refresh.value++);
+  bool activationLoginRequired = false;
+  ref.listen(authControllerProvider, (_, next) {
+    if (next.status == AuthStatus.loading) activationLoginRequired = false;
+    refresh.value++;
+  });
   GoRoute featureRoute(String path, Widget Function(GoRouterState) page) =>
       GoRoute(
         path: path,
         builder: (_, state) => ScopedFeaturePage(child: page(state)),
       );
   final router = GoRouter(
-    initialLocation: '/splash',
+    initialLocation: ref.read(activationBootstrapProvider).isActivation
+        ? '/activate'
+        : '/splash',
+    overridePlatformDefaultLocation: ref
+        .read(activationBootstrapProvider)
+        .isActivation,
     refreshListenable: refresh,
     redirect: (_, state) {
       final auth = ref.read(authControllerProvider);
       final path = state.uri.path;
+      if (path == '/activate') {
+        restoringLocation = null;
+        return state.uri.hasQuery ? '/activate' : null;
+      }
+      if (path == '/login') {
+        if (ref.read(activationControllerProvider).phase ==
+            ActivationPhase.completed) {
+          activationLoginRequired = true;
+        }
+        // Existing sessions survive activation; still show login after completion.
+        // Normal login submission resets this exception on AuthStatus.loading.
+        if (activationLoginRequired) return null;
+      }
       if ((auth.status == AuthStatus.unknown ||
               auth.status == AuthStatus.loading) &&
           auth.context == null &&
@@ -68,6 +93,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return redirectForAuth(auth, path);
     },
     routes: [
+      GoRoute(path: '/activate', builder: (_, __) => const ActivationPage()),
       GoRoute(path: '/organizations', redirect: (_, __) => '/change-tenant'),
       GoRoute(path: '/splash', builder: (_, __) => const SplashPage()),
       GoRoute(path: '/login', builder: (_, __) => const LoginPage()),
@@ -127,7 +153,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           featureRoute('/profile', (s) => const ProfilePage()),
           featureRoute('/admin', (s) => const AdminPage()),
           featureRoute('/tenants', (s) => const TenantsPage()),
-          featureRoute('/tenants/new', (s) => const TenantCreatePage()),
+          featureRoute('/tenants/new', (s) => const TenantRegistrationPage()),
+          featureRoute(
+            '/tenants/:id/onboarding',
+            (s) => TenantOnboardingPage(s.pathParameters['id']!),
+          ),
           featureRoute(
             '/tenants/:id',
             (s) => TenantDetailPage(s.pathParameters['id']!),
@@ -152,6 +182,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 });
 
 String? redirectForAuth(AuthState auth, String path) {
+  if (path == '/activate') return null;
   // Keep the tenant selector mounted while replacing an existing context so
   // recoverable switch errors remain visible. Feature state is cleared by scope.
   if (auth.status == AuthStatus.loading && auth.context != null) return null;

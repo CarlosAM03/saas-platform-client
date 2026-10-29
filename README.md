@@ -49,7 +49,7 @@ El backend es la autoridad para tenant context, autorizacion, persistencia, regl
 ## Alcance funcional
 
 - Auth: login, restauración, sesión expirada, logout y JWT en `flutter_secure_storage`.
-- Tenants: listado, detalle, creación ADMIN y cambio de organización desde Perfil.
+- Tenants: listado, detalle y cambio de organización desde Perfil. Alta visible de negocio por ADMIN mediante registro asistido ADR-006, con primer OWNER y seguimiento de onboarding.
 - Users: listado/búsqueda/paginación/orden, detalle, creación, edición y desactivación ADMIN. La creación omite `roleId`; backend asigna MEMBER. Sin selector de roles inventado.
 - Campaigns: listado/búsqueda/paginación/orden, creación, detalle, edición/estado, archivo, eliminación permanente ADMIN confirmada y prospectos por campaña.
 - Prospects: listado/búsqueda/paginación, detalle, edición y creación manual ADMIN/OWNER. Sources persistidos: `google_maps`, `manual`, `csv`.
@@ -220,3 +220,15 @@ Verificación:279 pruebas Flutter, análisis y CI; P2C real;32 escenarios locale
 Frontend productivo informado por el owner: [saas-platform-client-web.vercel.app](https://saas-platform-client-web.vercel.app/#/login). La URL histórica sin -web no corresponde al frontend verificado.
 
 Procedimiento en [tool/sprint/README.md](tool/sprint/README.md), resultados y riesgos en [codex/evidencias/handoff-qa.md](codex/evidencias/handoff-qa.md). ADR-006 adjunto es referencia futura; el contrato activo permanece separado.
+
+## Carril Flutter ADR-006 — implementación local separada
+
+Por autorización expresa posterior al sprint Core, `feat/tenant-register` añade
+registro asistido ADMIN, consulta/reenvío de onboarding y activación pública en
+`#/activate`. El contrato Core y el login normal no cambian. La provisión técnica
+`POST /tenants` se conserva en PlatformApi; la UI de alta usa `/tenants/register`.
+La autorización nueva no reescribe las evidencias históricas del sprint.
+
+Runbook, arquitectura y QA manual: [ADR-006 Flutter](Docs/ADR006-Flutter.md).
+Resultados de esta rama: [evidencia dedicada](codex/evidencias/adr006-flutter-validacion-20261028.md).
+No implica despliegue, correo real, E2E completo ni aprobación de merge.

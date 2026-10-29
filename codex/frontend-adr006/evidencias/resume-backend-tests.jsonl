@@ -1,0 +1,4 @@
+{"command":"npm run test:unit:ci","exitCode":0,"summary":["Test Suites: 11 passed, 11 total","Tests:       113 passed, 113 total","Time:        9.083 s"]}
+{"command":"npm run test:e2e:ci","exitCode":0,"summary":["Test Suites: 7 passed, 7 total","Tests:       84 passed, 84 total","Time:        22.927 s"]}
+{"command":"npm run prisma:migrate:deploy","exitCode":0,"summary":[]}
+{"command":"npm run test:postgres","exitCode":0,"summary":["Test Suites: 8 passed, 8 total","Tests:       59 passed, 59 total","Time:        30.509 s"]}
