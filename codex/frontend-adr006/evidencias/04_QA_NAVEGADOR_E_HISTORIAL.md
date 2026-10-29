@@ -32,3 +32,14 @@ Ampliaciones de respuesta tardía y reloj±24h: incorporadas al harness; no cont
 como PASS hasta terminar su ejecución. El runner nativo confirmó handoff íntegro
 y ausencia de Bearer, pero su interacción de formulario sigue en diagnóstico.
 Consultar native-browser.json; alcance MOCK_HTTP_NOT_E2E.
+
+
+## Revalidación conjunta del agente único
+
+Fecha UTC: 2026-10-29T06:42:10.981Z (2026-10-28 America/Tijuana). Entorno Windows, Flutter3.47.5/Dart3.13.4, Node22, Docker, Chromium/Playwright, PostgreSQL16 real. Rama feat/tenant-register. Código Flutter 2590aa423c2f329d3309507bf08975db435b63c1; Backend candidato PR10 5e214420394101ae7079f8e844cc759b01cce2a3; revisión de tooling/evidencias f981a839781b6415af51805cf4f0724b16a022f4. La publicación documental posterior no altera estos artefactos.
+
+Esperado: flujo autorizado sin regresión, integridad ni secretos expuestos. Observado: evidencia nueva indicada abajo. Los apartados anteriores se conservan como histórico; este apartado actualiza su estado.
+
+Estado: PASS. browser-qa.json:7/7 REAL_BROWSER con HTTP sintético declarado. Procedimiento: node tool/frontend-adr006/run-browser.mjs; para la ampliación móvil se ejecutó el mismo módulo fresco bajo service/HOME=/tmp/prospector-browser-home, con TLS verificado. Back/forward/reload, pestañas nuevas, duplicados, storage, replaceState fallido sin canje, errores/red, respuesta tardía, reloj±24h y móvil teclado/foco PASS.
+
+Las activaciones E2E reales están separadas en e2e-original-link.json y e2e-resend-link.json. native-browser.json conserva FAIL histórico de foco Edge/CDP; se revisó y documentó como diagnóstico, no aceptación. El runner mantenido Playwright/Chromium ejecuta efectivamente el historial. browser-qa-context-error.json registra un intento bajo root sin CA privada, reemplazado por ejecución correcta bajo service; no se desactivó TLS.

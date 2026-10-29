@@ -29,3 +29,23 @@ expectativa estricta. CI919ce03: tres jobs PASS, incluido Chrome real.
 
 Riesgos: E2E incompleto y fallo Docker/WSL; causa histórica QF01 sin determinar.
 No se amplió dominio, no se alteraron33 operaciones Core ni cinco ADR006.
+
+
+## Revalidación conjunta del agente único
+
+Fecha UTC: 2026-10-29T06:42:10.981Z (2026-10-28 America/Tijuana). Entorno Windows, Flutter3.47.5/Dart3.13.4, Node22, Docker, Chromium/Playwright, PostgreSQL16 real. Rama feat/tenant-register. Código Flutter 2590aa423c2f329d3309507bf08975db435b63c1; Backend candidato PR10 5e214420394101ae7079f8e844cc759b01cce2a3; revisión de tooling/evidencias f981a839781b6415af51805cf4f0724b16a022f4. La publicación documental posterior no altera estos artefactos.
+
+Esperado: flujo autorizado sin regresión, integridad ni secretos expuestos. Observado: evidencia nueva indicada abajo. Los apartados anteriores se conservan como histórico; este apartado actualiza su estado.
+
+| FBR | Estado actual | Evidencia / corrección |
+|---|---|---|
+|01|PASS|Limpieza temprana también en hashchange/popstate y fallback de captura de una lectura. Browser7/7.|
+|02|PASS|Enlace original8 casos; resend11 casos. UI→NestJS→Prisma→PG16; ambos cleanupPASS.|
+|03|PASS|Core32×2 y HTTP/SQL: ADMIN sin/con tenant, OWNER, MEMBER, múltiples membresías, JWT obsoleto403 sin logout.|
+|04|PASS sintético|QF01 parser + Core Users real; causa histórica ACME no determinada.|
+|05|PASS|Registrants file_picker requeridos por CSV Core; no retiro de plugin ni lockfile.|
+|06|PASS|Diez informes actualizados, matrizE01–E25 y manifiesto. Históricos preservados.|
+|07|PASS automatizado|Foco primer inválido, teclado, móvil390×844 real, busy, live regions, resend confirmado.|
+|08|PASS|Servidor autoridad TTL; reloj±24h, desafío vencido, red y respuesta tardía. Sin retry.|
+
+Se corrigieron defectos del arnés: apertura hash en documento existente, orden FK de cleanup, colisión de email de dos fixtures y expectativa histórica JWT-OWNER-SNAPSHOT superada explícitamente por D4. No se rebajó SEC01 ni ninguna expectativa contractual. Sin cambios de código Backend. Véase la matriz para el alcance concreto de cada resultado.

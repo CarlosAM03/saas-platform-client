@@ -35,3 +35,14 @@ visible /tenants/new usa el formulario asistido aprobado por este PR.
 
 Evidencia: tests de contrato ejecutados en baseline/final, CI38 y reporte05.
 Límite: fixtures no prueban disponibilidad NestJS ni transacciones.
+
+
+## Revalidación conjunta del agente único
+
+Fecha UTC: 2026-10-29T06:42:10.981Z (2026-10-28 America/Tijuana). Entorno Windows, Flutter3.47.5/Dart3.13.4, Node22, Docker, Chromium/Playwright, PostgreSQL16 real. Rama feat/tenant-register. Código Flutter 2590aa423c2f329d3309507bf08975db435b63c1; Backend candidato PR10 5e214420394101ae7079f8e844cc759b01cce2a3; revisión de tooling/evidencias f981a839781b6415af51805cf4f0724b16a022f4. La publicación documental posterior no altera estos artefactos.
+
+Esperado: flujo autorizado sin regresión, integridad ni secretos expuestos. Observado: evidencia nueva indicada abajo. Los apartados anteriores se conservan como histórico; este apartado actualiza su estado.
+
+Estado: PASS. Ejecutado contract-38.cjs contra Swagger real del candidato. contract-38.json e INVENTARIO_33_MAS_5.md contienen método/ruta, request, auth y schemas/status de38 operaciones. Cinco ADR: registro201, consulta200, resend200 sin body, redeem200 público y complete200 LOGIN_REQUIRED. Pruebas HTTP/SQL validan OFF503 para registro/reenvío y recuperación pública funcional.
+
+Jobs conserva su refinamiento sortBy ya presente en b51b265; está identificado como preservedCoreSpecialization y no como igualdad literal. Sus cuatro operaciones pendientes503 son intencionales, verificadas sin ampliar funcionalidad. Sin contrato, rutas, DTO ni cliente nuevos.

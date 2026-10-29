@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-29T06:35:01.692Z",
+  "branch": "feat/tenant-register",
+  "frontendAppSha": "2590aa423c2f329d3309507bf08975db435b63c1",
+  "backendSha": "5e214420394101ae7079f8e844cc759b01cce2a3",
+  "environment": "Windows11 Flutter3.47.5 Dart3.13.4 Node22 Docker Pg16 Chromium",
+  "commands": [
+    {
+      "command": "flutter pub get",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "final-pub-get.log"
+    },
+    {
+      "command": "dart run build_runner build",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "final-generation.log (0 outputs)"
+    },
+    {
+      "command": "flutter analyze",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "final-analyze.log (No issues)"
+    },
+    {
+      "command": "flutter test",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "final-flutter-test.log (317 passed,1 skipped)"
+    },
+    {
+      "command": "flutter test test/adr006",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "final-adr006.log (38 passed,1 skipped)"
+    },
+    {
+      "command": "node --test tool/frontend-adr006/bootstrap.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "final-bootstrap.log (5 passed)"
+    },
+    {
+      "command": "dart run tool/check_merge_markers.dart",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "resume-final-markers.log"
+    },
+    {
+      "command": "flutter build web --release --no-wasm-dry-run --dart-define=API_BASE_URL=https://localhost:18643 --output=codex/frontend-adr006/.local/final-web",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "resume-final-web.log"
+    },
+    {
+      "command": "docker build -f Dockerfile.dev --build-arg API_BASE_URL=https://localhost:18643 -t prospector-frontend-g1-dev:2590aa4 .",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "resume-development-container.log"
+    },
+    {
+      "command": "docker build -f Dockerfile.vercel --build-arg API_BASE_URL=https://localhost:18643 -t prospector-frontend-g1-prod:2590aa4 .",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "resume-production-container.log"
+    },
+    {
+      "command": "Own dev/prod container smoke HTTP200 + SPA + headers + no SDK",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "container-smoke.json"
+    },
+    {
+      "command": "Chromium audit module under service with private CA",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "browser-qa.json (7 cases,HTTP synthetic)"
+    },
+    {
+      "command": "http-sql.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "http-sql.json (9 cases,real TCP/SQL)"
+    },
+    {
+      "command": "contract-38.cjs in Backend development image",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "contract-38.json (38 operations)"
+    },
+    {
+      "command": "Start-OwnerEmailPilot.ps1 default + rejection guards",
+      "status": "PASS",
+      "exitCode": 0,
+      "evidence": "owner-pilot-guards.json (no real requests)"
+    }
+  ],
+  "notes": [
+    "Logs crudos permanecen locales e ignorados. JSON redactados están versionados.",
+    "Un skip unitario browser se cubre por7 gruposChromium y testChromeCI.",
+    "BE suites reproducidas: resume-backend-tests.jsonl:113+84+59=256.",
+    "CI exacto de publicación final se atesta en PR11 después del push."
+  ]
+}

@@ -1,8 +1,4 @@
 {
-  "date": "2026-10-28T22:21:22.635Z",
-  "frontendSha": "a09c117592f6be115b413f71c1441b08da9d0a4d",
-  "workingTree": true,
-  "browser": "Chromium / Playwright in dedicated Docker laboratory",
   "cases": [
     {
       "caseId": "HISTORY-REPLACE-BACK-FORWARD-RELOAD",
@@ -23,6 +19,24 @@
       "caseId": "ACTIVATION-HTTP-ERRORS-NETWORK-NO-RETRY",
       "scope": "REAL_BROWSER",
       "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-LATE-RESPONSE-AFTER-LEAVING",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-DEVICE-CLOCK-PLUS-MINUS-24H",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-MOBILE-KEYBOARD-VALIDATION-FOCUS",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
     }
-  ]
+  ],
+  "date": "2026-10-29T06:27:41.1391757Z",
+  "frontendSha": "2590aa423c2f329d3309507bf08975db435b63c1",
+  "browser": "Chromium real, Playwright, Docker aislado, TLS verificado"
 }

@@ -47,3 +47,18 @@ SHA final identificado y verificar de nuevo HEAD remoto.
 
 E2E_LOCAL = BLOCKED (preliminares parciales con FAIL; ninguna corrida integral PASS).
 PARIDAD_BACKEND_FINAL = BLOCKED. Estos estados no equivalen a aprobación.
+
+
+## Revalidación conjunta del agente único
+
+Fecha UTC: 2026-10-29T06:42:10.981Z (2026-10-28 America/Tijuana). Entorno Windows, Flutter3.47.5/Dart3.13.4, Node22, Docker, Chromium/Playwright, PostgreSQL16 real. Rama feat/tenant-register. Código Flutter 2590aa423c2f329d3309507bf08975db435b63c1; Backend candidato PR10 5e214420394101ae7079f8e844cc759b01cce2a3; revisión de tooling/evidencias f981a839781b6415af51805cf4f0724b16a022f4. La publicación documental posterior no altera estos artefactos.
+
+Esperado: flujo autorizado sin regresión, integridad ni secretos expuestos. Observado: evidencia nueva indicada abajo. Los apartados anteriores se conservan como histórico; este apartado actualiza su estado.
+
+E2E_LOCAL_CONJUNTO=PASS; PARIDAD_BACKEND_FINAL=PASS para el par identificado.
+
+Procedimientos: Start-Lab.ps1 exporta git archive del SHA Backend; e2e.mjs --quick prueba enlace original y e2e.mjs prueba resend. NestJS/Prisma reales, Pg16, transporte falso HTTPS443 aislado, Flutter release y Chromium. Datos example.invalid sintéticos.
+
+Original: g1fe37bfbbda5ccd, 8 PASS, cleanupPASS. Resend: g1fef51b1624edd2, 11 PASS, cleanupPASS. ADMINlogin, UI201, Tenant/2roles/User/UserTenant/onboarding SQL, consulta/reload,429/200 sin body, enlace anterior401, nuevo enlace limpio, canje sin JWT, contraseña, LOGIN_REQUIRED, OWNERlogin, rereadUsers y aislamientoPASS. Checksums comparados antes/después.
+
+HTTP/SQL adicional9 PASS: flagOFF sin escrituras, recuperaciónOFF,400/403/409 sin parciales, desafío<=900s,400 recuperable, replay401, vencimiento401, proveedor400/429/500/timeout con un solo intento y estados FAILED/UNKNOWN persistidos. http-sql.json. No acredita entrega externa ni datos históricos Supabase.

@@ -31,3 +31,14 @@ El runner nativo usa perfil propio y sandbox normal de Edge; sin confiar CA glob
 
 Pendiente: repetir seguridad real contra Backend final y completar el E2E.
 Un resultado estático o widget no acredita autorización NestJS.
+
+
+## Revalidación conjunta del agente único
+
+Fecha UTC: 2026-10-29T06:42:10.981Z (2026-10-28 America/Tijuana). Entorno Windows, Flutter3.47.5/Dart3.13.4, Node22, Docker, Chromium/Playwright, PostgreSQL16 real. Rama feat/tenant-register. Código Flutter 2590aa423c2f329d3309507bf08975db435b63c1; Backend candidato PR10 5e214420394101ae7079f8e844cc759b01cce2a3; revisión de tooling/evidencias f981a839781b6415af51805cf4f0724b16a022f4. La publicación documental posterior no altera estos artefactos.
+
+Esperado: flujo autorizado sin regresión, integridad ni secretos expuestos. Observado: evidencia nueva indicada abajo. Los apartados anteriores se conservan como histórico; este apartado actualiza su estado.
+
+SEGURIDAD=PASS en alcance automatizado local. Browser7/7, Core32×2, HTTP/SQL9/9 y suites Backend256 PASS reproducidas en imagen del SHA final. AUTH403 conserva sesión, SEC01 evita editar identidad compartida, sin parciales, aislamiento tenant y sin retry de credenciales. Móvil390×844 con foco al inválido, teclado y envío único PASS real; widget de registro móvil y semántica PASS. Lectura humana de screen reader y contraste exhaustivo: NOT RUN, sin declarar certificación WCAG.
+
+Red de laboratorio internal:true; CA solo contenedor. Se mantuvieron sandbox/seguridad Windows sin cambios. Secretos efímeros solo .local ignorado; no JWT/token/password/URL completa en evidencias. El script OwnerEmailPilot se parseó y probó disabled + guardas de confirmaciones/manifiesto; owner-pilot-guards.json. Nunca se activó Brevo real. Sender/domain/key/cuota/deliverability siguen OWNER_ACTION_REQUIRED. El modo real no registra logs persistentes de API y solo el owner introduce destinatario institucional en UI.

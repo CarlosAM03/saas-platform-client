@@ -1,0 +1,1287 @@
+{
+  "date": "2026-10-29T06:11:19.669Z",
+  "backendSha": "5e214420394101ae7079f8e844cc759b01cce2a3",
+  "coreOperations": 33,
+  "adr006Operations": 5,
+  "runtimeOperations": 38,
+  "approvedSha256": "25c2293627214eacf14cd62a511c26d6b70912abe2746b83e7b950020aff5419",
+  "operations": [
+    {
+      "operation": "GET /api/v1/health",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [],
+      "runtimeAuthorization": [],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200"
+      ],
+      "runtimeHttp": [
+        "200"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/health/live",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [],
+      "runtimeAuthorization": [],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200"
+      ],
+      "runtimeHttp": [
+        "200"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/health/ready",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [],
+      "runtimeAuthorization": [],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "503"
+      ],
+      "runtimeHttp": [
+        "200",
+        "503"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/auth/login",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [],
+      "runtimeAuthorization": [],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "429"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "429"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/auth/logout",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/auth/select-tenant",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/auth/me",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/tenants",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/tenants",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "runtimeHttp": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/tenants/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/users",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/users",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "runtimeHttp": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/users/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "PATCH /api/v1/users/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "DELETE /api/v1/users/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "403",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "403",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/campaigns",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/campaigns",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "201",
+        "400",
+        "401",
+        "409"
+      ],
+      "runtimeHttp": [
+        "201",
+        "400",
+        "401",
+        "409"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/campaigns/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "PATCH /api/v1/campaigns/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "DELETE /api/v1/campaigns/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "403",
+        "404",
+        "409"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/campaigns/{id}/prospects",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/prospects",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/prospects",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "runtimeHttp": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/prospects/import/preview",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "413"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "413"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/prospects/import/confirm",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409",
+        "413"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409",
+        "413"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/prospects/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "PATCH /api/v1/prospects/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "404",
+        "409"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "404",
+        "409"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/prospecting-jobs",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "preservedCoreSpecialization": "b51b265 deployment-document.ts: unchanged Jobs sortBy refinement",
+      "requestDifference": {
+        "approved": {
+          "parameters": [
+            {
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            {
+              "in": "query",
+              "name": "limit",
+              "required": false,
+              "schema": {
+                "default": 20,
+                "maximum": 100,
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            {
+              "in": "query",
+              "name": "sortBy",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "sortOrder",
+              "required": false,
+              "schema": {
+                "default": "asc",
+                "enum": [
+                  "asc",
+                  "desc"
+                ],
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "runtime": {
+          "parameters": [
+            {
+              "in": "query",
+              "name": "page",
+              "required": false,
+              "schema": {
+                "default": 1,
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            {
+              "in": "query",
+              "name": "limit",
+              "required": false,
+              "schema": {
+                "default": 20,
+                "maximum": 100,
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            {
+              "in": "query",
+              "name": "sortBy",
+              "required": false,
+              "schema": {
+                "default": "createdAt",
+                "enum": [
+                  "createdAt",
+                  "updatedAt",
+                  "startedAt",
+                  "completedAt",
+                  "status",
+                  "id"
+                ],
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "sortOrder",
+              "required": false,
+              "schema": {
+                "default": "asc",
+                "enum": [
+                  "asc",
+                  "desc"
+                ],
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "403"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/prospecting-jobs",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "201",
+        "400",
+        "401",
+        "409",
+        "503"
+      ],
+      "runtimeHttp": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "intended503": true,
+      "responseSchemaParity": null
+    },
+    {
+      "operation": "GET /api/v1/prospecting-jobs/{id}",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "404"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "403",
+        "404"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/prospecting-jobs/{id}/cancel",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "404",
+        "409"
+      ],
+      "runtimeHttp": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "intended503": true,
+      "responseSchemaParity": null
+    },
+    {
+      "operation": "POST /api/v1/prospecting-jobs/{id}/persist",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "404",
+        "409"
+      ],
+      "runtimeHttp": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "intended503": true,
+      "responseSchemaParity": null
+    },
+    {
+      "operation": "GET /api/v1/prospecting-jobs/{id}/export",
+      "scope": "CORE",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "404",
+        "409"
+      ],
+      "runtimeHttp": [
+        "400",
+        "401",
+        "403",
+        "503"
+      ],
+      "intended503": true,
+      "responseSchemaParity": null
+    },
+    {
+      "operation": "POST /api/v1/tenants/register",
+      "scope": "ADR006",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409",
+        "429",
+        "500",
+        "503"
+      ],
+      "runtimeHttp": [
+        "201",
+        "400",
+        "401",
+        "403",
+        "409",
+        "429",
+        "500",
+        "503"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "GET /api/v1/tenants/{id}/onboarding",
+      "scope": "ADR006",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "401",
+        "403",
+        "404",
+        "500"
+      ],
+      "runtimeHttp": [
+        "200",
+        "401",
+        "403",
+        "404",
+        "500"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/tenants/{id}/resend-welcome",
+      "scope": "ADR006",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "runtimeAuthorization": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409",
+        "429",
+        "500",
+        "503"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "403",
+        "404",
+        "409",
+        "429",
+        "500",
+        "503"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/auth/redeem-first-access",
+      "scope": "ADR006",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [],
+      "runtimeAuthorization": [],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "429",
+        "500"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "429",
+        "500"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    },
+    {
+      "operation": "POST /api/v1/auth/complete-first-access",
+      "scope": "ADR006",
+      "runtimePresent": true,
+      "consumerRequestParity": true,
+      "runtimeRequestParity": true,
+      "authorization": [],
+      "runtimeAuthorization": [],
+      "authorizationParity": true,
+      "approvedHttp": [
+        "200",
+        "400",
+        "401",
+        "429",
+        "500"
+      ],
+      "runtimeHttp": [
+        "200",
+        "400",
+        "401",
+        "429",
+        "500"
+      ],
+      "intended503": false,
+      "responseSchemaParity": true
+    }
+  ]
+}

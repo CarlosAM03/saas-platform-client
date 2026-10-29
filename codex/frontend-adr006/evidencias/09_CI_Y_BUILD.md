@@ -34,3 +34,16 @@ Hay aproximadamente2GB libres en C:; no se atribuye causalidad sin prueba adicio
 
 CI_FINAL al cierre documental aún requiere verificar el commit que contenga las
 evidencias y tooling. No atribuir los checks919ce03 a un HEAD nuevo sin consultarlo.
+
+
+## Revalidación conjunta del agente único
+
+Fecha UTC: 2026-10-29T06:42:10.981Z (2026-10-28 America/Tijuana). Entorno Windows, Flutter3.47.5/Dart3.13.4, Node22, Docker, Chromium/Playwright, PostgreSQL16 real. Rama feat/tenant-register. Código Flutter 2590aa423c2f329d3309507bf08975db435b63c1; Backend candidato PR10 5e214420394101ae7079f8e844cc759b01cce2a3; revisión de tooling/evidencias f981a839781b6415af51805cf4f0724b16a022f4. La publicación documental posterior no altera estos artefactos.
+
+Esperado: flujo autorizado sin regresión, integridad ni secretos expuestos. Observado: evidencia nueva indicada abajo. Los apartados anteriores se conservan como histórico; este apartado actualiza su estado.
+
+Validaciones locales finales: PASS (final-validation.json).317Flutter+38ADR+5Node, análisis sin incidencias, releaseWeb exit0. Dockerfile.dev y Dockerfile.vercel compilados en imágenes propias2590aa4; container-smoke.json registra ambas HTTP200, SPAfallback, sin SDK runtime y cabeceras producciónPASS. El bloqueo Docker previo queda como histórico; motor recuperado y ninguna nueva parada global Docker/WSL.
+
+CI Frontend código2590aa423c2f329d3309507bf08975db435b63c1: run40825062718 foundation/container/production-container SUCCESS; Backend5e214420394101ae7079f8e844cc759b01cce2a3: run40779464569 quality/postgres-integration/docker-build SUCCESS. La revisión documental final se publicará con push ordinario y su CI exacto se verificará y enlazará en PR11; no trasladar checks de un SHA anterior a uno nuevo. El manifiesto identifica código/artefactos, y la atestación de HEAD documental está en el PR. La suite pesada UI→PG16 es local, no incluida en esos checks. CI sí contiene Chrome real y bootstrap Node.
+
+Checkpoint tooling f981a839781b6415af51805cf4f0724b16a022f4: CI40829886046 foundation/container/production-container SUCCESS, verificados antes del commit documental final.

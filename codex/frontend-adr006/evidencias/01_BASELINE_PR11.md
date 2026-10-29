@@ -42,3 +42,14 @@ Backend inicialmente publicado: ca1e7c9d55d4cad73430801140593b58cb7c413b.
 El checkout principal Backend estaba en otra rama/SHA y se mantuvo en lectura.
 Se exportaron commits con git archive a .local ignorado, sin fetch ni escrituras
 en Backend. Candidato posterior publicado: 5e214420394101ae7079f8e844cc759b01cce2a3.
+
+
+## Revalidación conjunta del agente único
+
+Fecha UTC: 2026-10-29T06:42:10.981Z (2026-10-28 America/Tijuana). Entorno Windows, Flutter3.47.5/Dart3.13.4, Node22, Docker, Chromium/Playwright, PostgreSQL16 real. Rama feat/tenant-register. Código Flutter 2590aa423c2f329d3309507bf08975db435b63c1; Backend candidato PR10 5e214420394101ae7079f8e844cc759b01cce2a3; revisión de tooling/evidencias f981a839781b6415af51805cf4f0724b16a022f4. La publicación documental posterior no altera estos artefactos.
+
+Esperado: flujo autorizado sin regresión, integridad ni secretos expuestos. Observado: evidencia nueva indicada abajo. Los apartados anteriores se conservan como histórico; este apartado actualiza su estado.
+
+Estado actual: PASS. Se conserva el baseline Ángel9c0e556:312 tests y una omisión reproducidos. Hardening actual:317 PASS +1 skip del runner unitario, ADR00638 PASS +1 skip, Node5 PASS. La prueba omitida tiene ejecución real independiente:7 grupos Chromium PASS y Chrome en CI. No se reutilizan resultados históricos como ejecución nueva.
+
+Comandos finales y exit codes: final-validation.json. Logs locales ignorados final-pub-get.log, final-generation.log, final-analyze.log, final-flutter-test.log, final-adr006.log, final-bootstrap.log y resume-final-web.log. Pubspec.lock y registrants conservados.
