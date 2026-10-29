@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 from playwright.async_api import async_playwright
 
 BASE = "https://localhost:18643"
+saved_links = {}
 
 
 async def ready(page, text=None):
@@ -41,6 +42,23 @@ async def open_activation(page, recipient, secret_values):
     await page.goto('about:blank', wait_until='domcontentloaded')
     await page.goto(BASE + "/#/activate?code=" + code, wait_until="domcontentloaded")
     await page.wait_for_function("location.hash === '#/activate'", timeout=30000)
+    await ready(page)
+
+
+def remember_activation(recipient, secret_values):
+    with urllib.request.urlopen("http://mail:8025/?" + urlencode({"recipient": recipient})) as response:
+        code = json.load(response).get("code")
+    if not code:
+        raise RuntimeError("No laboratory message to remember")
+    saved_links[recipient] = code
+    secret_values.add(code)
+
+
+async def open_previous(page, recipient):
+    code = saved_links.pop(recipient)
+    await page.goto("about:blank")
+    await page.goto(BASE + "/#/activate?code=" + code, wait_until="domcontentloaded")
+    await page.wait_for_function("location.hash === '#/activate'")
     await ready(page)
 
 
@@ -220,6 +238,34 @@ async def audit(_existing_context):
             finally:
                 await page.close()
     await case("ACTIVATION-DEVICE-CLOCK-PLUS-MINUS-24H", device_clock)
+    async def mobile_keyboard():
+        page = await ctx.new_page()
+        await page.set_viewport_size({'width': 390, 'height': 844})
+        posts = []
+        await page.route("**/api/v1/auth/redeem-first-access", lambda route: route.fulfill(
+            status=200, content_type="application/json", body=json.dumps({"success": True, "data": {
+                "action": "CHANGE_PASSWORD_REQUIRED", "firstAccessToken": secrets.token_urlsafe(32),
+                "expiresAt": "2099-01-01T00:00:00Z"}})))
+        async def complete(route):
+            posts.append(route.request.method)
+            await route.fulfill(status=200, content_type="application/json", body='{"success":true,"data":{"action":"LOGIN_REQUIRED"}}')
+        await page.route("**/api/v1/auth/complete-first-access", complete)
+        try:
+            await page.goto(link)
+            await ready(page, "Nueva contraseña")
+            await page.get_by_text("Establecer contraseña", exact=True).click()
+            await ready(page, "Usa al menos 10 caracteres Unicode")
+            assert not posts, "invalid form must not submit"
+            assert await page.locator('input:focus').count() == 1, "first invalid field must receive focus"
+            await page.keyboard.type(secrets.token_hex(12)+"Aa1!", delay=5)
+            await page.keyboard.press('Tab')
+            await page.get_by_text("Establecer contraseña", exact=True).click()
+            await ready(page, "Iniciar sesión")
+            assert posts == ["POST"], "one valid submission"
+            assert await page.evaluate('document.documentElement.scrollWidth <= innerWidth'), "no horizontal overflow"
+        finally:
+            await page.close()
+    await case("ACTIVATION-MOBILE-KEYBOARD-VALIDATION-FOCUS", mobile_keyboard)
     await ctx.close()
     await browser.close()
     await playwright.stop()

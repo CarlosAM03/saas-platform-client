@@ -6,9 +6,12 @@ import re
 import socketserver
 import ssl
 import threading
+import time
 from urllib.parse import urlsplit, parse_qs
 
 messages = {}
+modes = {}
+attempts = {}
 lock = threading.Lock()
 
 
@@ -63,7 +66,9 @@ class Mailbox(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         query = parse_qs(urlsplit(self.path).query)
         with lock:
-            result = messages.get(query.get("recipient", [""])[0], {})
+            recipient = query.get("recipient", [""])[0]
+            result = ({"attempts": attempts.get(recipient, 0)} if urlsplit(self.path).path == "/lab/stats"
+                      else messages.get(recipient, {}))
         self.send_response(200)
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
@@ -76,6 +81,17 @@ class Mailbox(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
+        if self.path == "/lab/control":
+            payload = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))))
+            recipient = payload.get("recipient", "")
+            if not recipient.endswith("@example.invalid"):
+                self.send_error(400)
+                return
+            with lock:
+                modes[recipient] = payload.get("mode", 201)
+            self.send_response(204)
+            self.end_headers()
+            return
         if self.path != "/v3/smtp/email":
             self.send_error(404)
             return
@@ -84,6 +100,16 @@ class Mailbox(http.server.BaseHTTPRequestHandler):
         link = re.search(r"https://localhost:18643/#/activate\?code=([^\s]+)", payload.get("textContent", ""))
         if not recipient.endswith(("@example.invalid", "@demo.example")) or not link:
             self.send_error(400)
+            return
+        with lock:
+            attempts[recipient] = attempts.get(recipient, 0) + 1
+            mode = modes.get(recipient, 201)
+        if mode == "timeout":
+            time.sleep(16)
+            mode = 500
+        if mode != 201:
+            self.send_response(int(mode))
+            self.end_headers()
             return
         with lock:
             messages[recipient] = {"code": link.group(1)}

@@ -57,6 +57,7 @@ try{
  act({action:'reload'});text('Activación: PENDING_FIRST_ACCESS');
  record('REG-ONBOARDING-REREAD','UI_TO_DB_READ',{http:onboarding,uiReread:'PASS'});
  if(!process.argv.includes('--quick')){
+ act({action:'rememberLabActivation',recipient:ownerEmail});
  c=cursor();click('Reenviar enlace de activación');click('Confirmar');text('Se alcanzó el límite temporal.');
  record('REG-RESEND-429','UI_TO_DB',{http:http(c,'POST','/api/v1/tenants/'+tenantId+'/resend-welcome',429),dbAssertions:[check('(SELECT generation FROM tenant_onboardings WHERE tenant_id='+q(tenantId)+')=1','No generation change on throttling')]});
  const wait=Number(sql("SELECT GREATEST(0,ceil(extract(epoch FROM ((SELECT max(d.created_at) FROM delivery_attempts d JOIN tenant_onboardings o ON o.id=d.onboarding_id WHERE o.tenant_id="+q(tenantId)+")+interval '61 seconds'-clock_timestamp()))))::int;"));
@@ -65,6 +66,9 @@ try{
  const resend=http(c,'POST','/api/v1/tenants/'+tenantId+'/resend-welcome',200);
  assert.equal(resend.requestBodyPresent,false);
  record('REG-RESEND-200','UI_TO_DB',{http:resend,dbAssertions:[check('(SELECT generation FROM tenant_onboardings WHERE tenant_id='+q(tenantId)+')=2','Manual resend advances generation')]});
+ c=cursor();act({action:'openPreviousLabActivation',recipient:ownerEmail});
+ text('Solicita uno nuevo al administrador.');
+ record('REG-OLD-LINK-REVOKED','UI_HTTP',{http:http(c,'POST','/api/v1/auth/redeem-first-access',401)});
  }
  c=cursor();act({action:'openLabActivation',recipient:ownerEmail});text('Nueva contraseña');
  const redeem=http(c,'POST','/api/v1/auth/redeem-first-access',200);

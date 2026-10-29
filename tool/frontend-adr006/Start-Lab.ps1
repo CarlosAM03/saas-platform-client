@@ -94,6 +94,10 @@ $agent=$agent.Replace("        if kind=='resetSession':", @'
             return await browser_qa.audit(ctx)
         elif kind=='openLabActivation':
             await browser_qa.open_activation(page, d['recipient'], secrets)
+        elif kind=='rememberLabActivation':
+            browser_qa.remember_activation(d['recipient'], secrets)
+        elif kind=='openPreviousLabActivation':
+            await browser_qa.open_previous(page, d['recipient'])
         elif kind=='resetSession':
 '@)
 $agent=$agent.Replace("'previewreference')", "'previewreference','activationtoken','firstaccesstoken','newpassword')")
