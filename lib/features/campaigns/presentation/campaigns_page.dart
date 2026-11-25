@@ -122,9 +122,13 @@ class _CampaignDetailTabs extends StatefulWidget {
 
 class _CampaignDetailTabsState extends State<_CampaignDetailTabs> {
   CampaignProspectFilters? _summaryFilters;
+  Key? _summarySelection;
 
   void _showProspects(CampaignProspectFilters filters) {
-    setState(() => _summaryFilters = filters);
+    setState(() {
+      _summaryFilters = filters;
+      _summarySelection = UniqueKey();
+    });
     DefaultTabController.of(context).animateTo(1);
   }
 
@@ -154,6 +158,7 @@ class _CampaignDetailTabsState extends State<_CampaignDetailTabs> {
               ),
               CampaignProspectsPanel(
                 campaign.id,
+                key: _summarySelection,
                 initialFilters: _summaryFilters,
               ),
               CampaignDashboardPanel(

@@ -65,6 +65,14 @@ void main() {
     await tester.tap(find.byTooltip('Quitar filtro de evaluación'));
     await tester.pumpAndSettle();
     expect(repository.lastFilters?.toQuery(), isEmpty);
+
+    await tester.tap(find.text('Resumen comercial'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Revisar prospectos sin evaluar'));
+    await tester.pumpAndSettle();
+    expect(repository.lastQuery?.page, 1);
+    expect(repository.lastFilters?.toQuery(), {'evaluation': 'SIN_EVALUAR'});
+    expect(find.widgetWithText(Chip, 'Sin evaluar'), findsOneWidget);
   });
 
   test(

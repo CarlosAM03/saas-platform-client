@@ -15,6 +15,7 @@ import 'package:saas_platform_client/core/network/api_client.dart';
 import 'package:saas_platform_client/features/auth/state/auth_state.dart';
 import 'package:saas_platform_client/features/campaigns/presentation/campaign_prospects_panel.dart';
 import 'package:saas_platform_client/features/campaigns/presentation/campaign_dashboard_panel.dart';
+import 'package:saas_platform_client/features/campaigns/presentation/campaigns_page.dart';
 import 'package:saas_platform_client/features/campaigns/presentation/participation_panel.dart';
 import 'package:saas_platform_client/features/campaigns/state/participation_providers.dart';
 import 'package:saas_platform_client/features/prospects/presentation/prospects_page.dart';
@@ -127,6 +128,8 @@ void main() {
       await real(tester, font.load);
       final storage = TestTokenStorage(token: null);
       final requests = <Map<String, Object?>>[];
+      final receiptDirectory = Directory('codex/frontend-cp/.local/recibos');
+      const filterKeys = ['stage', 'responsibleId', 'evaluation', 'page'];
       final dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:18741'))
         ..httpClientAdapter = IOHttpClientAdapter(
           createHttpClient: () => RealHttp().createHttpClient(null),
@@ -137,6 +140,12 @@ void main() {
             requests.add({
               'method': r.requestOptions.method,
               'path': r.requestOptions.uri.path,
+              if (r.requestOptions.uri.path.endsWith('/prospects'))
+                'filters': {
+                  for (final key in filterKeys)
+                    if (r.requestOptions.uri.queryParameters.containsKey(key))
+                      key: r.requestOptions.uri.queryParameters[key],
+                },
               'status': r.statusCode,
             });
             h.next(r);
@@ -212,7 +221,7 @@ void main() {
               home: Scaffold(
                 body: RepaintBoundary(
                   key: const ValueKey('t32-frame'),
-                  child: ColoredBox(color: Colors.white, child: page),
+                  child: Material(color: Colors.white, child: page),
                 ),
               ),
             ),
@@ -232,9 +241,9 @@ void main() {
           image.dispose();
           return data!;
         });
-        Directory('codex/frontend-cp/evidencias').createSync(recursive: true);
+        receiptDirectory.createSync(recursive: true);
         File(
-          'codex/frontend-cp/evidencias/$name.png',
+          '${receiptDirectory.path}/$name.png',
         ).writeAsBytesSync(bytes.buffer.asUint8List());
       }
 
@@ -469,6 +478,45 @@ void main() {
           'UI renders one server snapshot with two manual activities including correction',
         );
         await capture('resumen');
+        await mount(CampaignDetailPage(campaign.id));
+        await waitFor(tester, find.text('Resumen comercial'));
+        for (final (action, parameter, value, chip, count) in [
+          ('Contactado', 'stage', 'CONTACTADO', 'Contactado', 1),
+          (
+            'Asignar responsables',
+            'responsibleId',
+            'UNASSIGNED',
+            'Sin responsable',
+            summary.responsibility['SIN_ASIGNAR']!,
+          ),
+          (
+            'Revisar prospectos sin evaluar',
+            'evaluation',
+            'SIN_EVALUAR',
+            'Sin evaluar',
+            summary.evaluations['SIN_EVALUAR']!,
+          ),
+        ]) {
+          await tap(tester, find.text('Resumen comercial'));
+          await waitFor(tester, find.text('Total de participaciones: 3'));
+          final target = find.text(action).first;
+          await tester.ensureVisible(target);
+          await tap(tester, target);
+          await waitFor(tester, find.widgetWithText(Chip, chip));
+          await waitFor(tester, find.text('Página 1 · $count registros'));
+          expect(
+            requests.lastWhere(
+              (request) =>
+                  request['path'] ==
+                  '/api/v1/campaigns/${campaign.id}/prospects',
+            )['filters'],
+            {'page': '1', parameter: value},
+          );
+        }
+        passed(
+          'T32-C8-FILTERS',
+          'Summary drills down into stage, responsibility and evaluation using page one and real server counts',
+        );
         expect(
           (await real(
             tester,
@@ -586,13 +634,12 @@ void main() {
           'Tenant switch immediately removes prior data and real foreign campaign returns 404',
         );
         expect(tester.takeException(), isNull);
-        expect(cases, hasLength(12));
+        expect(cases, hasLength(13));
         completed = true;
       } finally {
         dio.close(force: true);
-        final dir = Directory('codex/frontend-cp/evidencias')
-          ..createSync(recursive: true);
-        File('${dir.path}/T32.json').writeAsStringSync(
+        receiptDirectory.createSync(recursive: true);
+        File('${receiptDirectory.path}/T32.json').writeAsStringSync(
           '${const JsonEncoder.withIndent('  ').convert({
             'date': DateTime.now().toUtc().toIso8601String(),
             'backendSha': backendSha,
