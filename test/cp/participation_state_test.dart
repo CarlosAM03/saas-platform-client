@@ -78,7 +78,9 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     await tester.pumpAndSettle();
     expect(tester.widget<TabBar>(find.byType(TabBar)).isScrollable, true);
-    await tester.tap(find.text('Resumen comercial'));
+    final summaryTab = find.text('Resumen comercial');
+    await tester.ensureVisible(summaryTab);
+    await tester.tap(summaryTab);
     await tester.pumpAndSettle();
     expect(find.text('Etapas comerciales'), findsOneWidget);
     expect(tester.takeException(), isNull);
