@@ -221,7 +221,7 @@ void main() {
               home: Scaffold(
                 body: RepaintBoundary(
                   key: const ValueKey('t32-frame'),
-                  child: ColoredBox(color: Colors.white, child: page),
+                  child: Material(color: Colors.white, child: page),
                 ),
               ),
             ),
