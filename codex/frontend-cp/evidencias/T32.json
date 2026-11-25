@@ -1,0 +1,522 @@
+{
+  "date": "2026-11-25T03:16:01.690022Z",
+  "backendSha": "779fc7885faefdfe9e3cb0f3fee86810d96d2711",
+  "frontendSha": "e78b82a32d3afe185b69c2643455034e52ba57f6",
+  "workingTree": true,
+  "command": "flutter test --no-pub tool/sprint-cp/t32_real_api_test.dart --dart-define=CP_REAL_API=true",
+  "fixture": "Isolated PostgreSQL16 demo seed; synthetic T32 campaign, manual prospect and two CSV records",
+  "boundary": "Real Flutter test widgets, repositories, HTTP NestJS and PostgreSQL. Only OS file chooser receives an explicit synthetic fixture; no API mocks.",
+  "cases": [
+    {
+      "id": "T32-P1",
+      "expected": "UI match and explicit create persisted one manual prospect",
+      "observed": "UI match and explicit create persisted one manual prospect",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-C1",
+      "expected": "UI stage update persisted CONTACTADO",
+      "observed": "UI stage update persisted CONTACTADO",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-C2",
+      "expected": "UI displays real 400 then persists NO_APTO with a reason",
+      "observed": "UI displays real 400 then persists NO_APTO with a reason",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-C4",
+      "expected": "UI assigns an eligible member with PUT and unassigns with DELETE",
+      "observed": "UI assigns an eligible member with PUT and unassigns with DELETE",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-C3",
+      "expected": "UI correction appends a manual event and preserves the original",
+      "observed": "UI correction appends a manual event and preserves the original",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-P3-EDIT",
+      "expected": "UI warns about shared master edits and persists MASTER_UPDATED in the current campaign",
+      "observed": "UI warns about shared master edits and persists MASTER_UPDATED in the current campaign",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-P4",
+      "expected": "UI preview writes nothing; UI confirmation persists two CSV rows",
+      "observed": "UI preview writes nothing; UI confirmation persists two CSV rows",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-C8",
+      "expected": "UI renders one server snapshot with two manual activities including correction",
+      "observed": "UI renders one server snapshot with two manual activities including correction",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-P2-P3",
+      "expected": "Real contextual campaigns and provenance responses parse successfully",
+      "observed": "Real contextual campaigns and provenance responses parse successfully",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-C6",
+      "expected": "UI filter requests the server and renders one matching participation",
+      "observed": "UI filter requests the server and renders one matching participation",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-ROLES",
+      "expected": "MEMBER has no create/import actions and API rejects creation with 403",
+      "observed": "MEMBER has no create/import actions and API rejects creation with 403",
+      "status": "PASS"
+    },
+    {
+      "id": "T32-ISOLATION",
+      "expected": "Tenant switch immediately removes prior data and real foreign campaign returns 404",
+      "observed": "Tenant switch immediately removes prior data and real foreign campaign returns 404",
+      "status": "PASS"
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/select-tenant",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/campaigns",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/match",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/stage",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/evaluation",
+      "status": 400
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/evaluation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsible",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsible",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/participation",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/responsibles",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects/cmwvjwpja0044a5lr8dbyfq7x/activities",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x/provenance",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/preview",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/confirm",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/dashboard",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/dashboard",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/dashboard",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x/campaigns",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x/provenance",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x/campaigns",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x/provenance",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/select-tenant",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x/campaigns",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/prospects/cmwvjwpja0044a5lr8dbyfq7x/provenance",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/prospects/import/preview",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/select-tenant",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects",
+      "status": 404
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/campaigns/cmwvjwm820041a5lrqmevoia1/prospects",
+      "status": 404
+    }
+  ],
+  "status": "PASS",
+  "limitations": "Not a Chromium browser run. Disposable database is removed by Stop-Lab."
+}
