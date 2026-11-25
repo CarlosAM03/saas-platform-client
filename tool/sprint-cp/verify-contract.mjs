@@ -26,6 +26,6 @@ const report = {
   observed: {normalizedSha256: hash(served), paths: Object.keys(served.paths).length, schemas: Object.keys(served.components.schemas).length, verifiedOperations: operations.length},
   status: 'PASS', limitations: 'Contract equivalence verifies schema and documented operations, not every runtime semantic.'
 };
-fs.mkdirSync('codex/frontend-cp/evidencias', {recursive: true});
-fs.writeFileSync('codex/frontend-cp/evidencias/CONTRATO.json', JSON.stringify(report, null, 2) + '\n');
+fs.mkdirSync('codex/frontend-cp/.local/recibos', {recursive: true});
+fs.writeFileSync('codex/frontend-cp/.local/recibos/CONTRATO.json', JSON.stringify(report, null, 2) + '\n');
 console.log(`Contract PASS: ${report.observed.paths} paths, ${report.observed.schemas} schemas, ${operations.length} matrix operations`);
