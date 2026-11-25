@@ -201,6 +201,13 @@ class ApiClient {
     return response.data;
   }
 
+  Future<Object?> put(String path, {Object? data}) async {
+    final response = await _request(
+      () => _dio.put<Object?>(path, data: data, options: _options()),
+    );
+    return response.data;
+  }
+
   Future<Object?> delete(
     String path, {
     Map<String, dynamic>? queryParameters,

@@ -1,0 +1,23 @@
+PROMPT DE ACTIVACION - SPRINT CP FRONTEND (ANDRE)
+
+Contexto
+- Backend de referencia: rama feat/sprint-campana-prospector, SHA 3b5eec6fa99f846e853794fc8aedff2c4353c269.
+- Este paquete es el arnes contractual generado desde el contrato implementado y verificado, no desde el SPEC supuesto.
+- Estado: LISTO_PARA_REVISION. El owner decide cuando se usa y sobre que base Flutter.
+
+Instrucciones
+1. Lee completos, en este orden: 03_CONTRATO_IMPLEMENTADO.md, 02_MATRIZ_API_FLUTTER.csv, 04_OBJETIVOS_Y_FLUJOS.md, 05_REGLAS_FLUTTER_Y_PRUEBAS.md y 06_RUNBOOK_QA_SINTETICO.md.
+2. Respeta la arquitectura existente: UI -> Riverpod -> repositorio por feature -> lib/platform_api tipada -> ApiClient. No uses HTTP directo en widgets ni providers.
+3. Consume unicamente las operaciones marcadas AVAILABLE en la matriz. No inventes rutas, campos ni estados.
+4. Respeta sessionScope y el tenant contenido en el JWT. Cambiar de tenant exige select-tenant y reemplazar el token.
+5. No edites lib/app, lib/core/network, lib/routes ni lib/features/auth sin autorizacion puntual del owner. Si necesitas tocarlas, escala con alternativa y pruebas.
+6. Implementa los flujos de C1/C2/C3/C4/C6/C8/P1/P2/P3/P4 tal como se describen, incluyendo conflictos 409 con reintento de verificacion y errores 400 del servidor mostrados sin inventar mensajes.
+7. Recuerda: CORRECTION es actividad manual y se genera con correctsId; MASTER_UPDATE esta documentado pero no se emite; MASTER_UPDATED es procedencia global.
+8. Agrega pruebas de estado/widget, filtros y paginacion, roles (MEMBER sin alta ni importacion), aislamiento de sesion, errores 400/409, CSV y T32 UI->API real contra el backend sintetico del runbook. Los mocks solo para desarrollo visual y etiquetados.
+9. Registra evidencia por SHA (backend y frontend), fecha ISO, comando, fixture sintetico, esperado, observado y estado. No declares PASS sin ejecucion.
+10. No uses datos reales, secretos ni tokens en capturas o logs. No hagas merge, deploy ni push a ramas protegidas. Entrega PR Flutter para revision del owner.
+
+Entregable esperado
+- Implementacion Flutter de los flujos listados sobre el contrato del SHA indicado.
+- Suite de pruebas y evidencia de T32 contra el entorno sintetico.
+- Resumen de archivos tocados, brechas encontradas y riesgos abiertos.

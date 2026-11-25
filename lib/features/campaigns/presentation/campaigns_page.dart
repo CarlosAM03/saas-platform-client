@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../platform_api/campaign_participation_models.dart';
 import '../../../platform_api/platform_api.dart';
 import '../../../shared/widgets/feature_widgets.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../state/campaigns_providers.dart';
 import '../widgets/campaign_catalog.dart';
+import 'campaign_dashboard_panel.dart';
+import 'campaign_prospects_panel.dart';
 
 class CampaignsPage extends ConsumerStatefulWidget {
   const CampaignsPage({super.key});
@@ -97,45 +100,70 @@ class CampaignDetailPage extends ConsumerWidget {
         value: ref.watch(campaignsDetailProvider(id)),
         retry: () => ref.invalidate(campaignsDetailProvider(id)),
         data: (c) => DefaultTabController(
-          length: 2,
-          child: Column(
+          length: 3,
+          child: _CampaignDetailTabs(
+            c,
+            key: ValueKey((id, ref.watch(sessionScopeProvider))),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CampaignDetailTabs extends StatefulWidget {
+  const _CampaignDetailTabs(this.campaign, {super.key});
+
+  final Campaign campaign;
+
+  @override
+  State<_CampaignDetailTabs> createState() => _CampaignDetailTabsState();
+}
+
+class _CampaignDetailTabsState extends State<_CampaignDetailTabs> {
+  CampaignProspectFilters? _summaryFilters;
+
+  void _showProspects(CampaignProspectFilters filters) {
+    setState(() => _summaryFilters = filters);
+    DefaultTabController.of(context).animateTo(1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final campaign = widget.campaign;
+    return Column(
+      children: [
+        const TabBar(
+          tabs: [
+            Tab(text: 'Detalle'),
+            Tab(text: 'Prospectos'),
+            Tab(text: 'Resumen comercial'),
+          ],
+        ),
+        Expanded(
+          child: TabBarView(
             children: [
-              const TabBar(
-                tabs: [
-                  Tab(text: 'Detalle'),
-                  Tab(text: 'Prospectos'),
+              ListView(
+                children: [
+                  Text(campaign.name),
+                  if (campaign.description != null) Text(campaign.description!),
+                  Text(campaign.status.name),
+                  Text('Creada: ${campaign.createdAt.toLocal()}'),
+                  Text('Actualizada: ${campaign.updatedAt.toLocal()}'),
                 ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    ListView(
-                      children: [
-                        Text(c.name),
-                        if (c.description != null) Text(c.description!),
-                        Text(c.status.name),
-                        Text('Creada: ${c.createdAt.toLocal()}'),
-                        Text('Actualizada: ${c.updatedAt.toLocal()}'),
-                      ],
-                    ),
-                    PagedList<Prospect>(
-                      load: (ref, key) => ref.watch(
-                        campaignProspectsProvider((id: id, query: key)),
-                      ),
-                      refresh: () => ref.invalidate(campaignProspectsProvider),
-                      item: (p) => ListTile(
-                        title: Text(p.name),
-                        subtitle: Text('${p.source.name} · ${p.status.name}'),
-                        onTap: () => context.go('/prospects/${p.id}'),
-                      ),
-                    ),
-                  ],
-                ),
+              CampaignProspectsPanel(
+                campaign.id,
+                initialFilters: _summaryFilters,
+              ),
+              CampaignDashboardPanel(
+                campaign.id,
+                onShowProspects: _showProspects,
               ),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -11,6 +11,12 @@ import '../../../shared/widgets/beta_components.dart' show emailField;
 import '../../auth/state/tenant_permissions.dart';
 import '../../campaigns/state/campaigns_providers.dart';
 import '../state/prospects_providers.dart';
+import '../state/prospect_context_providers.dart';
+import '../../../platform_api/prospect_context_api.dart';
+import '../../campaigns/state/participation_providers.dart';
+import 'prospect_context_panel.dart';
+import 'prospect_match_dialog.dart';
+import '../../campaigns/presentation/participation_panel.dart';
 
 class ProspectsPage extends ConsumerWidget {
   const ProspectsPage({this.campaignId, super.key});
@@ -117,6 +123,7 @@ class ProspectDetailPage extends ConsumerWidget {
             ),
             Text('Creado: ${p.createdAt.toLocal()}'),
             Text('Actualizado: ${p.updatedAt.toLocal()}'),
+            ProspectContextPanel(id),
             if (p.metadata != null)
               SelectableText(
                 const JsonEncoder.withIndent('  ').convert(p.metadata),
@@ -180,8 +187,15 @@ UpdateProspectRequest prospectUpdate(Prospect p, Map<String, String> values) {
 }
 
 class ProspectFormPage extends ConsumerStatefulWidget {
-  const ProspectFormPage({this.id, super.key});
+  const ProspectFormPage({
+    this.id,
+    this.contextCampaignId,
+    this.onSaved,
+    super.key,
+  });
   final String? id;
+  final String? contextCampaignId;
+  final VoidCallback? onSaved;
   @override
   ConsumerState<ProspectFormPage> createState() => _ProspectFormPageState();
 }
@@ -236,6 +250,10 @@ class _ProspectFormPageState extends ConsumerState<ProspectFormPage> {
           ),
         Expanded(
           child: EntityEditor(
+            errorBuilder: (error) => ParticipationError(error),
+            notice: p == null
+                ? null
+                : 'Este maestro se comparte entre todas sus campañas.',
             key: ValueKey(p?.id ?? 'new'),
             fields: [
               EditorField(
@@ -244,6 +262,11 @@ class _ProspectFormPageState extends ConsumerState<ProspectFormPage> {
                 initial: p?.name ?? '',
                 required: true,
               ),
+              if (p == null)
+                const EditorField(
+                  'identityIdentifier',
+                  'Identificador Google Maps (opcional)',
+                ),
               for (final entry in prospectFieldLabels.entries)
                 EditorField(
                   entry.key,
@@ -265,6 +288,7 @@ class _ProspectFormPageState extends ConsumerState<ProspectFormPage> {
               ),
             ],
             save: (v) async {
+              final scope = ref.read(sessionScopeProvider);
               final repo = ref.read(prospectsRepositoryProvider);
               late Prospect result;
               if (p == null) {
@@ -277,19 +301,28 @@ class _ProspectFormPageState extends ConsumerState<ProspectFormPage> {
                 FieldUpdate<String> field(String key) => v[key]!.isEmpty
                     ? const FieldUpdate.omitted()
                     : FieldUpdate.set(v[key]);
-                result = await repo.create(
-                  CreateProspectRequest(
-                    campaignId: selected!.id,
-                    name: v['name']!.trim(),
-                    category: field('category'),
-                    address: field('address'),
-                    phone: field('phone'),
-                    email: field('email'),
-                    website: field('website'),
-                    language: field('language'),
-                    status: ProspectStatus.values.byName(v['status']!),
+                final created = await verifyAndCreateProspect(
+                  context,
+                  ref,
+                  ProspectIntakeRequest(
+                    CreateProspectRequest(
+                      campaignId: selected!.id,
+                      name: v['name']!.trim(),
+                      category: field('category'),
+                      address: field('address'),
+                      phone: field('phone'),
+                      email: field('email'),
+                      website: field('website'),
+                      language: field('language'),
+                      status: ProspectStatus.values.byName(v['status']!),
+                    ),
+                    identityIdentifier: v['identityIdentifier']!.trim().isEmpty
+                        ? null
+                        : v['identityIdentifier']!.trim(),
                   ),
                 );
+                if (created == null) return;
+                result = created;
               } else {
                 final request = prospectUpdate(p, v);
                 final changed =
@@ -297,16 +330,45 @@ class _ProspectFormPageState extends ConsumerState<ProspectFormPage> {
                     v['status'] != p.status.name ||
                     originals.entries.any((e) => v[e.key] != (e.value ?? ''));
                 if (!changed) {
-                  if (context.mounted) context.go('/prospects/${p.id}');
+                  if (context.mounted) {
+                    if (widget.onSaved != null) {
+                      widget.onSaved!();
+                    } else {
+                      context.go('/prospects/${p.id}');
+                    }
+                  }
                   return;
                 }
-                result = await repo.update(p.id, request);
+                if (!await confirmAction(
+                  context,
+                  'Los cambios del maestro se verán en todas sus campañas. ¿Continuar?',
+                )) {
+                  return;
+                }
+                if (!mounted || scope != ref.read(sessionScopeProvider)) return;
+                result = widget.contextCampaignId == null
+                    ? await repo.update(p.id, request)
+                    : await ref
+                          .read(prospectContextRepositoryProvider)
+                          .update(
+                            p.id,
+                            request,
+                            contextCampaignId: widget.contextCampaignId,
+                          );
               }
-              if (!mounted) return;
+              if (!mounted || scope != ref.read(sessionScopeProvider)) return;
               ref.invalidate(prospectsListProvider);
               ref.invalidate(prospectsDetailProvider(result.id));
               ref.invalidate(campaignProspectsProvider);
-              context.go('/prospects/${result.id}');
+              ref.invalidate(filteredCampaignProspectsProvider);
+              ref.invalidate(campaignDashboardProvider);
+              ref.invalidate(associatedCampaignsProvider);
+              ref.invalidate(prospectProvenanceProvider);
+              if (widget.onSaved != null) {
+                widget.onSaved!();
+              } else {
+                context.go('/prospects/${result.id}');
+              }
             },
           ),
         ),

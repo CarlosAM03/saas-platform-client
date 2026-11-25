@@ -19,6 +19,9 @@ import 'feature_fixtures.dart';
 import 'users_fixtures.dart';
 import 'campaigns_fixtures.dart';
 import 'prospects_fixtures.dart';
+import '../cp/cp_fixtures.dart';
+import 'package:saas_platform_client/features/campaigns/state/participation_providers.dart';
+import 'package:saas_platform_client/features/prospects/state/prospect_context_providers.dart';
 import 'tenants_fixtures.dart';
 
 Future<void> save(WidgetTester tester) async {
@@ -94,6 +97,9 @@ void main() {
           tenantsRepositoryProvider.overrideWithValue(FakeTenants()),
           usersRepositoryProvider.overrideWithValue(FakeUsers()),
           campaignsRepositoryProvider.overrideWithValue(FakeCampaigns()),
+          participationRepositoryProvider.overrideWithValue(
+            FakeParticipation(),
+          ),
           prospectsRepositoryProvider.overrideWithValue(FakeProspects()),
           dashboardProvider.overrideWith(
             (ref) async => DashboardData(
@@ -339,6 +345,9 @@ void main() {
         overrides: [
           authControllerProvider.overrideWith(FeatureAuthController.new),
           prospectsRepositoryProvider.overrideWithValue(repo),
+          prospectContextRepositoryProvider.overrideWithValue(
+            FakeProspectContext(repo),
+          ),
           campaignsRepositoryProvider.overrideWithValue(FakeCampaigns()),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>
@@ -355,6 +364,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextFormField).first, 'Manual A');
     await save(tester);
+    await tester.tap(find.text('Crear prospecto').last);
+    await tester.pumpAndSettle();
     expect(repo.creates, 1);
     expect(repo.payload, {
       'campaignId': entityId,
@@ -402,6 +413,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextFormField).at(3), '');
     await save(tester);
+    await tester.tap(find.text('Confirmar').last);
+    await tester.pumpAndSettle();
     expect(repo.payload, {'phone': null});
     expect(find.text('saved'), findsOneWidget);
   });

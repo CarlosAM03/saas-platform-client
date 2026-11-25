@@ -1,0 +1,41 @@
+{
+  "date": "2026-11-25T03:19:48.6054970Z",
+  "frontendSha": "e78b82a32d3afe185b69c2643455034e52ba57f6",
+  "backendSha": "779fc7885faefdfe9e3cb0f3fee86810d96d2711",
+  "fixture": "Synthetic unit/widget fixtures and isolated CP PostgreSQL16",
+  "flutter": "3.41.6",
+  "dart": "3.11.4",
+  "commands": [
+    {
+      "command": "flutter test --no-pub --reporter expanded",
+      "expected": "All baseline and CP tests pass",
+      "observed": "334 passed, 1 browser-only test skipped",
+      "status": "PASS"
+    },
+    {
+      "command": "flutter test --no-pub tool/sprint-cp/t32_real_api_test.dart --dart-define=CP_REAL_API=true --reporter expanded",
+      "expected": "UI to real API and PostgreSQL synthetic walkthrough",
+      "observed": "12 cases PASS, one test PASS",
+      "status": "PASS"
+    },
+    {
+      "command": "flutter build web --release --no-pub --no-wasm-dry-run --dart-define=API_BASE_URL=https://api.example.invalid",
+      "expected": "Web release builds",
+      "observed": "Built build/web in 56.6s",
+      "status": "PASS"
+    },
+    {
+      "command": "flutter analyze --no-pub",
+      "expected": "No issues",
+      "observed": "No issues found in 4.3s",
+      "status": "PASS"
+    },
+    {
+      "command": "flutter test --no-pub --platform chrome test/adr006/web_history_test.dart --reporter expanded",
+      "expected": "Browser history test executes",
+      "observed": "Local runner remained at loading; stopped before test started",
+      "status": "NOT_RUN"
+    }
+  ],
+  "limitations": "Local SDK differs from CI SDK 3.47.5. Lockfile unchanged. No full Chromium CP UI run; real widget HTTP/PG run recorded separately."
+}

@@ -333,11 +333,13 @@ class EntityEditor extends StatefulWidget {
     required this.fields,
     required this.save,
     this.notice,
+    this.errorBuilder,
     super.key,
   });
   final List<EditorField> fields;
   final Future<void> Function(Map<String, String>) save;
   final String? notice;
+  final Widget Function(Object)? errorBuilder;
   @override
   State<EntityEditor> createState() => _EntityEditorState();
 }
@@ -403,7 +405,8 @@ class _EntityEditorState extends State<EntityEditor> {
                                   },
                           ),
                   ),
-                if (error != null) ErrorView(error!),
+                if (error != null)
+                  widget.errorBuilder?.call(error!) ?? ErrorView(error!),
                 FilledButton(
                   onPressed: saving
                       ? null
