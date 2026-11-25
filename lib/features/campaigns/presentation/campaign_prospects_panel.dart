@@ -7,6 +7,7 @@ import '../../../platform_api/platform_api.dart'
 import '../../../shared/widgets/session_dialog.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../state/participation_providers.dart';
+import 'commercial_stage_labels.dart';
 import 'participation_panel.dart';
 
 class CampaignProspectsPanel extends ConsumerWidget {
@@ -130,7 +131,7 @@ class _CampaignProspectsListState
                           child: Text('Todas las etapas'),
                         ),
                         for (final s in CommercialStage.values)
-                          DropdownMenuItem(value: s, child: Text(s.name)),
+                          DropdownMenuItem(value: s, child: Text(s.label)),
                       ],
                       onChanged: (s) => setState(() => stage = s),
                     ),
@@ -254,7 +255,7 @@ class _CampaignProspectsListState
                                 child: ListTile(
                                   title: Text(row.prospect.name),
                                   subtitle: Text(
-                                    '${row.prospect.category ?? ''} · ${row.prospect.email ?? ''}\nEstado del maestro: ${row.prospect.status.name}\nEtapa comercial: ${row.participation.stage.name} · Evaluación: ${row.participation.evaluation.name}\nResponsable: ${row.participation.responsible?.name ?? 'Sin asignar'}${row.participation.responsible?.eligible == false ? ' (pendiente de reasignación)' : ''}',
+                                    '${row.prospect.category ?? ''} · ${row.prospect.email ?? ''}\nEstado del maestro: ${row.prospect.status.name}\nEtapa comercial: ${row.participation.stage.label} · Evaluación: ${row.participation.evaluation.name}\nResponsable: ${row.participation.responsible?.name ?? 'Sin asignar'}${row.participation.responsible?.eligible == false ? ' (pendiente de reasignación)' : ''}',
                                   ),
                                   isThreeLine: true,
                                   onTap: () => showSessionDialog<void>(

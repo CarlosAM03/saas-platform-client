@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../auth/state/tenant_permissions.dart';
+import '../../campaigns/presentation/commercial_stage_labels.dart';
 import '../../campaigns/presentation/participation_panel.dart';
 import '../state/prospect_context_providers.dart';
 
@@ -43,7 +44,7 @@ class _ProspectContextState extends ConsumerState<_ProspectContext> {
                 ListTile(
                   title: Text('${c.name}${c.isOrigin ? ' · Origen' : ''}'),
                   subtitle: Text(
-                    '${c.status.name} · ${c.stage.name} · ${c.evaluation.name}\nResponsable: ${c.responsible?.name ?? 'Sin asignar'}${c.responsible?.eligible == false ? ' (pendiente de reasignación)' : ''}\nIncorporación: ${c.addedAt.toLocal()}\nÚltima actividad: ${c.latestActivity?.content ?? c.latestActivity?.type.name ?? 'Sin actividad'}',
+                    '${c.status.name} · ${c.stage.label} · ${c.evaluation.name}\nResponsable: ${c.responsible?.name ?? 'Sin asignar'}${c.responsible?.eligible == false ? ' (pendiente de reasignación)' : ''}\nIncorporación: ${c.addedAt.toLocal()}\nÚltima actividad: ${c.latestActivity?.content ?? c.latestActivity?.type.name ?? 'Sin actividad'}',
                   ),
                   onTap: () => context.go('/campaigns/${c.id}'),
                 ),

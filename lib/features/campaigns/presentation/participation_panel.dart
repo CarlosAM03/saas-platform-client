@@ -8,6 +8,14 @@ import '../../../shared/widgets/session_dialog.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../state/participation_providers.dart';
 import '../../prospects/presentation/prospects_page.dart';
+import 'commercial_stage_labels.dart';
+
+String _activityValue(CampaignActivity activity, String? value) {
+  if (value == null) return '';
+  return activity.type == CampaignActivityType.STAGE_CHANGE
+      ? commercialStageLabelForCode(value)
+      : value;
+}
 
 class ParticipationError extends StatelessWidget {
   const ParticipationError(this.error, {this.retry, super.key});
@@ -96,7 +104,10 @@ class CampaignDashboardPanel extends ConsumerWidget {
           const Text('Esta campaña todavía no tiene participaciones.'),
         const Text('Etapas comerciales'),
         for (final e in d.stages.entries)
-          ListTile(title: Text(e.key), trailing: Text('${e.value}')),
+          ListTile(
+            title: Text(commercialStageLabelForCode(e.key)),
+            trailing: Text('${e.value}'),
+          ),
         const Text('Evaluaciones'),
         for (final e in d.evaluations.entries)
           ListTile(title: Text(e.key), trailing: Text('${e.value}')),
@@ -265,11 +276,11 @@ class _ParticipationPanelState extends ConsumerState<ParticipationPanel> {
     retry: refresh,
     data: (p) => ListView(
       children: [
-        Text('Etapa comercial: ${p.stage.name}'),
+        Text('Etapa comercial: ${p.stage.label}'),
         DropdownButton<CommercialStage>(
           value: p.stage,
           items: CommercialStage.values
-              .map((s) => DropdownMenuItem(value: s, child: Text(s.name)))
+              .map((s) => DropdownMenuItem(value: s, child: Text(s.label)))
               .toList(),
           onChanged: busy
               ? null
@@ -371,7 +382,7 @@ class _ParticipationPanelState extends ConsumerState<ParticipationPanel> {
                     '${a.isManual ? 'Declaración humana' : 'Evento automático'} · ${a.type.name}',
                   ),
                   subtitle: Text(
-                    '${a.content ?? '${a.previousValue ?? ''} → ${a.newValue ?? ''}'}\nAutor: ${a.actorName ?? 'Sistema'}\nRegistro: ${a.recordedAt.toLocal()}${a.declaredAt == null ? '' : '\nDeclarada: ${a.declaredAt!.toLocal()}'}${a.correctsId == null ? '' : '\nCorrige: ${a.correctsId}'}${a.reason == null ? '' : '\nMotivo: ${a.reason}'}',
+                    '${a.content ?? '${_activityValue(a, a.previousValue)} → ${_activityValue(a, a.newValue)}'}\nAutor: ${a.actorName ?? 'Sistema'}\nRegistro: ${a.recordedAt.toLocal()}${a.declaredAt == null ? '' : '\nDeclarada: ${a.declaredAt!.toLocal()}'}${a.correctsId == null ? '' : '\nCorrige: ${a.correctsId}'}${a.reason == null ? '' : '\nMotivo: ${a.reason}'}',
                   ),
                   trailing: a.isManual
                       ? TextButton(

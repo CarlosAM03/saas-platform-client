@@ -274,11 +274,11 @@ void main() {
 
         final key = (campaign: campaign.id, prospect: prospect.id);
         await mount(ParticipationPanel(key));
-        await waitFor(tester, find.text('Etapa comercial: SIN_GESTIONAR'));
+        await waitFor(tester, find.text('Etapa comercial: Sin gestionar'));
         await tap(tester, find.byType(DropdownButton<CommercialStage>));
         await settle(tester);
-        await tap(tester, find.text('CONTACTADO').last);
-        await waitFor(tester, find.text('Etapa comercial: CONTACTADO'));
+        await tap(tester, find.text('Contactado').last);
+        await waitFor(tester, find.text('Etapa comercial: Contactado'));
         expect(
           (await real(tester, () => cp.get(campaign.id, prospect.id))).stage,
           CommercialStage.CONTACTADO,
