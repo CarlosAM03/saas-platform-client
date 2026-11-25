@@ -5,7 +5,7 @@ import '../../../platform_api/platform_api.dart';
 import '../../../shared/widgets/feature_widgets.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../state/campaigns_providers.dart';
-import '../widgets/campaign_card.dart';
+import '../widgets/campaign_catalog.dart';
 
 class CampaignsPage extends ConsumerStatefulWidget {
   const CampaignsPage({super.key});
@@ -35,26 +35,20 @@ class _CampaignsState extends ConsumerState<CampaignsPage> {
         if (status != null)
           const Text('El filtro de estado se aplica a la página actual.'),
         if (p?.canManageCampaigns == true)
-          FilledButton(
+          FilledButton.icon(
             onPressed: () => context.go('/campaigns/new'),
-            child: const Text('Crear campaña'),
+            icon: const Icon(Icons.add),
+            label: const Text('Crear campaña'),
           ),
       ],
       child: PagedList<Campaign>(
         filter: (campaign) => status == null || campaign.status == status,
-        pageContent: (items) => CampaignCards(
+        pageContent: (items) => CampaignCatalog(
           campaigns: items,
           onSelected: (campaign) => context.go('/campaigns/${campaign.id}'),
         ),
         load: (ref, key) => ref.watch(campaignsListProvider(key)),
         refresh: () => ref.invalidate(campaignsListProvider),
-        item: (c) => Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: CampaignCard(
-            campaign: c,
-            onTap: () => context.go('/campaigns/${c.id}'),
-          ),
-        ),
       ),
     );
   }

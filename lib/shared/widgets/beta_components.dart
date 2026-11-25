@@ -55,15 +55,19 @@ class Surface extends StatelessWidget {
   final Widget child;
   final double padding;
   @override
-  Widget build(BuildContext context) => Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(padding),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: const Color(0xFFE2E8F0)),
-            borderRadius: BorderRadius.circular(12)),
-        child: child,
-      );
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(padding),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        border: Border.all(color: colors.outlineVariant),
+        borderRadius: BorderRadius.circular(2),
+      ),
+      child: child,
+    );
+  }
 }
 
 class StatusBadge extends StatelessWidget {

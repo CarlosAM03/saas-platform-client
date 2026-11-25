@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/errors/error_mapper.dart';
 import '../../../platform_api/platform_api.dart';
 import '../../../shared/services/file_service.dart';
+import '../../../shared/widgets/beta_components.dart' show dateLabel;
+import '../../../shared/widgets/catalog_list.dart';
 import '../../../shared/widgets/feature_widgets.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../../campaigns/state/campaigns_providers.dart';
@@ -19,6 +21,14 @@ const jobStatusLabels = {
   ProspectingJobStatus.COMPLETED: 'Completado',
   ProspectingJobStatus.FAILED: 'Fallido',
   ProspectingJobStatus.CANCELLED: 'Cancelado',
+};
+
+CatalogTagTone _jobStatusTone(ProspectingJobStatus status) => switch (status) {
+  ProspectingJobStatus.QUEUED => CatalogTagTone.paused,
+  ProspectingJobStatus.RUNNING => CatalogTagTone.info,
+  ProspectingJobStatus.COMPLETED => CatalogTagTone.positive,
+  ProspectingJobStatus.FAILED => CatalogTagTone.error,
+  ProspectingJobStatus.CANCELLED => CatalogTagTone.neutral,
 };
 
 class JobsPage extends ConsumerStatefulWidget {
@@ -69,17 +79,28 @@ class _JobsState extends ConsumerState<JobsPage> {
                     )
                   : ListView(
                       children: [
-                        for (final job in page.items)
-                          Card(
-                            child: ListTile(
-                              title: Text('Trabajo ${job.id}'),
-                              subtitle: Text(
-                                'Creado: ${job.createdAt.toLocal()}',
+                        CatalogList(
+                          windowTitle: 'Historial de trabajos',
+                          titleLabel: 'Trabajo',
+                          columns: const ['Estado', 'Creado'],
+                          records: [
+                            for (final job in page.items)
+                              CatalogRecord(
+                                title: 'Trabajo ${job.id}',
+                                cells: [
+                                  CatalogTag(
+                                    jobStatusLabels[job.status]!,
+                                    tone: _jobStatusTone(job.status),
+                                  ),
+                                  Text(
+                                    '${dateLabel(job.createdAt)} · '
+                                    '${TimeOfDay.fromDateTime(job.createdAt.toLocal()).format(context)}',
+                                  ),
+                                ],
+                                open: () => context.go('/jobs/${job.id}'),
                               ),
-                              trailing: Text(jobStatusLabels[job.status]!),
-                              onTap: () => context.go('/jobs/${job.id}'),
-                            ),
-                          ),
+                          ],
+                        ),
                       ],
                     ),
             ),

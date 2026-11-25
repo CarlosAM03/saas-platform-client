@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../platform_api/platform_api.dart';
+import '../../../shared/widgets/catalog_list.dart';
 
 class CampaignStatusBadge extends StatelessWidget {
   const CampaignStatusBadge(this.status, {super.key});
@@ -8,25 +9,12 @@ class CampaignStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (label, color) = switch (status) {
-      CampaignStatus.ACTIVA => ('Activa', const Color(0xFF16A34A)),
-      CampaignStatus.PAUSADA => ('Pausada', const Color(0xFFD97706)),
-      CampaignStatus.COMPLETADA => ('Completada', const Color(0xFF2563EB)),
-      CampaignStatus.ARCHIVADA => ('Archivada', const Color(0xFF64748B)),
+    final (label, tone) = switch (status) {
+      CampaignStatus.ACTIVA => ('Activa', CatalogTagTone.positive),
+      CampaignStatus.PAUSADA => ('Pausada', CatalogTagTone.paused),
+      CampaignStatus.COMPLETADA => ('Completada', CatalogTagTone.info),
+      CampaignStatus.ARCHIVADA => ('Archivada', CatalogTagTone.neutral),
     };
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.circle, size: 10, color: color),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: color,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
+    return CatalogTag(label, tone: tone);
   }
 }

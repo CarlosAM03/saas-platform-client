@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/app_providers.dart';
+import '../core/theme/catalog_palette.dart';
 import '../features/admin/presentation/admin_page.dart';
 import '../features/tenants/presentation/tenants_pages.dart';
 import '../features/users/presentation/users_pages.dart';
@@ -223,17 +224,24 @@ class AppShell extends ConsumerWidget {
   const AppShell({required this.child, super.key});
   final Widget child;
 
+  static const _destinations = [
+    (path: '/dashboard', label: 'Dashboard', icon: Icons.dashboard_outlined),
+    (path: '/campaigns', label: 'Campañas', icon: Icons.campaign_outlined),
+    (path: '/prospects', label: 'Prospectos', icon: Icons.people_outline),
+    (path: '/jobs', label: 'Trabajos', icon: Icons.work_outline),
+  ];
+
+  static const _selectionShape = RoundedRectangleBorder(
+    side: BorderSide(color: CatalogPalette.outlineStrong),
+  );
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.path;
-    final destinations = const [
-      '/dashboard',
-      '/campaigns',
-      '/prospects',
-      '/jobs',
-    ];
-    final rawIndex = destinations.indexWhere(
-      (root) => location == root || location.startsWith('$root/'),
+    final rawIndex = _destinations.indexWhere(
+      (destination) =>
+          location == destination.path ||
+          location.startsWith('${destination.path}/'),
     );
     final index = rawIndex < 0 ? 0 : rawIndex;
     final wideLayout = MediaQuery.sizeOf(context).width >= 700;
@@ -241,28 +249,100 @@ class AppShell extends ConsumerWidget {
     final organization = tenantId == null
         ? null
         : ref.watch(tenantDetailProvider(tenantId)).asData?.value;
+    final organizationName = tenantId == null
+        ? null
+        : organization?.name ?? 'Organización seleccionada';
+
+    void navigate(int destinationIndex) =>
+        context.go(_destinations[destinationIndex].path);
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        backgroundColor: CatalogPalette.cobalt,
+        foregroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+        shape: const Border(
+          bottom: BorderSide(color: CatalogPalette.cobaltDark),
+        ),
+        toolbarHeight: 64,
+        leadingWidth: 48,
+        titleSpacing: 6,
+        title: Row(
           children: [
-            const Text('PROSPECTOR'),
-            if (tenantId != null)
-              Text(
-                organization?.name ?? 'Organización seleccionada',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodySmall,
+            Container(
+              width: 30,
+              height: 30,
+              decoration: const BoxDecoration(
+                color: CatalogPalette.lime,
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(2, 2),
+                    color: CatalogPalette.cobaltDark,
+                  ),
+                ],
               ),
+              child: const Icon(
+                Icons.grid_on_rounded,
+                size: 17,
+                color: CatalogPalette.cobaltDark,
+              ),
+            ),
+            const SizedBox(width: 9),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'PROSPECTOR',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.15,
+                    ),
+                  ),
+                  if (!wideLayout && organizationName != null)
+                    Text(
+                      organizationName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ],
         ),
         actions: [
-          IconButton(
-            tooltip: 'Cambiar organización',
-            onPressed: () => context.go('/change-tenant'),
-            icon: const Icon(Icons.business_outlined),
-          ),
+          if (wideLayout && organizationName != null)
+            Tooltip(
+              message: 'Cambiar organización',
+              child: TextButton.icon(
+                onPressed: () => context.go('/change-tenant'),
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
+                icon: const Icon(Icons.business_outlined, size: 19),
+                label: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 200),
+                  child: Text(
+                    organizationName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            )
+          else
+            IconButton(
+              tooltip: 'Cambiar organización',
+              onPressed: () => context.go('/change-tenant'),
+              icon: const Icon(Icons.business_outlined),
+            ),
           IconButton(
             tooltip: 'Cerrar sesión',
             onPressed: () => ref.read(authControllerProvider.notifier).logout(),
@@ -273,54 +353,100 @@ class AppShell extends ConsumerWidget {
       body: wideLayout
           ? Row(
               children: [
-                NavigationRail(
-                  selectedIndex: index,
-                  onDestinationSelected: (value) =>
-                      context.go(destinations[value]),
-                  destinations: const [
-                    NavigationRailDestination(
-                      icon: Icon(Icons.dashboard_outlined),
-                      label: Text('Dashboard'),
+                DecoratedBox(
+                  position: DecorationPosition.foreground,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      right: BorderSide(color: CatalogPalette.outline),
                     ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.campaign_outlined),
-                      label: Text('Campañas'),
+                  ),
+                  child: NavigationRail(
+                    selectedIndex: index,
+                    onDestinationSelected: navigate,
+                    extended: true,
+                    scrollable: true,
+                    labelType: NavigationRailLabelType.none,
+                    minWidth: 56,
+                    minExtendedWidth: 156,
+                    backgroundColor: CatalogPalette.rail,
+                    useIndicator: true,
+                    indicatorColor: CatalogPalette.lime,
+                    indicatorShape: _selectionShape,
+                    selectedIconTheme: const IconThemeData(
+                      color: CatalogPalette.cobaltDark,
+                      size: 20,
                     ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.people_outline),
-                      label: Text('Prospectos'),
+                    unselectedIconTheme: const IconThemeData(
+                      color: CatalogPalette.muted,
+                      size: 20,
                     ),
-                    NavigationRailDestination(
-                      icon: Icon(Icons.work_outline),
-                      label: Text('Trabajos'),
+                    selectedLabelTextStyle: const TextStyle(
+                      color: CatalogPalette.cobaltDark,
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
                     ),
-                  ],
+                    unselectedLabelTextStyle: const TextStyle(
+                      color: CatalogPalette.ink,
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    destinations: [
+                      for (final destination in _destinations)
+                        NavigationRailDestination(
+                          icon: Icon(destination.icon),
+                          label: Text(destination.label),
+                        ),
+                    ],
+                  ),
                 ),
                 Expanded(child: child),
               ],
             )
           : child,
       drawer: Drawer(
+        backgroundColor: CatalogPalette.rail,
+        surfaceTintColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(),
         child: ListView(
           children: [
-            const DrawerHeader(child: Text('Cuenta')),
+            const DrawerHeader(
+              decoration: BoxDecoration(color: CatalogPalette.cobalt),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  'Cuenta',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
             ListTile(
+              leading: const Icon(Icons.travel_explore),
               title: const Text('Buscar prospectos'),
               onTap: () => context.go('/generate'),
             ),
             ListTile(
+              leading: const Icon(Icons.business_outlined),
               title: const Text('Organizaciones'),
               onTap: () => context.go('/tenants'),
             ),
             ListTile(
+              leading: const Icon(Icons.people_outline),
               title: const Text('Usuarios'),
               onTap: () => context.go('/users'),
             ),
             ListTile(
+              leading: const Icon(Icons.person_outline),
               title: const Text('Perfil'),
               onTap: () => context.go('/profile'),
             ),
             ListTile(
+              leading: const Icon(Icons.logout),
               title: const Text('Cerrar sesión'),
               onTap: () => ref.read(authControllerProvider.notifier).logout(),
             ),
@@ -329,27 +455,49 @@ class AppShell extends ConsumerWidget {
       ),
       bottomNavigationBar: wideLayout
           ? null
-          : NavigationBar(
-              selectedIndex: index,
-              onDestinationSelected: (value) => context.go(destinations[value]),
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.dashboard_outlined),
-                  label: 'Dashboard',
+          : DecoratedBox(
+              position: DecorationPosition.foreground,
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: CatalogPalette.outline)),
+              ),
+              child: NavigationBarTheme(
+                data: NavigationBarThemeData(
+                  labelTextStyle: WidgetStateProperty.resolveWith(
+                    (states) => TextStyle(
+                      fontSize: 11,
+                      fontWeight: states.contains(WidgetState.selected)
+                          ? FontWeight.w700
+                          : FontWeight.w500,
+                      color: CatalogPalette.ink,
+                    ),
+                  ),
+                  iconTheme: WidgetStateProperty.resolveWith(
+                    (states) => IconThemeData(
+                      size: 20,
+                      color: states.contains(WidgetState.selected)
+                          ? CatalogPalette.cobaltDark
+                          : CatalogPalette.muted,
+                    ),
+                  ),
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.campaign_outlined),
-                  label: 'Campañas',
+                child: NavigationBar(
+                  selectedIndex: index,
+                  onDestinationSelected: navigate,
+                  height: 64,
+                  backgroundColor: CatalogPalette.rail,
+                  surfaceTintColor: Colors.transparent,
+                  elevation: 0,
+                  indicatorColor: CatalogPalette.lime,
+                  indicatorShape: _selectionShape,
+                  destinations: [
+                    for (final destination in _destinations)
+                      NavigationDestination(
+                        icon: Icon(destination.icon),
+                        label: destination.label,
+                      ),
+                  ],
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.people_outline),
-                  label: 'Prospectos',
-                ),
-                NavigationDestination(
-                  icon: Icon(Icons.work_outline),
-                  label: 'Trabajos',
-                ),
-              ],
+              ),
             ),
     );
   }

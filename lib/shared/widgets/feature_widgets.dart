@@ -17,17 +17,30 @@ class FeaturePage extends StatelessWidget {
   final List<Widget> actions;
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(16),
+    padding: EdgeInsets.all(MediaQuery.sizeOf(context).width < 600 ? 16 : 24),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Wrap(
-          spacing: 12,
+          spacing: 16,
           runSpacing: 8,
+          alignment: WrapAlignment.spaceBetween,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Text(title, style: Theme.of(context).textTheme.headlineSmall),
-            ...actions,
+            Semantics(
+              header: true,
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+            ),
+            if (actions.isNotEmpty)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: actions,
+              ),
           ],
         ),
         const SizedBox(height: 16),
@@ -110,8 +123,8 @@ PaginationQuery pageQuery(PageKey key) => PaginationQuery(
 class PagedList<T> extends ConsumerStatefulWidget {
   const PagedList({
     required this.load,
-    required this.item,
     required this.refresh,
+    this.item,
     this.filter,
     this.pageContent,
     this.sorts = const [
@@ -121,9 +134,9 @@ class PagedList<T> extends ConsumerStatefulWidget {
       SortField.updatedAt,
     ],
     super.key,
-  });
+  }) : assert(item != null || pageContent != null);
   final AsyncValue<PaginatedResult<T>> Function(WidgetRef, PageKey) load;
-  final Widget Function(T) item;
+  final Widget Function(T)? item;
   final VoidCallback refresh;
   final List<SortField> sorts;
   final bool Function(T)? filter;
@@ -151,17 +164,32 @@ class _PagedListState<T> extends ConsumerState<PagedList<T>> {
     final value = widget.load(ref, query);
     return Column(
       children: [
-        Wrap(
-          spacing: 12,
-          runSpacing: 8,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            SizedBox(
-              width: 240,
-              child: TextField(
-                controller: search,
-                decoration: const InputDecoration(labelText: 'Buscar'),
-                onSubmitted: (_) => setState(
+        Surface(
+          padding: 8,
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                width: 240,
+                child: TextField(
+                  controller: search,
+                  decoration: const InputDecoration(labelText: 'Buscar'),
+                  onSubmitted: (_) => setState(
+                    () => query = (
+                      page: 1,
+                      search: search.text.trim(),
+                      sort: query.sort,
+                      order: query.order,
+                    ),
+                  ),
+                ),
+              ),
+              IconButton(
+                tooltip: 'Buscar',
+                icon: const Icon(Icons.search),
+                onPressed: () => setState(
                   () => query = (
                     page: 1,
                     search: search.text.trim(),
@@ -170,61 +198,50 @@ class _PagedListState<T> extends ConsumerState<PagedList<T>> {
                   ),
                 ),
               ),
-            ),
-            IconButton(
-              tooltip: 'Buscar',
-              icon: const Icon(Icons.search),
-              onPressed: () => setState(
-                () => query = (
-                  page: 1,
-                  search: search.text.trim(),
-                  sort: query.sort,
-                  order: query.order,
+              DropdownButton<SortField>(
+                value: query.sort,
+                borderRadius: BorderRadius.circular(2),
+                items: widget.sorts
+                    .map((s) => DropdownMenuItem(value: s, child: Text(s.name)))
+                    .toList(),
+                onChanged: (s) {
+                  if (s != null) {
+                    setState(
+                      () => query = (
+                        page: 1,
+                        search: query.search,
+                        sort: s,
+                        order: query.order,
+                      ),
+                    );
+                  }
+                },
+              ),
+              IconButton(
+                tooltip: 'Cambiar orden',
+                icon: Icon(
+                  query.order == SortOrder.asc
+                      ? Icons.arrow_upward
+                      : Icons.arrow_downward,
+                ),
+                onPressed: () => setState(
+                  () => query = (
+                    page: 1,
+                    search: query.search,
+                    sort: query.sort,
+                    order: query.order == SortOrder.asc
+                        ? SortOrder.desc
+                        : SortOrder.asc,
+                  ),
                 ),
               ),
-            ),
-            DropdownButton<SortField>(
-              value: query.sort,
-              items: widget.sorts
-                  .map((s) => DropdownMenuItem(value: s, child: Text(s.name)))
-                  .toList(),
-              onChanged: (s) {
-                if (s != null) {
-                  setState(
-                    () => query = (
-                      page: 1,
-                      search: query.search,
-                      sort: s,
-                      order: query.order,
-                    ),
-                  );
-                }
-              },
-            ),
-            IconButton(
-              tooltip: 'Cambiar orden',
-              icon: Icon(
-                query.order == SortOrder.asc
-                    ? Icons.arrow_upward
-                    : Icons.arrow_downward,
+              IconButton(
+                tooltip: 'Actualizar',
+                icon: const Icon(Icons.refresh),
+                onPressed: widget.refresh,
               ),
-              onPressed: () => setState(
-                () => query = (
-                  page: 1,
-                  search: query.search,
-                  sort: query.sort,
-                  order: query.order == SortOrder.asc
-                      ? SortOrder.desc
-                      : SortOrder.asc,
-                ),
-              ),
-            ),
-            IconButton(
-              tooltip: 'Actualizar',
-              icon: const Icon(Icons.refresh),
-              onPressed: widget.refresh,
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: 12),
         Expanded(
@@ -242,7 +259,7 @@ class _PagedListState<T> extends ConsumerState<PagedList<T>> {
               }
               return ListView(
                 children: widget.pageContent == null
-                    ? items.map(widget.item).toList()
+                    ? items.map(widget.item!).toList()
                     : [widget.pageContent!(items)],
               );
             },
