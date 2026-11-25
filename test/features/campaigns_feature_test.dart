@@ -1,3 +1,5 @@
+import '../cp/cp_fixtures.dart';
+import 'package:saas_platform_client/features/campaigns/state/participation_providers.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +25,9 @@ void main() {
         overrides: [
           authControllerProvider.overrideWith(FeatureAuthController.new),
           campaignsRepositoryProvider.overrideWithValue(repo),
+          participationRepositoryProvider.overrideWithValue(
+            FakeParticipation(),
+          ),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>
                 const TenantPermissions(role: RoleName.OWNER, hasTenant: true),
@@ -88,6 +93,9 @@ void main() {
         overrides: [
           authControllerProvider.overrideWith(FeatureAuthController.new),
           campaignsRepositoryProvider.overrideWithValue(repo),
+          participationRepositoryProvider.overrideWithValue(
+            FakeParticipation(),
+          ),
         ],
       );
       addTearDown(c.dispose);
@@ -133,6 +141,9 @@ void main() {
           overrides: [
             authControllerProvider.overrideWith(FeatureAuthController.new),
             campaignsRepositoryProvider.overrideWithValue(repo),
+            participationRepositoryProvider.overrideWithValue(
+              FakeParticipation(),
+            ),
             currentTenantPermissionsProvider.overrideWith(
               (ref) async => const TenantPermissions(
                 role: RoleName.OWNER,
@@ -181,6 +192,9 @@ void main() {
         overrides: [
           authControllerProvider.overrideWith(FeatureAuthController.new),
           campaignsRepositoryProvider.overrideWithValue(repo),
+          participationRepositoryProvider.overrideWithValue(
+            FakeParticipation(),
+          ),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>
                 const TenantPermissions(role: RoleName.MEMBER, hasTenant: true),
@@ -221,6 +235,9 @@ void main() {
         overrides: [
           authControllerProvider.overrideWith(FeatureAuthController.new),
           campaignsRepositoryProvider.overrideWithValue(repo),
+          participationRepositoryProvider.overrideWithValue(
+            FakeParticipation(),
+          ),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>
                 const TenantPermissions(admin: true, hasTenant: true),
@@ -260,6 +277,9 @@ void main() {
         overrides: [
           authControllerProvider.overrideWith(FeatureAuthController.new),
           campaignsRepositoryProvider.overrideWithValue(repo),
+          participationRepositoryProvider.overrideWithValue(
+            FakeParticipation(),
+          ),
           currentTenantPermissionsProvider.overrideWith(
             (ref) async =>
                 const TenantPermissions(role: RoleName.MEMBER, hasTenant: true),

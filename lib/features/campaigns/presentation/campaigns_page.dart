@@ -6,6 +6,8 @@ import '../../../shared/widgets/feature_widgets.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../state/campaigns_providers.dart';
 import '../widgets/campaign_card.dart';
+import 'campaign_prospects_panel.dart';
+import 'participation_panel.dart';
 
 class CampaignsPage extends ConsumerStatefulWidget {
   const CampaignsPage({super.key});
@@ -103,13 +105,14 @@ class CampaignDetailPage extends ConsumerWidget {
         value: ref.watch(campaignsDetailProvider(id)),
         retry: () => ref.invalidate(campaignsDetailProvider(id)),
         data: (c) => DefaultTabController(
-          length: 2,
+          length: 3,
           child: Column(
             children: [
               const TabBar(
                 tabs: [
                   Tab(text: 'Detalle'),
                   Tab(text: 'Prospectos'),
+                  Tab(text: 'Resumen comercial'),
                 ],
               ),
               Expanded(
@@ -124,17 +127,8 @@ class CampaignDetailPage extends ConsumerWidget {
                         Text('Actualizada: ${c.updatedAt.toLocal()}'),
                       ],
                     ),
-                    PagedList<Prospect>(
-                      load: (ref, key) => ref.watch(
-                        campaignProspectsProvider((id: id, query: key)),
-                      ),
-                      refresh: () => ref.invalidate(campaignProspectsProvider),
-                      item: (p) => ListTile(
-                        title: Text(p.name),
-                        subtitle: Text('${p.source.name} · ${p.status.name}'),
-                        onTap: () => context.go('/prospects/${p.id}'),
-                      ),
-                    ),
+                    CampaignProspectsPanel(id),
+                    CampaignDashboardPanel(id),
                   ],
                 ),
               ),
