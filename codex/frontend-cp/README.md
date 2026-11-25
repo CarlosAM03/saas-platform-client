@@ -39,3 +39,5 @@ El laboratorio exporta el SHA backend a una carpeta ignorada y construye una ima
 T32 utiliza widgets Flutter reales, repositorios reales, HTTP NestJS y PostgreSQL reales. El selector de archivos del sistema operativo recibe un CSV sintético explícito; el almacenamiento de token es sólo memoria de pruebas. No hay respuestas HTTP simuladas. El runner está separado de la suite estándar y exige `CP_REAL_API=true`. No equivale a una ejecución Chromium de los flujos CP ni certifica lectura por tecnologías asistivas.
 
 Resultados y atribución por SHA: `evidencias/RESULTADOS.md` y `evidencias/T32.json`. No declarar PASS por pruebas pendientes ni sustituir UI→API real por mocks.
+
+Los resultados originales se conservan. Para una corrida nueva, con el laboratorio activo, ejecutar también `node tool/sprint-cp/verify-contract.mjs`. T32 y el verificador escriben en `codex/frontend-cp/.local/recibos/`. Revisar los recibos antes de copiarlos a una carpeta de evidencias nueva. El [cierre CT-02](evidencias/CT02_CIERRE_20261125/RESULTADOS.md) y el [handoff CT-03](evidencias/CT03_RECONCILIACION.md) corresponden al ciclo posterior.
