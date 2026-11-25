@@ -1,0 +1,41 @@
+{
+  "frontendSha": "9fa71984af9cf8ef135149f7803662a7dd904c88",
+  "backendSha": "779fc7885faefdfe9e3cb0f3fee86810d96d2711",
+  "browserVersion": "156.0.8078.4",
+  "cases": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "status": "PASS",
+      "checks": [
+        "login",
+        "tenant selection",
+        "dashboard",
+        "campaign summary",
+        "filtered reads on page one",
+        "logout",
+        "authenticated route guard"
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": "PASS",
+      "checks": [
+        "login",
+        "tenant selection",
+        "dashboard",
+        "campaign summary",
+        "filtered reads on page one",
+        "logout",
+        "authenticated route guard"
+      ]
+    }
+  ],
+  "status": "PASS",
+  "fixture": "Disposable synthetic NestJS and PostgreSQL16 laboratory; screens and HTTP requests are real."
+}

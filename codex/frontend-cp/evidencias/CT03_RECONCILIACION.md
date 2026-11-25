@@ -26,6 +26,8 @@ Se utilizó `git merge-tree --write-tree` y se crearon objetos temporales con `g
 
 El árbol del paso #12 coincide con el árbol CP probado en la simulación. Los dos commits exclusivos de dev, `0b40f1f048ea71ab8f3fddf1f7306e82c977ca6e` y `2fdba28bf394d8a103b4f61deba98cd37061b2cd`, producen 147 cambios netos bajo `Docs/` desde la base común. El diff bruto sin renombres coincide entrada por entrada con el aplicado en el paso final, incluidos modo, ruta y SHA de blob. Las evidencias CP, el código, las pruebas, los arneses y las dependencias coinciden con CP después del merge documental. Los cuatro heads de entrada y el primer commit documental son ancestros del resultado. El avance rápido de dev hacia ese resultado es posible.
 
+La repetición con el candidato móvil `49665c82f8c22cf145a08f36daab8a504737811e` produjo el mismo árbol para #11. El árbol de #12 fue `532f2e2e9ddb65cb1fad7846e89debf3491ca35b` y el consolidado fue `5968746acd1badcb87f061d3eaa17d51074d36c1`. Se comprobó de nuevo la igualdad del árbol CP después de #12, el delta bruto de 147 entradas, la ascendencia de los cinco SHA de entrada y el avance rápido de dev. La nota más reciente del PR #12 registra la repetición con los recibos agregados al head publicado.
+
 ## Ejecución posterior
 
 1. Esperar autorización del propietario. Hacer fetch, confirmar los heads, volver a simular si hay cambios y verificar los tres jobs de los PR por head exacto. Revisar la política del repositorio y la automatización de despliegue antes de cambiar una rama de integración.
