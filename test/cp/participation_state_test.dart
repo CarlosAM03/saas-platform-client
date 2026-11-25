@@ -6,13 +6,67 @@ import 'package:saas_platform_client/app/app_providers.dart';
 import 'package:saas_platform_client/core/errors/api_exception.dart';
 import 'package:saas_platform_client/features/auth/state/tenant_permissions.dart';
 import 'package:saas_platform_client/features/campaigns/presentation/campaign_prospects_panel.dart';
+import 'package:saas_platform_client/features/campaigns/presentation/campaigns_page.dart';
+import 'package:saas_platform_client/features/campaigns/state/campaigns_providers.dart';
 import 'package:saas_platform_client/features/campaigns/state/participation_providers.dart';
 import 'package:saas_platform_client/platform_api/campaign_participation_api.dart';
 import 'package:saas_platform_client/platform_api/platform_api.dart';
 import '../features/feature_fixtures.dart';
+import '../features/campaigns_fixtures.dart';
 import 'cp_fixtures.dart';
 
 void main() {
+  testWidgets('commercial summary opens page one with the selected filter', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(1100, 850));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final repository = FakeParticipation();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authControllerProvider.overrideWith(FeatureAuthController.new),
+          campaignsRepositoryProvider.overrideWithValue(FakeCampaigns()),
+          participationRepositoryProvider.overrideWithValue(repository),
+        ],
+        child: const MaterialApp(
+          home: Scaffold(body: CampaignDetailPage(entityId)),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Prospectos'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Página siguiente'));
+    await tester.pumpAndSettle();
+    expect(repository.lastQuery?.page, 2);
+
+    for (final (action, filter, chip) in [
+      ('Sin gestionar', {'stage': 'SIN_GESTIONAR'}, 'Sin gestionar'),
+      (
+        'Asignar responsables',
+        {'responsibleId': 'UNASSIGNED'},
+        'Sin responsable',
+      ),
+      (
+        'Revisar prospectos sin evaluar',
+        {'evaluation': 'SIN_EVALUAR'},
+        'Sin evaluar',
+      ),
+    ]) {
+      await tester.tap(find.text('Resumen comercial'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(action));
+      await tester.pumpAndSettle();
+      expect(repository.lastQuery?.page, 1);
+      expect(repository.lastFilters?.toQuery(), filter);
+      expect(find.widgetWithText(Chip, chip), findsOneWidget);
+    }
+    await tester.tap(find.byTooltip('Quitar filtro de evaluación'));
+    await tester.pumpAndSettle();
+    expect(repository.lastFilters?.toQuery(), isEmpty);
+  });
+
   test(
     'CP discards a late response and reloads on tenant replacement',
     () async {

@@ -87,49 +87,6 @@ class ParticipationPagination extends StatelessWidget {
   );
 }
 
-class CampaignDashboardPanel extends ConsumerWidget {
-  const CampaignDashboardPanel(this.campaign, {super.key});
-  final String campaign;
-  @override
-  Widget build(BuildContext context, WidgetRef ref) => ParticipationAsync(
-    value: ref.watch(campaignDashboardProvider(campaign)),
-    retry: () => ref.invalidate(campaignDashboardProvider(campaign)),
-    data: (d) => ListView(
-      children: [
-        Text(
-          'Total de participaciones: ${d.total}',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        if (d.total == 0)
-          const Text('Esta campaña todavía no tiene participaciones.'),
-        const Text('Etapas comerciales'),
-        for (final e in d.stages.entries)
-          ListTile(
-            title: Text(commercialStageLabelForCode(e.key)),
-            trailing: Text('${e.value}'),
-          ),
-        const Text('Evaluaciones'),
-        for (final e in d.evaluations.entries)
-          ListTile(title: Text(e.key), trailing: Text('${e.value}')),
-        const Text('Responsabilidad'),
-        for (final e in d.responsibility.entries)
-          ListTile(title: Text(e.key), trailing: Text('${e.value}')),
-        Text(
-          'Actividad total: ${d.activityTotal} · Manual: ${d.manual} · Automática: ${d.events}',
-        ),
-        const Text('Las correcciones cuentan como manuales.'),
-        Text(
-          'Incorporación: ${d.newCount} nuevas · ${d.reused} reutilizadas · ${d.unknownLegacy} desconocidas (legado)',
-        ),
-        TextButton(
-          onPressed: () => ref.invalidate(campaignDashboardProvider(campaign)),
-          child: const Text('Actualizar resumen'),
-        ),
-      ],
-    ),
-  );
-}
-
 class ParticipationPanel extends ConsumerStatefulWidget {
   const ParticipationPanel(this.participation, {super.key});
   final ParticipationKey participation;

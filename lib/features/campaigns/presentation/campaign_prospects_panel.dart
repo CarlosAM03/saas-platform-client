@@ -11,26 +11,36 @@ import 'commercial_stage_labels.dart';
 import 'participation_panel.dart';
 
 class CampaignProspectsPanel extends ConsumerWidget {
-  const CampaignProspectsPanel(this.campaign, {super.key});
+  const CampaignProspectsPanel(this.campaign, {this.initialFilters, super.key});
   final String campaign;
+  final CampaignProspectFilters? initialFilters;
   @override
   Widget build(BuildContext context, WidgetRef ref) => _CampaignProspectsList(
     campaign,
-    key: ValueKey((campaign, ref.watch(sessionScopeProvider))),
+    initialFilters: initialFilters ?? const CampaignProspectFilters(),
+    key: ValueKey((campaign, initialFilters, ref.watch(sessionScopeProvider))),
   );
 }
 
 class _CampaignProspectsList extends ConsumerStatefulWidget {
-  const _CampaignProspectsList(this.campaign, {super.key});
+  const _CampaignProspectsList(
+    this.campaign, {
+    required this.initialFilters,
+    super.key,
+  });
   final String campaign;
+  final CampaignProspectFilters initialFilters;
   @override
   ConsumerState<_CampaignProspectsList> createState() =>
       _CampaignProspectsListState();
 }
 
-class _CampaignProspectsListState
-    extends ConsumerState<_CampaignProspectsList> {
-  final fields = {
+class _CampaignProspectsListState extends ConsumerState<_CampaignProspectsList>
+    with AutomaticKeepAliveClientMixin<_CampaignProspectsList> {
+  @override
+  bool get wantKeepAlive => true;
+
+  late final fields = {
     for (final key in [
       'search',
       'category',
@@ -42,14 +52,16 @@ class _CampaignProspectsListState
       'activityFrom',
       'activityTo',
     ])
-      key: TextEditingController(),
+      key: TextEditingController(
+        text: widget.initialFilters.toQuery()[key] as String?,
+      ),
   };
-  CommercialStage? stage;
-  CommercialEvaluation? evaluation;
+  late CommercialStage? stage = widget.initialFilters.stage;
+  late CommercialEvaluation? evaluation = widget.initialFilters.evaluation;
   int page = 1, limit = 20;
   SortField sort = SortField.name;
   SortOrder order = SortOrder.asc;
-  CampaignProspectFilters filters = const CampaignProspectFilters();
+  late CampaignProspectFilters filters = widget.initialFilters;
   late PaginationQuery query = pagination();
   PaginationQuery pagination() =>
       PaginationQuery(page: page, limit: limit, sortBy: sort, sortOrder: order);
@@ -80,6 +92,7 @@ class _CampaignProspectsListState
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final key = (campaign: widget.campaign, query: query, filters: filters);
     final permissions = ref
         .watch(currentTenantPermissionsProvider)
@@ -176,6 +189,45 @@ class _CampaignProspectsListState
             ),
           ),
         ),
+        if (filters.stage != null ||
+            filters.evaluation != null ||
+            filters.responsibleId == 'UNASSIGNED')
+          Wrap(
+            spacing: 8,
+            children: [
+              if (filters.stage case final selected?)
+                Chip(
+                  label: Text(selected.label),
+                  deleteButtonTooltipMessage: 'Quitar filtro de etapa',
+                  onDeleted: () {
+                    stage = null;
+                    apply();
+                  },
+                ),
+              if (filters.evaluation case final selected?)
+                Chip(
+                  label: Text(switch (selected) {
+                    CommercialEvaluation.SIN_EVALUAR => 'Sin evaluar',
+                    CommercialEvaluation.APTO => 'Apto',
+                    CommercialEvaluation.NO_APTO => 'No apto',
+                  }),
+                  deleteButtonTooltipMessage: 'Quitar filtro de evaluación',
+                  onDeleted: () {
+                    evaluation = null;
+                    apply();
+                  },
+                ),
+              if (filters.responsibleId == 'UNASSIGNED')
+                Chip(
+                  label: const Text('Sin responsable'),
+                  deleteButtonTooltipMessage: 'Quitar filtro de responsable',
+                  onDeleted: () {
+                    fields['responsibleId']!.clear();
+                    apply();
+                  },
+                ),
+            ],
+          ),
         Wrap(
           spacing: 12,
           crossAxisAlignment: WrapCrossAlignment.center,

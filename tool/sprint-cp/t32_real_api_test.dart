@@ -14,6 +14,7 @@ import 'package:saas_platform_client/core/errors/api_exception.dart';
 import 'package:saas_platform_client/core/network/api_client.dart';
 import 'package:saas_platform_client/features/auth/state/auth_state.dart';
 import 'package:saas_platform_client/features/campaigns/presentation/campaign_prospects_panel.dart';
+import 'package:saas_platform_client/features/campaigns/presentation/campaign_dashboard_panel.dart';
 import 'package:saas_platform_client/features/campaigns/presentation/participation_panel.dart';
 import 'package:saas_platform_client/features/campaigns/state/participation_providers.dart';
 import 'package:saas_platform_client/features/prospects/presentation/prospects_page.dart';

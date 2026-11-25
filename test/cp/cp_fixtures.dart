@@ -20,6 +20,8 @@ final participationJson = {
 
 class FakeParticipation implements ParticipationRepository {
   int reads = 0;
+  PaginationQuery? lastQuery;
+  CampaignProspectFilters? lastFilters;
   Future<PaginatedResult<CampaignProspect>>? pending;
   Object? error;
   @override
@@ -29,6 +31,8 @@ class FakeParticipation implements ParticipationRepository {
     CampaignProspectFilters filters,
   ) async {
     reads++;
+    lastQuery = query;
+    lastFilters = filters;
     if (error != null) throw error!;
     if (pending != null) return pending!;
     return PaginatedResult(
