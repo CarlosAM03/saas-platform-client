@@ -35,6 +35,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    expect(tester.widget<TabBar>(find.byType(TabBar)).isScrollable, false);
     await tester.tap(find.text('Prospectos'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Página siguiente'));
@@ -73,6 +74,16 @@ void main() {
     expect(repository.lastQuery?.page, 1);
     expect(repository.lastFilters?.toQuery(), {'evaluation': 'SIN_EVALUAR'});
     expect(find.widgetWithText(Chip, 'Sin evaluar'), findsOneWidget);
+
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    await tester.pumpAndSettle();
+    expect(tester.widget<TabBar>(find.byType(TabBar)).isScrollable, true);
+    final summaryTab = find.text('Resumen comercial');
+    await tester.ensureVisible(summaryTab);
+    await tester.tap(summaryTab);
+    await tester.pumpAndSettle();
+    expect(find.text('Etapas comerciales'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   test(

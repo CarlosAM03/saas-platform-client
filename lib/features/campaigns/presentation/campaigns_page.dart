@@ -137,12 +137,20 @@ class _CampaignDetailTabsState extends State<_CampaignDetailTabs> {
     final campaign = widget.campaign;
     return Column(
       children: [
-        const TabBar(
-          tabs: [
-            Tab(text: 'Detalle'),
-            Tab(text: 'Prospectos'),
-            Tab(text: 'Resumen comercial'),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final textScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+            final compact = constraints.maxWidth < 440 * textScale;
+            return TabBar(
+              isScrollable: compact,
+              tabAlignment: compact ? TabAlignment.start : TabAlignment.fill,
+              tabs: const [
+                Tab(text: 'Detalle'),
+                Tab(text: 'Prospectos'),
+                Tab(text: 'Resumen comercial'),
+              ],
+            );
+          },
         ),
         Expanded(
           child: TabBarView(
