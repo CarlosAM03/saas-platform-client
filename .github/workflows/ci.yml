@@ -22,6 +22,11 @@ jobs:
       - run: flutter analyze
       - name: Foundation, Platform API and contract tests
         run: flutter test
+      - name: Early activation URL regression
+        run: node --test tool/frontend-adr006/bootstrap.test.mjs
+      - name: Real browser history primitive
+        timeout-minutes: 5
+        run: flutter test --platform chrome test/adr006/web_history_test.dart --reporter expanded
       - run: flutter build web --release --no-wasm-dry-run --dart-define=API_BASE_URL=https://api.example.invalid
 
   container:

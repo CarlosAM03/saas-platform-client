@@ -1,0 +1,7 @@
+{"id":"markers","command":"dart run tool/check_merge_markers.dart","exitCode":0,"sha":"919ce033f76a0f04aebe9dc2bed4c159d6fb86ca","start":"2026-10-28T22:35:20.5874726Z","seconds":2.504062}
+{"id":"pub-get","command":"flutter pub get","exitCode":0,"sha":"919ce033f76a0f04aebe9dc2bed4c159d6fb86ca","start":"2026-10-28T22:35:23.2104672Z","seconds":7.9789218}
+{"id":"generation","command":"dart run build_runner build","exitCode":0,"sha":"919ce033f76a0f04aebe9dc2bed4c159d6fb86ca","start":"2026-10-28T22:35:31.1977044Z","seconds":37.5957913}
+{"id":"analyze","command":"flutter analyze","exitCode":0,"sha":"919ce033f76a0f04aebe9dc2bed4c159d6fb86ca","start":"2026-10-28T22:36:08.7970217Z","seconds":27.9800649}
+{"id":"tests","command":"flutter test --reporter expanded","exitCode":0,"sha":"919ce033f76a0f04aebe9dc2bed4c159d6fb86ca","start":"2026-10-28T22:36:36.7819288Z","seconds":40.2637151}
+{"id":"adr006","command":"flutter test test/adr006 --reporter expanded","exitCode":0,"sha":"919ce033f76a0f04aebe9dc2bed4c159d6fb86ca","start":"2026-10-28T22:37:17.0493784Z","seconds":13.7044996}
+{"id":"web-release","command":"flutter build web --release --no-wasm-dry-run --dart-define=API_BASE_URL=https://localhost:18643","exitCode":0,"sha":"919ce033f76a0f04aebe9dc2bed4c159d6fb86ca","start":"2026-10-28T22:37:30.7577145Z","seconds":16.4796993}

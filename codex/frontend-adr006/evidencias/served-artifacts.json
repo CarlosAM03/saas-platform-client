@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "frontendAppSha": "2590aa423c2f329d3309507bf08975db435b63c1",
+  "hashes": {
+    "flutter_bootstrap.js": "4bbbf840c95f68333eda16f185668ab016ad3e4f8940e35f7e77795e57477120",
+    "main.dart.js": "ba81222eccadf05a06b92129cbf10f07ee9d1dc541243103a8e277a7c124af67"
+  },
+  "date": "2026-10-29T06:39:41.5132532Z"
+}

@@ -1,0 +1,17 @@
+{
+  "defaultMode": "PILOT_DISABLED",
+  "date": "2026-10-29T06:20:22.2964645Z",
+  "cases": [
+    {
+      "caseId": "Unconfirmed",
+      "status": "PASS",
+      "networkRequests": 0
+    },
+    {
+      "caseId": "MissingManifest",
+      "status": "PASS",
+      "networkRequests": 0
+    }
+  ],
+  "realBrevo": "NOT RUN"
+}

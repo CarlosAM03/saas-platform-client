@@ -1,0 +1,163 @@
+{
+  "date": "2026-10-29T05:36:32.072Z",
+  "runId": "g1fe945f6c304a07",
+  "frontendSha": "1d41f95919f5d296ceb995227520b55cfe9cb844",
+  "workingTree": true,
+  "backendSha": "5e214420394101ae7079f8e844cc759b01cce2a3",
+  "backendStatus": "VERIFIED_PR_CANDIDATE",
+  "postgres": "16",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "REG-ADMIN-LOGIN-NO-TENANT",
+      "scope": "UI_HTTP",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "status": 200,
+        "requestId": "f1c10fa2-6e34-42af-83be-f32fb0956af5",
+        "authorizationPresent": false,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": true,
+        "requestKeys": [
+          "email",
+          "password"
+        ]
+      }
+    },
+    {
+      "caseId": "REG-CREATE-201-ATOMIC",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/tenants/register",
+        "status": 201,
+        "requestId": "15449911-d887-4790-bae4-b51e8f68f18c",
+        "authorizationPresent": true,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": true,
+        "requestKeys": [
+          "ownerEmail",
+          "ownerName",
+          "tenantName",
+          "tenantSlug"
+        ]
+      },
+      "dbAssertions": [
+        "Two tenant roles",
+        "Pending non-ADMIN user and OWNER membership",
+        "Onboarding, hashed link and accepted delivery persisted"
+      ]
+    },
+    {
+      "caseId": "REG-ONBOARDING-REREAD",
+      "scope": "UI_TO_DB_READ",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/tenants/cmvt404e10001iekssk8olssb/onboarding",
+        "status": 200,
+        "requestId": "30c88d57-aafb-4e6e-89a4-e5475bd3e811",
+        "authorizationPresent": true,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": false
+      },
+      "uiReread": "PASS"
+    },
+    {
+      "caseId": "E2E-EXECUTION",
+      "scope": "UI_TO_DB",
+      "status": "FAIL",
+      "error": "Error: TimeoutError: Expected semantic text is absent: Nueva contraseña",
+      "uiDiagnostic": {
+        "url": "https://localhost:18643/#/activate",
+        "aria": "- group:\n  - text: Activa tu cuenta Este enlace no inicia una sesión. Al terminar deberás usar el login habitual. No se pudo usar este enlace. Solicita uno nuevo al administrador.\n  - button \"Volver al login\"\n  - text: Si perdiste la respuesta o venció el desafío, solicita un nuevo enlace al administrador. No recargues ni reutilices el enlace.",
+        "cursor": 6
+      },
+      "recentHttp": [
+        {
+          "method": "GET",
+          "path": "/api/v1/tenants",
+          "status": 200,
+          "requestId": "d72843e4-5e25-40b6-8274-ad7f8e2c9881",
+          "authorizationPresent": true,
+          "reason": null,
+          "total": null,
+          "requestBodyPresent": false
+        },
+        {
+          "method": "POST",
+          "path": "/api/v1/tenants/register",
+          "status": 201,
+          "requestId": "15449911-d887-4790-bae4-b51e8f68f18c",
+          "authorizationPresent": true,
+          "action": null,
+          "id": null,
+          "summary": null,
+          "reason": null,
+          "total": null,
+          "requestBodyPresent": true,
+          "requestKeys": [
+            "ownerEmail",
+            "ownerName",
+            "tenantName",
+            "tenantSlug"
+          ]
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/tenants/cmvt404e10001iekssk8olssb/onboarding",
+          "status": 200,
+          "requestId": "30c88d57-aafb-4e6e-89a4-e5475bd3e811",
+          "authorizationPresent": true,
+          "action": null,
+          "id": null,
+          "summary": null,
+          "reason": null,
+          "total": null,
+          "requestBodyPresent": false
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/auth/me",
+          "status": 200,
+          "requestId": "efa4722f-68e5-45b3-a5ad-140b73c95db8",
+          "authorizationPresent": true,
+          "action": null,
+          "id": null,
+          "summary": null,
+          "reason": null,
+          "total": null,
+          "requestBodyPresent": false
+        },
+        {
+          "method": "GET",
+          "path": "/api/v1/tenants/cmvt404e10001iekssk8olssb/onboarding",
+          "status": 200,
+          "requestId": "a40e7b67-ae63-420b-af8c-8e1c93d92780",
+          "authorizationPresent": true,
+          "action": null,
+          "id": null,
+          "summary": null,
+          "reason": null,
+          "total": null,
+          "requestBodyPresent": false
+        }
+      ]
+    }
+  ]
+}

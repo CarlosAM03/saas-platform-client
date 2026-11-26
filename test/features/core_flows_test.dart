@@ -405,13 +405,15 @@ void main() {
     expect(repo.payload, {'phone': null});
     expect(find.text('saved'), findsOneWidget);
   });
-  testWidgets('tenant create and detail use the repository', (tester) async {
+  testWidgets('legacy tenant detail still uses the Core repository', (
+    tester,
+  ) async {
     final repo = FakeTenants();
     final router = GoRouter(
       routes: [
         GoRoute(
           path: '/',
-          builder: (_, __) => const Scaffold(body: TenantCreatePage()),
+          builder: (_, __) => const Scaffold(body: TenantDetailPage(entityId)),
         ),
         GoRoute(
           path: '/tenants/:id',
@@ -434,16 +436,8 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.enterText(
-      find.byType(TextFormField).at(0),
-      'New organization',
-    );
-    await tester.enterText(find.byType(TextFormField).at(1), 'new-org');
-    await save(tester);
-    expect(
-      router.routeInformationProvider.value.uri.path,
-      '/tenants/$entityId',
-    );
+    // Business registration is covered separately by ADR-006. The technical
+    // POST /tenants API/repository remains covered by the Core contract tests.
     expect(find.text('Usar organización'), findsOneWidget);
   });
 }

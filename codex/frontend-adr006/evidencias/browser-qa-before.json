@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-28T22:13:37.287Z",
+  "frontendSha": "9c0e556b64f6ca51db3baaf284096adcde480e9b",
+  "workingTree": true,
+  "browser": "Chromium / Playwright in dedicated Docker laboratory",
+  "cases": [
+    {
+      "caseId": "HISTORY-REPLACE-BACK-FORWARD-RELOAD",
+      "scope": "REAL_BROWSER",
+      "status": "FAIL",
+      "errorType": "AssertionError",
+      "assertion": "router history must be clean"
+    },
+    {
+      "caseId": "HISTORY-NEW-TAB-INVALID-DUPLICATE-SESSION-STORAGE",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "HISTORY-REPLACE-FAILURE-NO-REDEEM",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    },
+    {
+      "caseId": "ACTIVATION-HTTP-ERRORS-NETWORK-NO-RETRY",
+      "scope": "REAL_BROWSER",
+      "status": "PASS"
+    }
+  ]
+}

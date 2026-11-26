@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-29T06:27:17.7024248Z",
+  "cases": [
+    {
+      "status": "PASS",
+      "spaFallback": "PASS",
+      "runtimeWithoutSdk": true,
+      "http": 200,
+      "caseId": "prod"
+    },
+    {
+      "status": "PASS",
+      "spaFallback": "PASS",
+      "runtimeWithoutSdk": true,
+      "http": 200,
+      "caseId": "dev"
+    }
+  ],
+  "frontendAppSha": "2590aa423c2f329d3309507bf08975db435b63c1"
+}

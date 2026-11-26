@@ -1,0 +1,236 @@
+{
+  "date": "2026-10-29T05:51:40.151Z",
+  "runId": "g1fef51b1624edd2",
+  "frontendSha": "2590aa423c2f329d3309507bf08975db435b63c1",
+  "workingTree": true,
+  "backendSha": "5e214420394101ae7079f8e844cc759b01cce2a3",
+  "backendStatus": "VERIFIED_PR_CANDIDATE",
+  "postgres": "16",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "REG-ADMIN-LOGIN-NO-TENANT",
+      "scope": "UI_HTTP",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "status": 200,
+        "requestId": "11b60d80-0e02-41ec-8049-dfd5277f76cc",
+        "authorizationPresent": false,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": true,
+        "requestKeys": [
+          "email",
+          "password"
+        ]
+      }
+    },
+    {
+      "caseId": "REG-CREATE-201-ATOMIC",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/tenants/register",
+        "status": 201,
+        "requestId": "9d7e82df-e99a-4c97-b354-2ea87ccceea9",
+        "authorizationPresent": true,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": true,
+        "requestKeys": [
+          "ownerEmail",
+          "ownerName",
+          "tenantName",
+          "tenantSlug"
+        ]
+      },
+      "dbAssertions": [
+        "Two tenant roles",
+        "Pending non-ADMIN user and OWNER membership",
+        "Onboarding, hashed link and accepted delivery persisted"
+      ]
+    },
+    {
+      "caseId": "REG-ONBOARDING-REREAD",
+      "scope": "UI_TO_DB_READ",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/tenants/cmvt4i5nf001uieksxvq61w6a/onboarding",
+        "status": 200,
+        "requestId": "623a0985-b3bd-4a2b-8b61-7b65da615543",
+        "authorizationPresent": true,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": false
+      },
+      "uiReread": "PASS"
+    },
+    {
+      "caseId": "REG-RESEND-429",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/tenants/cmvt4i5nf001uieksxvq61w6a/resend-welcome",
+        "status": 429,
+        "requestId": "bd1cdce8-005f-4186-acca-7128cbae2a4c",
+        "authorizationPresent": true,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": false
+      },
+      "dbAssertions": [
+        "No generation change on throttling"
+      ]
+    },
+    {
+      "caseId": "REG-RESEND-200",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/tenants/cmvt4i5nf001uieksxvq61w6a/resend-welcome",
+        "status": 200,
+        "requestId": "272f9444-5132-4622-9181-315f561f6afa",
+        "authorizationPresent": true,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": false
+      },
+      "dbAssertions": [
+        "Manual resend advances generation"
+      ]
+    },
+    {
+      "caseId": "REG-OLD-LINK-REVOKED",
+      "scope": "UI_HTTP",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/redeem-first-access",
+        "status": 401,
+        "requestId": "0aa69358-b811-4423-ad82-0c9b1f8b1168",
+        "authorizationPresent": false,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": true,
+        "requestKeys": [
+          "activationToken"
+        ]
+      }
+    },
+    {
+      "caseId": "REG-REDEEM-PUBLIC-CLEAN-URL",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/redeem-first-access",
+        "status": 200,
+        "requestId": "95b6dcc0-0cea-4f30-96d3-f1bd1e2c754c",
+        "authorizationPresent": false,
+        "action": "CHANGE_PASSWORD_REQUIRED",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": true,
+        "requestKeys": [
+          "activationToken"
+        ]
+      },
+      "dbAssertions": [
+        "Single challenge persisted"
+      ]
+    },
+    {
+      "caseId": "REG-COMPLETE-LOGIN-REQUIRED",
+      "scope": "UI_TO_DB",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/complete-first-access",
+        "status": 200,
+        "requestId": "6b8b0eea-c947-487f-9431-b3ab87b47d36",
+        "authorizationPresent": false,
+        "action": "LOGIN_REQUIRED",
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": true,
+        "requestKeys": [
+          "firstAccessToken",
+          "newPassword"
+        ]
+      },
+      "dbAssertions": [
+        "Completed state and normal login enabled",
+        "Challenge consumed"
+      ]
+    },
+    {
+      "caseId": "REG-OWNER-LOGIN-USERS-REREAD",
+      "scope": "UI_TO_DB_READ",
+      "status": "PASS",
+      "http": {
+        "method": "POST",
+        "path": "/api/v1/auth/login",
+        "status": 200,
+        "requestId": "c58acdc7-c861-409e-a76d-eca18df0abf0",
+        "authorizationPresent": false,
+        "action": null,
+        "id": null,
+        "summary": null,
+        "reason": null,
+        "total": null,
+        "requestBodyPresent": true,
+        "requestKeys": [
+          "email",
+          "password"
+        ]
+      },
+      "uiReread": "PASS",
+      "dbAssertions": [
+        "Owner membership stable"
+      ]
+    },
+    {
+      "caseId": "REG-OWNER-REGISTER-DENIED",
+      "scope": "UI_ACCESS_CONTROL",
+      "status": "PASS"
+    },
+    {
+      "caseId": "REG-CROSS-TENANT-ISOLATION",
+      "scope": "HTTP_SQL",
+      "status": "PASS",
+      "http": {
+        "method": "GET",
+        "path": "/api/v1/users/[OTHER_TENANT_USER]",
+        "status": 404
+      }
+    }
+  ]
+}

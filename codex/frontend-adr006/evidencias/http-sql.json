@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-29T06:03:15.022Z",
+  "backendSha": "5e214420394101ae7079f8e844cc759b01cce2a3",
+  "database": "g1http7a4cbbe49e",
+  "postgres": "16",
+  "cleanup": "PASS",
+  "cases": [
+    {
+      "caseId": "E03-FLAG-OFF-NO-WRITES",
+      "status": "PASS",
+      "scope": "HTTP_SQL"
+    },
+    {
+      "caseId": "E05-VALIDATION-ROLES-CONFLICT-NO-PARTIAL-WRITES",
+      "status": "PASS",
+      "scope": "HTTP_SQL"
+    },
+    {
+      "caseId": "E03-RECOVERY-WHILE-FLAG-OFF",
+      "status": "PASS",
+      "scope": "HTTP_SQL"
+    },
+    {
+      "caseId": "E14-PASSWORD-400-RECOVERABLE-TTL-AND-REPLAY",
+      "status": "PASS",
+      "scope": "HTTP_SQL"
+    },
+    {
+      "caseId": "E08-PROVIDER-400",
+      "status": "PASS",
+      "scope": "HTTP_SQL",
+      "http": 201,
+      "deliveryStatus": "FAILED",
+      "providerAttempts": 1,
+      "persistence": "PASS"
+    },
+    {
+      "caseId": "E08-PROVIDER-429",
+      "status": "PASS",
+      "scope": "HTTP_SQL",
+      "http": 201,
+      "deliveryStatus": "FAILED",
+      "providerAttempts": 1,
+      "persistence": "PASS"
+    },
+    {
+      "caseId": "E08-PROVIDER-500",
+      "status": "PASS",
+      "scope": "HTTP_SQL",
+      "http": 201,
+      "deliveryStatus": "UNKNOWN",
+      "providerAttempts": 1,
+      "persistence": "PASS"
+    },
+    {
+      "caseId": "E08-PROVIDER-timeout",
+      "status": "PASS",
+      "scope": "HTTP_SQL",
+      "http": 201,
+      "deliveryStatus": "UNKNOWN",
+      "providerAttempts": 1,
+      "persistence": "PASS"
+    },
+    {
+      "caseId": "E14-EXPIRED-CHALLENGE-REJECTED-BY-SERVER",
+      "status": "PASS",
+      "scope": "HTTP_SQL"
+    }
+  ]
+}
