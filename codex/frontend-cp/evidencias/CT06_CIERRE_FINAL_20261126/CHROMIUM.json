@@ -1,0 +1,34 @@
+{
+  "frontendSha": "465b788911055587e8795ec24b0da6f30aaa048f",
+  "backendSha": "590aaf0dda98fd42befc4f3ed432d028d23d3946",
+  "browserVersion": "158.0.8127.38",
+  "cases": [
+    {
+      "name": "owner-desktop-full-flow",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "member-desktop-and-mobile-denials",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "admin-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 960
+      },
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "fixture": "Disposable synthetic NestJS and PostgreSQL 16 laboratory; screens and HTTP requests are real.",
+  "limits": "Prospector Service/Engine are not part of this laboratory. Batch admission, generation and confirmation remain NOT_RUN here; role, navigation, denial and visual states are covered."
+}
