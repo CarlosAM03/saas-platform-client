@@ -1,0 +1,110 @@
+{
+  "date": "2026-10-28T00:17:20.288Z",
+  "method": "GET",
+  "path": "/repos/CarlosAM03/saas-platform-client/branches/main",
+  "status": 200,
+  "value": {
+    "name": "main",
+    "commit": {
+      "sha": "7731649a2c69b45cb9776d02de4a6105d6fd9886",
+      "node_id": "C_kwDOUUxAzNoAKDc3MzE2NDlhMmM2OWI0NWNiOTc3NmQwMmRlNGE2MTA1ZDZmZDk4ODY",
+      "commit": {
+        "author": {
+          "name": "Carlos Armenta",
+          "email": "carlos.b.armenta.0@gmail.com",
+          "date": "2026-10-28T00:12:58Z"
+        },
+        "committer": {
+          "name": "GitHub",
+          "email": "noreply@github.com",
+          "date": "2026-10-28T00:12:58Z"
+        },
+        "message": "Merge pull request #6 from CarlosAM03/dev\n\nrelease: PROSPECTOR SaaS v1.0.0 — Foundation, CSV, dashboard y Jobs lectura",
+        "tree": {
+          "sha": "ec3f4f460ccef1566a6443b84db35dc94003eddb",
+          "url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/git/trees/ec3f4f460ccef1566a6443b84db35dc94003eddb"
+        },
+        "url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/git/commits/7731649a2c69b45cb9776d02de4a6105d6fd9886",
+        "comment_count": 0,
+        "verification": {
+          "verified": true,
+          "reason": "valid",
+          "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJq4T4KCRC1aQ7uu5UhlAAAKbcQAD50ghaMx2W3h69sjFTwVjgF\nXE2X3rAtfnhjUJ99L2wwPNPBJLJMaunLcH1fbjtXrUqxfdLzAXw8tXq/ONv4rmRG\n0D+Q4qWy3zUelNu8nFMer85P7iMCFpoFlE6PCvG1Q7ZVbveREp/4XqOQQKASn9Bk\nrDkyY65JBh4ARL0OzfNUZqEdjYyDwGhTu/+3DbADOuUedcLD0foIOXFIz2n9oYf6\nXr/tiTuPeCNKcew1M/ans77C17hOlQP3ePdKf6/Tqp6UvNgQVbsfW+e6VtDPk6iG\npV4/aC7vJKYq+n3tvGMTd8WvfqcSFGrtzdC0yn9JkKTaVjsMf5M+qztVaw6/Q7er\nMjO5E4LiBje9KGE7m9IwVWtHUj8LYidMojFBDw92VcKPifkfNwUJXGzK6WkU6cpG\nKNXNBURvZPMHaFk1CvhRREi9jk33IVzPokpt2HIdI70z7s4jGoOhCn4roiDpY6wp\n3MMD2YwsPFAMmDkzEa/nu3t2kZRG9nWp1pEG/jdd1WUeaulyMUPBVju4qR+NKeke\nuN9D9G3cJbwYokPmi+eKX7WLgG4aMTYLux5GsRns0sTGoIGMaEOLm2ofyMouHMea\nh1hMMejFznEa/GSWzoYA55TvfQgZRtbYm/wg3hYdKlg38iAazC/kA5TnaiG1CwjZ\nLyiGZV3Im2Q2tCE4YE3n\n=RpBo\n-----END PGP SIGNATURE-----\n",
+          "payload": "tree ec3f4f460ccef1566a6443b84db35dc94003eddb\nparent a85a99678101b3f5562f66d7dd1c1c454b1d20cb\nparent cd527ef12bc7c1327ed9a8520e1a07f0fc8be39f\nauthor Carlos Armenta <carlos.b.armenta.0@gmail.com> 1793146378 -0700\ncommitter GitHub <noreply@github.com> 1793146378 -0700\n\nMerge pull request #6 from CarlosAM03/dev\n\nrelease: PROSPECTOR SaaS v1.0.0 — Foundation, CSV, dashboard y Jobs lectura",
+          "verified_at": "2026-10-28T00:12:59Z"
+        }
+      },
+      "url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/commits/7731649a2c69b45cb9776d02de4a6105d6fd9886",
+      "html_url": "https://github.com/CarlosAM03/saas-platform-client/commit/7731649a2c69b45cb9776d02de4a6105d6fd9886",
+      "comments_url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/commits/7731649a2c69b45cb9776d02de4a6105d6fd9886/comments",
+      "author": {
+        "login": "CarlosAM03",
+        "id": 188122706,
+        "node_id": "U_kgDOCzaGUg",
+        "avatar_url": "https://avatars.githubusercontent.com/u/188122706?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/CarlosAM03",
+        "html_url": "https://github.com/CarlosAM03",
+        "followers_url": "https://api.github.com/users/CarlosAM03/followers",
+        "following_url": "https://api.github.com/users/CarlosAM03/following{/other_user}",
+        "gists_url": "https://api.github.com/users/CarlosAM03/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/CarlosAM03/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/CarlosAM03/subscriptions",
+        "organizations_url": "https://api.github.com/users/CarlosAM03/orgs",
+        "repos_url": "https://api.github.com/users/CarlosAM03/repos",
+        "events_url": "https://api.github.com/users/CarlosAM03/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/CarlosAM03/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "committer": {
+        "login": "web-flow",
+        "id": 19864447,
+        "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+        "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/web-flow",
+        "html_url": "https://github.com/web-flow",
+        "followers_url": "https://api.github.com/users/web-flow/followers",
+        "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+        "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+        "organizations_url": "https://api.github.com/users/web-flow/orgs",
+        "repos_url": "https://api.github.com/users/web-flow/repos",
+        "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/web-flow/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "parents": [
+        {
+          "sha": "a85a99678101b3f5562f66d7dd1c1c454b1d20cb",
+          "url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/commits/a85a99678101b3f5562f66d7dd1c1c454b1d20cb",
+          "html_url": "https://github.com/CarlosAM03/saas-platform-client/commit/a85a99678101b3f5562f66d7dd1c1c454b1d20cb"
+        },
+        {
+          "sha": "cd527ef12bc7c1327ed9a8520e1a07f0fc8be39f",
+          "url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/commits/cd527ef12bc7c1327ed9a8520e1a07f0fc8be39f",
+          "html_url": "https://github.com/CarlosAM03/saas-platform-client/commit/cd527ef12bc7c1327ed9a8520e1a07f0fc8be39f"
+        }
+      ]
+    },
+    "_links": {
+      "self": "https://api.github.com/repos/CarlosAM03/saas-platform-client/branches/main",
+      "html": "https://github.com/CarlosAM03/saas-platform-client/tree/main"
+    },
+    "protected": true,
+    "protection": {
+      "enabled": false,
+      "required_status_checks": {
+        "enforcement_level": "off",
+        "contexts": [],
+        "checks": []
+      }
+    },
+    "protection_url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/branches/main/protection"
+  }
+}

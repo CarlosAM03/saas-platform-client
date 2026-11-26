@@ -1,0 +1,61 @@
+{
+  "recordedAt": "2026-10-27T20:45:00.189Z",
+  "excludesItself": true,
+  "files": [
+    {
+      "file": "ACTA_G0_WORKTREES.md",
+      "bytes": 8329,
+      "sha256": "b11fd20906e6444de889ab10efb2b3c103cf22aa471ef5259f37131dda112868"
+    },
+    {
+      "file": "DETALLE_IMPLEMENTACION_G1.md",
+      "bytes": 18216,
+      "sha256": "02305f5c6a9dd78438a4cec50dcdd3cf8b7b3f837d9ab8f3d45c3bb4ce4b8f94"
+    },
+    {
+      "file": "AMPLIACION_PROPUESTA_DEMO_COMPOSE_1_1.md",
+      "bytes": 17671,
+      "sha256": "c77ba6f67fee1b98c69bca806f4bb301213594f7410be6be9e939ead87df4be4"
+    },
+    {
+      "file": "evidencias/01_REVALIDACION_G0.json",
+      "bytes": 9504,
+      "sha256": "0fecc38947f427138272f7f6d84cec1e237cdba0f2bcc3ddff7ce34da995a552"
+    },
+    {
+      "file": "evidencias/02_CREACION_Y_ESTADO.json",
+      "bytes": 13620,
+      "sha256": "666ca7f935fcb02bf0f4d9370176c203dece86f4b060564f1988598cbf5fbe9e"
+    },
+    {
+      "file": "evidencias/03_PRERREQUISITOS_LECTURA.json",
+      "bytes": 634,
+      "sha256": "0c5b4414b869495eea5b7fd37f85ce6879533a8711766da1c5dc8acaa3d70d34"
+    },
+    {
+      "file": "evidencias/04_REFERENCIAS_G1.json",
+      "bytes": 3550,
+      "sha256": "a5ec80d203be8f315c68101e3248a20cf0ad3e02fc72e83c25af153072d520e8"
+    },
+    {
+      "file": "evidencias/05_PROPUESTA_Y_ENTORNO.json",
+      "bytes": 2479,
+      "sha256": "4ae6701c5531336c5dbd8494a1090cdcacac9fbe30194e6e2b6e9a70c958084c"
+    },
+    {
+      "file": "evidencias/06_MATRIZ_PROPUESTA_G1.json",
+      "bytes": 12562,
+      "sha256": "20e484e45edbf039eef6076cf7b3da316fb26efb1cb6bf13a04f3fe545f4a142"
+    },
+    {
+      "file": "evidencias/07_INTEGRIDAD_FINAL.json",
+      "bytes": 18053,
+      "sha256": "3806439d955cac49cf3339ccc2e4bfb7d097aa05949f02559cfeff03a48f9a3e"
+    },
+    {
+      "file": "evidencias/08_QA_ENTREGA.json",
+      "bytes": 1013,
+      "sha256": "f210bcf69fe11946c249e4620203a685b32e5b76cb0654cdfc62867c0ac405f2"
+    }
+  ]
+}

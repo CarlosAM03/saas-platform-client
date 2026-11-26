@@ -1,0 +1,195 @@
+{
+  "date": "2026-10-27T23:44:59.797Z",
+  "pass": true,
+  "container": "prospector-demo-110-browser-1",
+  "evidence": [
+    {
+      "name": "experimental login-label",
+      "data": {
+        "url": "https://localhost:18463/#/login",
+        "aria": "- group:\n  - text: PLATAFORMA SaaS · BETA Bienvenido de nuevo Inicia sesión para gestionar tus campañas y tu organización.\n  - textbox \"Correo electrónico\"\n  - textbox \"Contraseña\"\n  - button \"Mostrar contraseña\"\n  - button \"Iniciar sesión\"\n  - text: ¿Necesitas acceso o recuperar tu contraseña? Contacta al administrador de tu organización.",
+        "errors": []
+      }
+    },
+    {
+      "name": "experimental owner login",
+      "data": {
+        "url": "https://localhost:18463/#/dashboard",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Dashboard\n- button \"Actualizar dashboard\"\n- button \"Buscar prospectos\"\n- group:\n  - text: Resumen de la organización actual\n  - button \"4 Campañas\"\n  - button \"18 Prospectos\"\n  - button \"9 Trabajos\"\n  - text: Campañas recientes\n  - group \"Demo controlada 1.1.0 norte Activa Fixture sintético reservado; adaptador controlado; sin scraping externo Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 3 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 2 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n  - group \"Campaña 1 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"",
+        "errors": []
+      }
+    },
+    {
+      "name": "created in Flutter; real worker callback COMPLETED",
+      "data": {
+        "url": "https://localhost:18463/#/jobs/cmvrc1d4n002arfz4uupifc1s",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Detalle del trabajo\n- button \"Ver trabajos\"\n- button \"Actualizar trabajo\"\n- group:\n  - text: \"Completado normal · CONTROLLED LOCAL FIXTURE · hasta 1 resultados Creado: 2026-10-27 23:44:28.342\"\n  - button \"Ver campaña\"\n  - text: \"Resultados disponibles hasta: 2026-10-28 00:44:28.904 La creación requiere disponibilidad y cuota verificadas en el Backend. Cancelar, guardar resultados en campaña y exportar trabajos no están disponibles. La importación CSV continúa disponible.\"\n  - button \"Guardar en campaña\" [disabled]\n  - button \"Exportar CSV\" [disabled]\n  - button \"Exportar XLSX\" [disabled]\n  - button \"Descartar vista\"\n  - text: 1 resultados temporales CONTROLLED DEMO — Synthetic Cafe Synthetic fixture",
+        "errors": []
+      }
+    },
+    {
+      "name": "controlled normal displayed",
+      "data": {
+        "url": "https://localhost:18463/#/jobs/cmvrbtvxp0011rfz4v72yytxo",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Detalle del trabajo\n- button \"Ver trabajos\"\n- button \"Actualizar trabajo\"\n- group:\n  - text: \"Completado normal · CONTROLLED LOCAL FIXTURE · hasta 1 resultados Creado: 2026-10-27 23:38:39.468\"\n  - button \"Ver campaña\"\n  - text: \"Resultados disponibles hasta: 2026-10-28 00:38:39.719 La creación requiere disponibilidad y cuota verificadas en el Backend. Cancelar, guardar resultados en campaña y exportar trabajos no están disponibles. La importación CSV continúa disponible.\"\n  - button \"Guardar en campaña\" [disabled]\n  - button \"Exportar CSV\" [disabled]\n  - button \"Exportar XLSX\" [disabled]\n  - button \"Descartar vista\"\n  - text: 1 resultados temporales CONTROLLED DEMO — Synthetic Cafe Synthetic fixture",
+        "errors": []
+      }
+    },
+    {
+      "name": "controlled empty displayed",
+      "data": {
+        "url": "https://localhost:18463/#/jobs/cmvrbtwkh001drfz4tjermqnb",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Detalle del trabajo\n- button \"Ver trabajos\"\n- button \"Actualizar trabajo\"\n- group:\n  - text: \"Completado empty · CONTROLLED LOCAL FIXTURE · hasta 1 resultados Creado: 2026-10-27 23:38:40.289\"\n  - button \"Ver campaña\"\n  - text: \"Resultados disponibles hasta: 2026-10-28 00:38:40.419 La creación requiere disponibilidad y cuota verificadas en el Backend. Cancelar, guardar resultados en campaña y exportar trabajos no están disponibles. La importación CSV continúa disponible.\"\n  - button \"Guardar en campaña\" [disabled]\n  - button \"Exportar CSV\" [disabled]\n  - button \"Exportar XLSX\" [disabled]\n  - button \"Descartar vista\"\n  - text: 0 resultados temporales La búsqueda no encontró negocios.",
+        "errors": []
+      }
+    },
+    {
+      "name": "controlled fail displayed",
+      "data": {
+        "url": "https://localhost:18463/#/jobs/cmvrbtx5a001prfz4myy5fbfi",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Detalle del trabajo\n- button \"Ver trabajos\"\n- button \"Actualizar trabajo\"\n- group:\n  - text: \"Fallido fail · CONTROLLED LOCAL FIXTURE · hasta 1 resultados Creado: 2026-10-27 23:38:41.038\"\n  - button \"Ver campaña\"\n  - text: La búsqueda falló en el servicio de prospección.\n  - button \"Repetir búsqueda manualmente\"\n  - text: La creación requiere disponibilidad y cuota verificadas en el Backend. Cancelar, guardar resultados en campaña y exportar trabajos no están disponibles. La importación CSV continúa disponible.",
+        "errors": []
+      }
+    },
+    {
+      "name": "experimental A isolated campaigns",
+      "data": {
+        "url": "https://localhost:18463/#/campaigns",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Campañas\n- checkbox \"Todas\" [checked]\n- checkbox \"ACTIVA\"\n- checkbox \"PAUSADA\"\n- checkbox \"COMPLETADA\"\n- checkbox \"ARCHIVADA\"\n- button \"Crear campaña\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - group \"Campaña 1 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Campaña 2 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Campaña 3 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Demo controlada 1.1.0 norte Activa Fixture sintético reservado; adaptador controlado; sin scraping externo Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 4 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "no public scraping or production API in browser",
+      "data": {
+        "requests": [
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/flutter_bootstrap.js"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/manifest.json"
+          },
+          {
+            "method": "GET",
+            "url": "https://www.gstatic.com/flutter-canvaskit/af7e796e161ae0bb1ff0758c71a7105418bd9ded/chromium/canvaskit.wasm"
+          },
+          {
+            "method": "GET",
+            "url": "https://www.gstatic.com/flutter-canvaskit/af7e796e161ae0bb1ff0758c71a7105418bd9ded/chromium/canvaskit.js"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/main.dart.js"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/favicon.png"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/icons/Icon-192.png"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/assets/FontManifest.json"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/assets/fonts/MaterialIcons-Regular.otf"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/assets/assets/fonts/Inter.ttf"
+          },
+          {
+            "method": "GET",
+            "url": "https://fonts.gstatic.com/s/roboto/v32/KFOmCnqEu92Fr1Me4GZLCzYlKw.woff2"
+          },
+          {
+            "method": "POST",
+            "url": "https://localhost:18463/api/v1/auth/login"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/tenants/c0000000000000000000000001"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/campaigns"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospects"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/users/demo-user-demo-norte-owner"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/capabilities"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/campaigns"
+          },
+          {
+            "method": "POST",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/capabilities"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/cmvrc1d4n002arfz4uupifc1s"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/capabilities"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/cmvrbtvxp0011rfz4v72yytxo"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/capabilities"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/cmvrbtwkh001drfz4tjermqnb"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/capabilities"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/prospecting-jobs/cmvrbtx5a001prfz4myy5fbfi"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/users/demo-user-demo-norte-owner"
+          },
+          {
+            "method": "GET",
+            "url": "https://localhost:18463/api/v1/campaigns"
+          }
+        ],
+        "errors": []
+      }
+    }
+  ]
+}

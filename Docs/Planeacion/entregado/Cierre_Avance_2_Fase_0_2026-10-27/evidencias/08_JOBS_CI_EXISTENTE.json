@@ -1,0 +1,1819 @@
+{
+  "recordedAt": "2026-10-27T19:45:12.930Z",
+  "note": "Checks anteriores consultados ahora; ninguna suite ejecutada por Fase 0.",
+  "data": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "Foundation",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "jobs": [
+              {
+                "id": 122108400260,
+                "name": "container",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 40480231249,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run docker compose config --quiet",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run docker compose build",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 8
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 9
+                  }
+                ]
+              },
+              {
+                "id": 122108400491,
+                "name": "production-container",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 40480231249,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Build production image",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Smoke test production container",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Clean up",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 10
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  }
+                ]
+              },
+              {
+                "id": 122108400690,
+                "name": "foundation",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 40480231249,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run subosito/flutter-action@v2",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Reject unresolved merge markers",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run flutter pub get",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run dart run build_runner build",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run flutter analyze",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Foundation, Platform API and contract tests",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 8
+                  },
+                  {
+                    "name": "Run flutter build web --release --no-wasm-dry-run --dart-define=API_BASE_URL=https://api.example.invalid",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 9
+                  },
+                  {
+                    "name": "Post Run subosito/flutter-action@v2",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 17
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 18
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 19
+                  }
+                ]
+              }
+            ]
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "FlutterDev",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "jobs": [
+              {
+                "id": 121974346227,
+                "name": "production-container",
+                "status": "completed",
+                "conclusion": "failure",
+                "run_id": 40438948365,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Build production image",
+                    "status": "completed",
+                    "conclusion": "failure",
+                    "number": 3
+                  },
+                  {
+                    "name": "Smoke test production container",
+                    "status": "completed",
+                    "conclusion": "skipped",
+                    "number": 4
+                  },
+                  {
+                    "name": "Clean up",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 10
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  }
+                ]
+              },
+              {
+                "id": 121974346470,
+                "name": "container",
+                "status": "completed",
+                "conclusion": "failure",
+                "run_id": 40438948365,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run docker compose config --quiet",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run docker compose build",
+                    "status": "completed",
+                    "conclusion": "failure",
+                    "number": 4
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 8
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 9
+                  }
+                ]
+              },
+              {
+                "id": 121974346500,
+                "name": "foundation",
+                "status": "completed",
+                "conclusion": "failure",
+                "run_id": 40438948365,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run subosito/flutter-action@v2",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run flutter pub get",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run dart run build_runner build",
+                    "status": "completed",
+                    "conclusion": "failure",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run flutter analyze",
+                    "status": "completed",
+                    "conclusion": "skipped",
+                    "number": 6
+                  },
+                  {
+                    "name": "Foundation, Platform API and contract tests",
+                    "status": "completed",
+                    "conclusion": "skipped",
+                    "number": 7
+                  },
+                  {
+                    "name": "Run flutter build web --no-wasm-dry-run",
+                    "status": "completed",
+                    "conclusion": "skipped",
+                    "number": 8
+                  },
+                  {
+                    "name": "Post Run subosito/flutter-action@v2",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 16
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 17
+                  }
+                ]
+              }
+            ]
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "BackendCoreDev",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "jobs": [
+              {
+                "id": 118744131997,
+                "name": "docker-build",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39456351630,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run docker build .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  }
+                ]
+              },
+              {
+                "id": 118744132388,
+                "name": "quality",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39456351630,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-node@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run npm ci",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run npm run prisma:generate",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run npm run lint:check",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run npm run format:check",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Run npm run build",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 8
+                  },
+                  {
+                    "name": "Run npm run test:unit:ci",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 9
+                  },
+                  {
+                    "name": "Run npm run test:e2e:ci",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 10
+                  },
+                  {
+                    "name": "Run npm audit --audit-level=high",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  },
+                  {
+                    "name": "Run npm audit --omit=dev --audit-level=high",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 12
+                  },
+                  {
+                    "name": "Post Run actions/setup-node@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 23
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 24
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 25
+                  }
+                ]
+              },
+              {
+                "id": 118744132467,
+                "name": "postgres-integration",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39456351630,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Initialize containers",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run actions/setup-node@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run npm ci",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run npm run prisma:generate",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run npm run prisma:migrate:deploy",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Run npm run test:postgres",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 8
+                  },
+                  {
+                    "name": "Post Run actions/setup-node@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 14
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  },
+                  {
+                    "name": "Stop containers",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 16
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 17
+                  }
+                ]
+              }
+            ]
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "Service",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "jobs": [
+              {
+                "id": 119285336969,
+                "name": "package",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m build",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pip wheel -c requirements/constraints.txt --wheel-dir .validation/wheels '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run python scripts/installed_smoke.py --wheelhouse .validation/wheels",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Run actions/upload-artifact@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 8
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 16
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 17
+                  }
+                ]
+              },
+              {
+                "id": 119285337191,
+                "name": "unit and contract (3.11)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'not integration and not browser and not contract'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m contract",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 12
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  }
+                ]
+              },
+              {
+                "id": 119285337249,
+                "name": "unit and contract (3.13)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'not integration and not browser and not contract'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m contract",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 12
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  }
+                ]
+              },
+              {
+                "id": 119285337325,
+                "name": "quality",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m compileall -q src",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m ruff check .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run python -m ruff format --check .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 14
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  }
+                ]
+              },
+              {
+                "id": 119285337341,
+                "name": "integration (ubuntu-latest, 3.13)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m playwright install --with-deps chromium",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'integration or browser'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 12
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  }
+                ]
+              },
+              {
+                "id": 119285337355,
+                "name": "integration (ubuntu-latest, 3.11)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m playwright install --with-deps chromium",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'integration or browser'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 12
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  }
+                ]
+              },
+              {
+                "id": 119285337357,
+                "name": "integration (windows-latest, 3.13)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m playwright install --with-deps chromium",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'integration or browser'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 12
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  }
+                ]
+              },
+              {
+                "id": 119285337551,
+                "name": "docker-build",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run docker build -t prospector-service:ci .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python scripts/container_smoke.py --image prospector-service:ci",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 9
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 10
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  }
+                ]
+              },
+              {
+                "id": 119285337569,
+                "name": "integration (windows-latest, 3.11)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39618476631,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m playwright install --with-deps chromium",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'integration or browser'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 12
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  }
+                ]
+              }
+            ]
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "Engine",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "jobs": [
+              {
+                "id": 119249658296,
+                "name": "integration (ubuntu-latest, 3.11)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39608150150,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m playwright install --with-deps chromium",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest tests/integration -q",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'not e2e'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 14
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  }
+                ]
+              },
+              {
+                "id": 119249658564,
+                "name": "quality (3.11)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39608150150,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m compileall -q src",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m ruff check .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run python -m ruff format --check .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Run python -m pytest tests/unit -q",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 8
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 16
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 17
+                  }
+                ]
+              },
+              {
+                "id": 119249658625,
+                "name": "integration (windows-latest, 3.13)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39608150150,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m playwright install --with-deps chromium",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest tests/integration -q",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'not e2e'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 14
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  }
+                ]
+              },
+              {
+                "id": 119249658766,
+                "name": "package",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39608150150,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt '.[dev]' setuptools wheel",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m build --no-isolation",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python scripts/wheel_smoke.py",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run actions/upload-artifact@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 14
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  }
+                ]
+              },
+              {
+                "id": 119249658784,
+                "name": "quality (3.13)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39608150150,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m compileall -q src",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m ruff check .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run python -m ruff format --check .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Run python -m pytest tests/unit -q",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 8
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 16
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 17
+                  }
+                ]
+              },
+              {
+                "id": 119249658802,
+                "name": "integration (ubuntu-latest, 3.13)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39608150150,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m playwright install --with-deps chromium",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest tests/integration -q",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'not e2e'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 14
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  }
+                ]
+              },
+              {
+                "id": 119249659021,
+                "name": "docker-build",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39608150150,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run docker build --tag prospector-engine:ci .",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run docker run --rm --init --shm-size=1g --cap-drop=ALL --security-opt=no-new-privileges prospector-engine:ci python -m prospector_engine.diagnostics",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run docker run --rm --init --shm-size=1g --cap-drop=ALL --security-opt=no-new-privileges prospector-engine:ci",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 10
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 11
+                  }
+                ]
+              },
+              {
+                "id": 119249659136,
+                "name": "integration (windows-latest, 3.11)",
+                "status": "completed",
+                "conclusion": "success",
+                "run_id": 39608150150,
+                "logs_url": null,
+                "steps": [
+                  {
+                    "name": "Set up job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 1
+                  },
+                  {
+                    "name": "Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 2
+                  },
+                  {
+                    "name": "Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 3
+                  },
+                  {
+                    "name": "Run python -m pip install -c requirements/constraints.txt -e '.[dev]'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 4
+                  },
+                  {
+                    "name": "Run python -m playwright install --with-deps chromium",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 5
+                  },
+                  {
+                    "name": "Run python -m pytest tests/integration -q",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 6
+                  },
+                  {
+                    "name": "Run python -m pytest -q -m 'not e2e'",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 7
+                  },
+                  {
+                    "name": "Post Run actions/setup-python@v5",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 13
+                  },
+                  {
+                    "name": "Post Run actions/checkout@v4",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 14
+                  },
+                  {
+                    "name": "Complete job",
+                    "status": "completed",
+                    "conclusion": "success",
+                    "number": 15
+                  }
+                ]
+              }
+            ]
+          },
+          "isError": false
+        }
+      }
+    }
+  ]
+}

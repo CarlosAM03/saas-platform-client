@@ -1,0 +1,32 @@
+[
+  {
+    "repo": "CarlosAM03/saas-platform-backend",
+    "number": 6,
+    "state": "open",
+    "merged": false,
+    "draft": true,
+    "head": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+    "base": "dev",
+    "url": "https://github.com/CarlosAM03/saas-platform-backend/pull/6"
+  },
+  {
+    "repo": "CarlosAM03/saas-platform-client",
+    "number": 7,
+    "state": "closed",
+    "merged": true,
+    "draft": true,
+    "head": "095e899ace31acf17d97bbe945c118c1a5d88682",
+    "base": "dev",
+    "url": "https://github.com/CarlosAM03/saas-platform-client/pull/7"
+  },
+  {
+    "repo": "CarlosAM03/saas-platform-client",
+    "number": 8,
+    "state": "open",
+    "merged": false,
+    "draft": true,
+    "head": "97ad02a621007e4139e5207511ecca2376754ed8",
+    "base": "fix/f5-foundation",
+    "url": "https://github.com/CarlosAM03/saas-platform-client/pull/8"
+  }
+]

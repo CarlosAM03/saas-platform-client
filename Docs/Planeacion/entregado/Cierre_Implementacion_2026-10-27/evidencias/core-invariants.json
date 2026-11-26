@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-28T00:46:30.184Z",
+  "backendMain": "b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+  "baseline": "3a3309398458ab333d7b00f16e9c2df6a09ef734",
+  "unchangedPaths": [
+    "Prisma",
+    "src/auth/strategies/jwt.strategy.ts",
+    "src/prospecting-jobs",
+    "src/prospector-client",
+    "src/common/openapi/deployment-document.ts"
+  ],
+  "gitDiffExitCode": 0,
+  "blobs": {
+    "prisma": "807371c90e99fe1aa4ff89835ff8e765fd507a64",
+    "jwt": "cf77cca6b81d2b18cf6aea055759108b19f33ae5",
+    "jobs": "56e3e459bf5f5dae941f3c04f4c9c04bb8cb495a"
+  },
+  "coreCountsAfterSerialization": {
+    "tenants": 2,
+    "users": 5,
+    "campaigns": 7,
+    "prospects": 38,
+    "jobs": 10
+  },
+  "experimentalMigration": "20261027063000_prospector_mvp_integration",
+  "experimentalCounts": {
+    "tenants": 2,
+    "users": 5,
+    "campaigns": 8,
+    "prospects": 36,
+    "jobs": 19
+  },
+  "limitations": "Snapshot counts in B expire by TTL; counts describe capture time"
+}

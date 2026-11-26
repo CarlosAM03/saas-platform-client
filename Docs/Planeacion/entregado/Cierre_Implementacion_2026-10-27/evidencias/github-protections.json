@@ -1,0 +1,177 @@
+[
+  {
+    "repo": "saas-platform-backend",
+    "path": "branches/dev/protection",
+    "status": 404,
+    "body": {
+      "message": "Branch not protected",
+      "documentation_url": "https://docs.github.com/rest/branches/branch-protection#get-branch-protection",
+      "status": "404"
+    }
+  },
+  {
+    "repo": "saas-platform-backend",
+    "path": "rules/branches/dev",
+    "status": 200,
+    "body": []
+  },
+  {
+    "repo": "saas-platform-backend",
+    "path": "branches/main/protection",
+    "status": 404,
+    "body": {
+      "message": "Branch not protected",
+      "documentation_url": "https://docs.github.com/rest/branches/branch-protection#get-branch-protection",
+      "status": "404"
+    }
+  },
+  {
+    "repo": "saas-platform-backend",
+    "path": "rules/branches/main",
+    "status": 200,
+    "body": [
+      {
+        "type": "pull_request",
+        "parameters": {
+          "required_approving_review_count": 0,
+          "dismiss_stale_reviews_on_push": false,
+          "required_reviewers": [],
+          "require_code_owner_review": false,
+          "require_last_push_approval": false,
+          "required_review_thread_resolution": false,
+          "require_extra_approval_for_unattributed_changes": true,
+          "allowed_merge_methods": [
+            "merge",
+            "squash",
+            "rebase"
+          ]
+        },
+        "ruleset_source_type": "Repository",
+        "ruleset_source": "CarlosAM03/saas-platform-backend",
+        "ruleset_id": 24791910
+      },
+      {
+        "type": "required_status_checks",
+        "parameters": {
+          "strict_required_status_checks_policy": true,
+          "do_not_enforce_on_create": false,
+          "required_status_checks": [
+            {
+              "context": "quality",
+              "integration_id": 15368
+            },
+            {
+              "context": "postgres-integration",
+              "integration_id": 15368
+            },
+            {
+              "context": "docker-build",
+              "integration_id": 15368
+            }
+          ]
+        },
+        "ruleset_source_type": "Repository",
+        "ruleset_source": "CarlosAM03/saas-platform-backend",
+        "ruleset_id": 24791910
+      },
+      {
+        "type": "non_fast_forward",
+        "ruleset_source_type": "Repository",
+        "ruleset_source": "CarlosAM03/saas-platform-backend",
+        "ruleset_id": 24791910
+      },
+      {
+        "type": "deletion",
+        "ruleset_source_type": "Repository",
+        "ruleset_source": "CarlosAM03/saas-platform-backend",
+        "ruleset_id": 24791910
+      }
+    ]
+  },
+  {
+    "repo": "saas-platform-client",
+    "path": "branches/dev/protection",
+    "status": 404,
+    "body": {
+      "message": "Branch not protected",
+      "documentation_url": "https://docs.github.com/rest/branches/branch-protection#get-branch-protection",
+      "status": "404"
+    }
+  },
+  {
+    "repo": "saas-platform-client",
+    "path": "rules/branches/dev",
+    "status": 200,
+    "body": []
+  },
+  {
+    "repo": "saas-platform-client",
+    "path": "branches/main/protection",
+    "status": 404,
+    "body": {
+      "message": "Branch not protected",
+      "documentation_url": "https://docs.github.com/rest/branches/branch-protection#get-branch-protection",
+      "status": "404"
+    }
+  },
+  {
+    "repo": "saas-platform-client",
+    "path": "rules/branches/main",
+    "status": 200,
+    "body": [
+      {
+        "type": "deletion",
+        "ruleset_source_type": "Repository",
+        "ruleset_source": "CarlosAM03/saas-platform-client",
+        "ruleset_id": 25497523
+      },
+      {
+        "type": "non_fast_forward",
+        "ruleset_source_type": "Repository",
+        "ruleset_source": "CarlosAM03/saas-platform-client",
+        "ruleset_id": 25497523
+      },
+      {
+        "type": "pull_request",
+        "parameters": {
+          "required_approving_review_count": 0,
+          "dismiss_stale_reviews_on_push": false,
+          "required_reviewers": [],
+          "require_code_owner_review": false,
+          "require_last_push_approval": false,
+          "required_review_thread_resolution": false,
+          "require_extra_approval_for_unattributed_changes": true,
+          "allowed_merge_methods": [
+            "merge",
+            "squash",
+            "rebase"
+          ]
+        },
+        "ruleset_source_type": "Repository",
+        "ruleset_source": "CarlosAM03/saas-platform-client",
+        "ruleset_id": 25497523
+      },
+      {
+        "type": "required_status_checks",
+        "parameters": {
+          "strict_required_status_checks_policy": true,
+          "do_not_enforce_on_create": false,
+          "required_status_checks": [
+            {
+              "context": "foundation"
+            },
+            {
+              "context": "container"
+            },
+            {
+              "context": "production-container"
+            }
+          ]
+        },
+        "ruleset_source_type": "Repository",
+        "ruleset_source": "CarlosAM03/saas-platform-client",
+        "ruleset_id": 25497523
+      }
+    ]
+  }
+]

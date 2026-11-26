@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-27T23:57:02.098Z",
+  "pass": true,
+  "assets": [
+    {
+      "container": "prospector-avance2-core-web-1",
+      "kind": "core-local",
+      "sha256": "f3654ef62aa8fe7325e48c92cc7a33bcb03e82b69954f4628c253181e2c69e86",
+      "secretMatches": 0,
+      "loopbackUrls": [
+        "https://localhost:18443"
+      ],
+      "publicApi": false
+    },
+    {
+      "container": "prospector-demo-110-web-1",
+      "kind": "experimental-local",
+      "sha256": "70a8b3167202a942fcc12d23ce7ae89acfcb8abfe0df67969c74fc7aee97d890",
+      "secretMatches": 0,
+      "loopbackUrls": [
+        "https://localhost:18463"
+      ],
+      "publicApi": false
+    },
+    {
+      "container": "prospector-avance2-release-smoke",
+      "kind": "release-candidate",
+      "sha256": "3b5d2f49234e9a5486f235cb3a3b8d551befcb880e37854352ddf4dadb4c1578",
+      "secretMatches": 0,
+      "loopbackUrls": [],
+      "publicApi": true
+    }
+  ],
+  "logs": [
+    {
+      "container": "prospector-avance2-core-api-1",
+      "secretMatches": 0
+    },
+    {
+      "container": "prospector-demo-110-api-1",
+      "secretMatches": 0
+    },
+    {
+      "container": "prospector-demo-110-service-1",
+      "secretMatches": 0
+    }
+  ],
+  "coreUser": "node",
+  "coreNodeEnv": "production",
+  "coreCors": "https://localhost:18443",
+  "coreIntegrationEnvironmentKeys": []
+}

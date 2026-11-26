@@ -1,0 +1,24 @@
+{
+  "recordedAt": "2026-10-27T19:42:53.930Z",
+  "snapshots": [
+    {
+      "source": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\Plan de TrabajoAvance2.md",
+      "copy": "evidencias/PLAN_RECTOR_SNAPSHOT.md",
+      "bytes": 19546,
+      "sha256": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09",
+      "gitBlobIfTracked": "9222a25e615afc9b5a5f9c076a5c6f9cdb80e538"
+    },
+    {
+      "source": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\Docs\\Planeacion\\entregado\\Plan de TrabajoAvance1.md",
+      "copy": "evidencias/PLAN_AVANCE_1_SNAPSHOT.md",
+      "bytes": 19862,
+      "sha256": "afdbf821b98f5040d569aec44662f8414f32e4f55eb9fe44a7ebdb8e4a4fdb00",
+      "gitBlobIfTracked": "c81250fe018a3525506becdb46ad459e5775c7ec"
+    }
+  ],
+  "deletedTrackedPlan": {
+    "path": "PlataformaFlutter/saas-platform-client/Plan de Trabajo.md",
+    "baselineBlob": "3988fdff5b3ce379fb461e0753ec77daed9e3a08",
+    "state": "Working-tree deletion left intact; content remains reachable in published HEAD; no restoration, rename or commit performed"
+  }
+}
