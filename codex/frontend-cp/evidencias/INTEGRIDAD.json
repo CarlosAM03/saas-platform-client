@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-25T03:15:35.9335446Z",
+  "frontendSha": "e78b82a32d3afe185b69c2643455034e52ba57f6",
+  "backendSha": "779fc7885faefdfe9e3cb0f3fee86810d96d2711",
+  "command": "Compare git blob IDs for all 10 source and destination handoff files",
+  "fixture": "Backend handoff at pinned SHA; complete frontend copy",
+  "expected": "10 identical Git blobs",
+  "observed": "10 identical Git blobs",
+  "status": "PASS",
+  "files": [
+    {
+      "file": "00_CONTRATO_DE_ENTREGA.md",
+      "sourceBlob": "caec1e5874868599a3a6ce43871af017792ce8bd",
+      "copiedBlob": "caec1e5874868599a3a6ce43871af017792ce8bd",
+      "status": "PASS"
+    },
+    {
+      "file": "01_PLANTILLA_HARNESS_FRONTEND.md",
+      "sourceBlob": "ade3de9401789c43f4c9c5d198c09181c68d63ba",
+      "copiedBlob": "ade3de9401789c43f4c9c5d198c09181c68d63ba",
+      "status": "PASS"
+    },
+    {
+      "file": "02_MATRIZ_API_FLUTTER.csv",
+      "sourceBlob": "ec30e907726d3d4a3225052992b6f06b289243a8",
+      "copiedBlob": "ec30e907726d3d4a3225052992b6f06b289243a8",
+      "status": "PASS"
+    },
+    {
+      "file": "03_CONTRATO_IMPLEMENTADO.md",
+      "sourceBlob": "47248dfa36e298a2ac74a215a22148c14c888acc",
+      "copiedBlob": "47248dfa36e298a2ac74a215a22148c14c888acc",
+      "status": "PASS"
+    },
+    {
+      "file": "04_OBJETIVOS_Y_FLUJOS.md",
+      "sourceBlob": "5ddcefcdf7ba38c24e04ef355d2fbe36e73cccab",
+      "copiedBlob": "5ddcefcdf7ba38c24e04ef355d2fbe36e73cccab",
+      "status": "PASS"
+    },
+    {
+      "file": "05_REGLAS_FLUTTER_Y_PRUEBAS.md",
+      "sourceBlob": "8cb39f7f2a59c96601c9fb3203db560fcfb07f68",
+      "copiedBlob": "8cb39f7f2a59c96601c9fb3203db560fcfb07f68",
+      "status": "PASS"
+    },
+    {
+      "file": "06_RUNBOOK_QA_SINTETICO.md",
+      "sourceBlob": "1fb550f053387a9845ead050c604b534d10189e3",
+      "copiedBlob": "1fb550f053387a9845ead050c604b534d10189e3",
+      "status": "PASS"
+    },
+    {
+      "file": "openapi-served-3b5eec6.json",
+      "sourceBlob": "f5bdc0c7bfa455f3923064c8861c28434d58bb8b",
+      "copiedBlob": "f5bdc0c7bfa455f3923064c8861c28434d58bb8b",
+      "status": "PASS"
+    },
+    {
+      "file": "PROMPT_ACTIVACION.txt",
+      "sourceBlob": "c8037bbedc00d70d39e1ba70fb4a178bcd88e8a1",
+      "copiedBlob": "c8037bbedc00d70d39e1ba70fb4a178bcd88e8a1",
+      "status": "PASS"
+    },
+    {
+      "file": "README.md",
+      "sourceBlob": "f2572b5750f677d0a6908858dd2b2553d1e24441",
+      "copiedBlob": "f2572b5750f677d0a6908858dd2b2553d1e24441",
+      "status": "PASS"
+    }
+  ],
+  "limitations": "Original three Markdown hard-break trailing spaces preserved intentionally"
+}

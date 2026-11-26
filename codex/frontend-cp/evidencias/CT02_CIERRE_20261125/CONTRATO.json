@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-25T20:20:43.055Z",
+  "frontendSha": "e2b27cbe69e8b2d0d6fa753de641ed3a0ed51211",
+  "backendSha": "779fc7885faefdfe9e3cb0f3fee86810d96d2711",
+  "command": "node tool/sprint-cp/verify-contract.mjs",
+  "fixture": "Pinned isolated synthetic backend, onboarding disabled",
+  "expected": "Same normalized served OpenAPI as immutable handoff, all 25 method/path pairs",
+  "observed": {
+    "normalizedSha256": "1520369724d778a620541c1f56e312dd6a41a221afdbb3e857030b6c6a7ec14f",
+    "paths": 39,
+    "schemas": 77,
+    "verifiedOperations": 25
+  },
+  "status": "PASS",
+  "limitations": "Contract equivalence verifies schema and documented operations, not every runtime semantic."
+}
