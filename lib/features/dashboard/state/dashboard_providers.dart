@@ -11,7 +11,10 @@ final dashboardRepositoryProvider =
   }
   return ApiDashboardRepository(ref.watch(platformApiProvider));
 });
-final dashboardProvider = FutureProvider.autoDispose<DashboardData>((ref) {
+final dashboardProvider = FutureProvider.autoDispose<DashboardData>((ref) async {
   ref.watch(sessionScopeProvider);
-  return ref.watch(dashboardRepositoryProvider).load();
+  final permissions = await ref.watch(currentTenantPermissionsProvider.future);
+  return ref
+      .watch(dashboardRepositoryProvider)
+      .load(includeProspecting: permissions.canCreateProspects);
 });
