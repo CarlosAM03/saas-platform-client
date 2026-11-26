@@ -19,7 +19,7 @@ COPY web ./web
 COPY assets ./assets
 COPY tool/validate_api_origin.dart ./tool/validate_api_origin.dart
 ARG API_BASE_URL=https://saas-platform-backend-l55n.onrender.com
-ARG PROSPECTOR_BATCH_ENABLED=false
+ARG PROSPECTOR_BATCH_ENABLED=true
 RUN case "$API_BASE_URL" in https://?*) ;; *) echo "ERROR: API_BASE_URL is required and must use HTTPS" >&2; exit 1 ;; esac \
     && case "$PROSPECTOR_BATCH_ENABLED" in true|false) ;; *) exit 1 ;; esac \
     && dart run tool/validate_api_origin.dart "$API_BASE_URL" \
