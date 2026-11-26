@@ -15,6 +15,7 @@ import '../../dashboard/state/dashboard_providers.dart';
 import '../state/prospecting_jobs_providers.dart';
 import '../state/prospecting_capabilities.dart';
 import 'prospecting_demo_panel.dart';
+import 'batch_generation_page.dart';
 
 class GeneratePage extends ConsumerStatefulWidget {
   const GeneratePage({super.key});
@@ -112,6 +113,11 @@ class _GenerateState extends ConsumerState<GeneratePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (const bool.fromEnvironment('PROSPECTOR_BATCH_ENABLED')) {
+      return BatchGenerationPage(
+        key: ValueKey(ref.watch(sessionScopeProvider)),
+      );
+    }
     final permissions = ref.watch(currentTenantPermissionsProvider);
     if (!ref.watch(prospectingCapabilitiesProvider).create) {
       return FeaturePage(
