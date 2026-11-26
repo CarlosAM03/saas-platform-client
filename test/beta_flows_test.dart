@@ -354,6 +354,8 @@ void main() {
       await tester.ensureVisible(find.text('Guardar'));
       await tester.tap(find.text('Guardar'));
       await tester.pumpAndSettle();
+      await tester.tap(find.text('Confirmar').last);
+      await tester.pumpAndSettle();
       expect(repo.updatedData, {'email': null});
       expect(find.byType(AlertDialog), findsNothing);
       expect(tester.takeException(), isNull);

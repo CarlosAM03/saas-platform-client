@@ -1,0 +1,8 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "feat/sprint-campana-prospector": false,
+      "UI/UX": false
+    }
+  }
+}

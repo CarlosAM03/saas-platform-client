@@ -14,6 +14,8 @@ import '../../campaigns/state/campaigns_providers.dart';
 import '../../dashboard/state/dashboard_providers.dart';
 import '../data/prospect_import_repository.dart';
 import '../state/prospects_providers.dart';
+import '../state/prospect_context_providers.dart';
+import '../../campaigns/state/participation_providers.dart';
 
 const importActions = {
   ProspectImportAction.CREATE: 'Crear prospecto',
@@ -153,6 +155,10 @@ class _ImportState extends ConsumerState<ProspectImportPage> {
       ref.invalidate(prospectsDetailProvider);
       ref.invalidate(campaignProspectsProvider);
       ref.invalidate(dashboardProvider);
+      ref.invalidate(filteredCampaignProspectsProvider);
+      ref.invalidate(campaignDashboardProvider);
+      ref.invalidate(associatedCampaignsProvider);
+      ref.invalidate(prospectProvenanceProvider);
       setState(() {
         result = value;
         preview = null;
@@ -173,7 +179,7 @@ class _ImportState extends ConsumerState<ProspectImportPage> {
             e is ApiException &&
                 (e.kind == ApiErrorKind.badRequest ||
                     e.kind == ApiErrorKind.conflict)
-            ? 'La vista previa venció o los datos cambiaron. Genera una nueva vista previa.'
+            ? '${e.code ?? ''}: ${e.message}\nGenera una nueva vista previa.'
             : 'No se pudo confirmar el resultado. Revisa los prospectos de la campaña antes de generar otra vista previa. ${const ErrorMapper().userMessage(e)}';
       });
     }
@@ -301,11 +307,9 @@ class _ImportState extends ConsumerState<ProspectImportPage> {
                       onPressed: () => context.go('/campaigns/${campaign!.id}'),
                       child: const Text('Ver prospectos de la campaña'),
                     ),
-                    for (final row in value.rows.where(
-                      (r) => r.action == ProspectImportResultAction.REJECTED,
-                    ))
+                    for (final row in value.rows)
                       ListTile(
-                        title: Text('Fila ${row.record}: rechazada'),
+                        title: Text('Fila ${row.record}: ${row.action.name}'),
                         subtitle: Text(
                           row.errors
                               .map((e) => '${e.field}: ${e.message}')
@@ -377,6 +381,7 @@ class _ImportState extends ConsumerState<ProspectImportPage> {
                                                 ProspectImportAction.SKIP,
                                               ]
                                             : [
+                                                ProspectImportAction.CREATE,
                                                 ProspectImportAction.SKIP,
                                                 ProspectImportAction
                                                     .LINK_EXISTING,
