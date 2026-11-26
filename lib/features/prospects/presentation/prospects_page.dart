@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../platform_api/platform_api.dart';
 import '../../../core/errors/api_exception.dart';
+import '../../../shared/widgets/catalog_list.dart';
 import '../../../shared/widgets/feature_widgets.dart';
 import '../../../shared/widgets/beta_components.dart' show emailField;
 import '../../auth/state/tenant_permissions.dart';
@@ -38,9 +39,10 @@ class ProspectsPage extends ConsumerWidget {
             label: const Text('Importar CSV'),
           ),
         if (p?.canCreateProspects == true)
-          FilledButton(
+          FilledButton.icon(
             onPressed: () => context.go('/prospects/new'),
-            child: const Text('Crear prospecto'),
+            icon: const Icon(Icons.add),
+            label: const Text('Crear prospecto'),
           ),
       ],
       child: PagedList<Prospect>(
@@ -54,11 +56,28 @@ class ProspectsPage extends ConsumerWidget {
           ref.invalidate(prospectsListProvider);
           ref.invalidate(campaignProspectsProvider);
         },
-        item: (p) => ListTile(
-          title: Text(p.name),
-          subtitle: Text('${p.email ?? p.phone ?? ''} · ${p.status.name}'),
-          trailing: Chip(label: Text(p.source.name)),
-          onTap: () => context.go('/prospects/${p.id}'),
+        pageContent: (items) => CatalogList(
+          titleLabel: 'Prospecto',
+          columns: const ['Estado', 'Origen'],
+          records: [
+            for (final prospect in items)
+              CatalogRecord(
+                title: prospect.name,
+                description: prospect.email ?? prospect.phone,
+                cells: [
+                  CatalogTag(
+                    prospect.status == ProspectStatus.ACTIVO
+                        ? 'Activo'
+                        : 'Inactivo',
+                    tone: prospect.status == ProspectStatus.ACTIVO
+                        ? CatalogTagTone.positive
+                        : CatalogTagTone.neutral,
+                  ),
+                  Text(prospect.source.name),
+                ],
+                open: () => context.go('/prospects/${prospect.id}'),
+              ),
+          ],
         ),
       ),
     );
