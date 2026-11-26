@@ -2,7 +2,8 @@
   "git": {
     "deploymentEnabled": {
       "feat/sprint-campana-prospector": false,
-      "UI/UX": false
+      "UI/UX": false,
+      "feat/prospector-batch-flutter": false
     }
   }
 }

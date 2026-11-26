@@ -1,87 +1,208 @@
 import 'package:flutter/material.dart';
 
+import 'catalog_palette.dart';
+
 class AppTheme {
   static ThemeData light() {
-    const primary = Color(0xFF2563EB);
-    const border = Color(0xFFE2E8F0);
-    final scheme = ColorScheme.fromSeed(seedColor: primary).copyWith(
-      primary: primary,
-      surface: Colors.white,
-      error: const Color(0xFFDC2626),
-      onSurface: const Color(0xFF0F172A),
-      secondary: const Color(0xFF1E3A8A),
+    const scheme = ColorScheme.light(
+      primary: CatalogPalette.cobalt,
+      onPrimary: Colors.white,
+      primaryContainer: CatalogPalette.accentSurface,
+      onPrimaryContainer: CatalogPalette.ink,
+      secondary: CatalogPalette.cobaltDark,
+      onSecondary: Colors.white,
+      secondaryContainer: CatalogPalette.lime,
+      onSecondaryContainer: CatalogPalette.ink,
+      tertiary: CatalogPalette.link,
+      onTertiary: Colors.white,
+      tertiaryContainer: CatalogPalette.rail,
+      onTertiaryContainer: CatalogPalette.ink,
+      surface: CatalogPalette.surface,
+      onSurface: CatalogPalette.ink,
+      onSurfaceVariant: CatalogPalette.muted,
+      surfaceContainerLowest: Colors.white,
+      surfaceContainerLow: CatalogPalette.surface,
+      surfaceContainer: CatalogPalette.soft,
+      surfaceContainerHigh: CatalogPalette.canvas,
+      surfaceContainerHighest: CatalogPalette.rail,
+      outline: CatalogPalette.outlineStrong,
+      outlineVariant: CatalogPalette.outline,
+      inverseSurface: CatalogPalette.cobaltDark,
+      onInverseSurface: Colors.white,
+      inversePrimary: CatalogPalette.lime,
+      surfaceTint: Colors.transparent,
+      error: CatalogPalette.error,
+      onError: Colors.white,
+      errorContainer: CatalogPalette.errorSurface,
+      onErrorContainer: CatalogPalette.error,
     );
-    final base =
-        ThemeData(useMaterial3: true, colorScheme: scheme, fontFamily: 'Inter');
+    const corners = BorderRadius.all(Radius.circular(2));
+    const shape = RoundedRectangleBorder(borderRadius: corners);
+    const panelShape = RoundedRectangleBorder(
+      borderRadius: corners,
+      side: BorderSide(color: CatalogPalette.outline),
+    );
+    const inputBorder = OutlineInputBorder(
+      borderRadius: corners,
+      borderSide: BorderSide(color: CatalogPalette.outlineStrong),
+    );
+    final base = ThemeData(
+      useMaterial3: true,
+      colorScheme: scheme,
+      fontFamily: 'Inter',
+    );
+    final text = base.textTheme.apply(
+      bodyColor: CatalogPalette.ink,
+      displayColor: CatalogPalette.ink,
+    );
+
     return base.copyWith(
-      scaffoldBackgroundColor: const Color(0xFFF8FAFC),
-      textTheme: base.textTheme.copyWith(
-        headlineLarge: const TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 32,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF0F172A)),
-        headlineMedium: const TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF0F172A)),
-        titleLarge: const TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF0F172A)),
-        bodyLarge: const TextStyle(
-            fontFamily: 'Inter', fontSize: 16, color: Color(0xFF0F172A)),
-        bodyMedium: const TextStyle(
-            fontFamily: 'Inter', fontSize: 14, color: Color(0xFF475569)),
+      scaffoldBackgroundColor: CatalogPalette.canvas,
+      textTheme: text.copyWith(
+        headlineLarge: text.headlineLarge?.copyWith(
+          fontWeight: FontWeight.w800,
+          letterSpacing: -1.35,
+        ),
+        headlineMedium: text.headlineMedium?.copyWith(
+          fontWeight: FontWeight.w800,
+          letterSpacing: -.85,
+        ),
+        headlineSmall: text.headlineSmall?.copyWith(
+          fontWeight: FontWeight.w800,
+          letterSpacing: -.6,
+        ),
+        titleLarge: text.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+        titleMedium: text.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+        bodyMedium: text.bodyMedium?.copyWith(color: CatalogPalette.muted),
       ),
       appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Color(0xFF0F172A),
-          elevation: 0,
-          surfaceTintColor: Colors.transparent),
-      inputDecorationTheme: InputDecorationTheme(
+        backgroundColor: CatalogPalette.cobalt,
+        foregroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.white),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        titleTextStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 18,
+          fontWeight: FontWeight.w800,
+          color: Colors.white,
+        ),
+        shape: Border(bottom: BorderSide(color: CatalogPalette.cobaltDark)),
+      ),
+      inputDecorationTheme: InputDecorationThemeData(
         filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.all(16),
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: border)),
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: border)),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: primary, width: 2)),
+        fillColor: CatalogPalette.surface,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 11,
+        ),
+        border: inputBorder,
+        enabledBorder: inputBorder,
+        focusedBorder: inputBorder.copyWith(
+          borderSide: const BorderSide(color: CatalogPalette.cobalt, width: 2),
+        ),
       ),
       filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-              minimumSize: const Size(48, 48),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)))),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(48, 44),
+          backgroundColor: CatalogPalette.lime,
+          foregroundColor: CatalogPalette.ink,
+          disabledBackgroundColor: CatalogPalette.rail,
+          disabledForegroundColor: CatalogPalette.muted,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          textStyle: text.labelLarge?.copyWith(fontWeight: FontWeight.w700),
+          shape: shape,
+        ).copyWith(side: _buttonBorder(CatalogPalette.cobaltDark)),
+      ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-              minimumSize: const Size(48, 48),
-              side: const BorderSide(color: border),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)))),
-      cardTheme: CardThemeData(
-          color: Colors.white,
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-              side: const BorderSide(color: border))),
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(48, 44),
+          backgroundColor: CatalogPalette.surface,
+          foregroundColor: CatalogPalette.cobaltDark,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          shape: shape,
+        ).copyWith(side: _buttonBorder(CatalogPalette.outlineStrong)),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: CatalogPalette.link,
+          shape: shape,
+        ),
+      ),
+      cardTheme: const CardThemeData(
+        color: CatalogPalette.surface,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: panelShape,
+      ),
+      listTileTheme: const ListTileThemeData(
+        selectedTileColor: CatalogPalette.accentSurface,
+        selectedColor: CatalogPalette.ink,
+        shape: shape,
+      ),
+      chipTheme: base.chipTheme.copyWith(
+        shape: shape,
+        side: const BorderSide(color: CatalogPalette.outlineStrong),
+        backgroundColor: CatalogPalette.surface,
+        selectedColor: CatalogPalette.accentSurface,
+        secondarySelectedColor: CatalogPalette.accentSurface,
+        labelStyle: text.labelMedium,
+        secondaryLabelStyle: text.labelMedium,
+      ),
       navigationBarTheme: const NavigationBarThemeData(
-          backgroundColor: Colors.white, indicatorColor: Color(0xFFDBEAFE)),
+        backgroundColor: CatalogPalette.rail,
+        indicatorColor: CatalogPalette.lime,
+        indicatorShape: panelShape,
+        surfaceTintColor: Colors.transparent,
+      ),
       navigationRailTheme: const NavigationRailThemeData(
-          backgroundColor: Colors.white, indicatorColor: Color(0xFFDBEAFE)),
-      dividerTheme: const DividerThemeData(color: border, thickness: 1),
-      snackBarTheme: SnackBarThemeData(
-          behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+        backgroundColor: CatalogPalette.rail,
+        indicatorColor: CatalogPalette.lime,
+        indicatorShape: panelShape,
+      ),
+      tabBarTheme: const TabBarThemeData(
+        labelColor: CatalogPalette.ink,
+        unselectedLabelColor: CatalogPalette.muted,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: BoxDecoration(
+          color: CatalogPalette.accentSurface,
+          border: Border.fromBorderSide(
+            BorderSide(color: CatalogPalette.outlineStrong),
+          ),
+          borderRadius: corners,
+        ),
+        dividerColor: CatalogPalette.outlineStrong,
+      ),
+      dialogTheme: const DialogThemeData(
+        backgroundColor: CatalogPalette.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: panelShape,
+      ),
+      drawerTheme: const DrawerThemeData(
+        backgroundColor: CatalogPalette.rail,
+        surfaceTintColor: Colors.transparent,
+        shape: shape,
+      ),
+      dividerTheme: const DividerThemeData(
+        color: CatalogPalette.outline,
+        thickness: 1,
+      ),
+      snackBarTheme: const SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: shape,
+      ),
     );
   }
+
+  static WidgetStateProperty<BorderSide> _buttonBorder(Color border) =>
+      WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return const BorderSide(color: CatalogPalette.outline);
+        }
+        if (states.contains(WidgetState.focused)) {
+          return const BorderSide(color: CatalogPalette.cobaltDark, width: 2);
+        }
+        return BorderSide(color: border);
+      });
 }

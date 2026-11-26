@@ -19,10 +19,14 @@ COPY web ./web
 COPY assets ./assets
 COPY tool/validate_api_origin.dart ./tool/validate_api_origin.dart
 ARG API_BASE_URL=https://saas-platform-backend-l55n.onrender.com
+ARG PROSPECTOR_BATCH_ENABLED=false
 RUN case "$API_BASE_URL" in https://?*) ;; *) echo "ERROR: API_BASE_URL is required and must use HTTPS" >&2; exit 1 ;; esac \
+    && case "$PROSPECTOR_BATCH_ENABLED" in true|false) ;; *) exit 1 ;; esac \
     && dart run tool/validate_api_origin.dart "$API_BASE_URL" \
     && dart run build_runner build \
-    && flutter build web --release --no-pub --no-wasm-dry-run --dart-define=API_BASE_URL="${API_BASE_URL}"
+    && flutter build web --release --no-pub --no-wasm-dry-run \
+        --dart-define=API_BASE_URL="${API_BASE_URL}" \
+        --dart-define=PROSPECTOR_BATCH_ENABLED="${PROSPECTOR_BATCH_ENABLED}"
 
 FROM nginx:1.28.0-alpine
 # Vercel defaults to port 80; the runtime may override PORT.

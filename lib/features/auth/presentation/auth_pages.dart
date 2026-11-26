@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/app_providers.dart';
 import '../state/auth_state.dart';
 import '../../../core/errors/error_mapper.dart';
+import '../../../core/theme/catalog_palette.dart';
 import '../../../shared/widgets/beta_components.dart';
 
 class SplashPage extends StatelessWidget {
@@ -48,103 +49,139 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           padding: const EdgeInsets.all(24),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 460),
-            child: Column(
-              children: [
-                const Icon(
-                  Icons.layers_outlined,
-                  color: Color(0xFF2563EB),
-                  size: 48,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'PLATAFORMA SaaS · BETA',
-                  style: TextStyle(
-                    fontSize: 12,
-                    letterSpacing: 2,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Surface(
-                  padding: 28,
-                  child: Form(
-                    key: form,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Bienvenido de nuevo',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Inicia sesión para gestionar tus campañas y tu organización.',
-                        ),
-                        const SizedBox(height: 28),
-                        TextFormField(
-                          controller: email,
-                          enabled: !auth.busy,
-                          validator: emailField,
-                          autofillHints: const [AutofillHints.username],
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            labelText: 'Correo electrónico',
-                            hintText: 'usuario@empresa.com',
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          controller: password,
-                          enabled: !auth.busy,
-                          obscureText: obscure,
-                          validator: requiredField,
-                          autofillHints: const [AutofillHints.password],
-                          onFieldSubmitted: (_) => auth.busy ? null : submit(),
-                          decoration: InputDecoration(
-                            labelText: 'Contraseña',
-                            suffixIcon: IconButton(
-                              tooltip: obscure
-                                  ? 'Mostrar contraseña'
-                                  : 'Ocultar contraseña',
-                              onPressed: () =>
-                                  setState(() => obscure = !obscure),
-                              icon: Icon(
-                                obscure
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (auth.error != null)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Text(
-                              const ErrorMapper().userMessage(auth.error!),
-                              style: const TextStyle(color: Color(0xFFDC2626)),
-                            ),
-                          ),
-                        const SizedBox(height: 24),
-                        FilledButton(
-                          onPressed: auth.busy ? null : submit,
-                          child: Text(
-                            auth.busy ? 'Iniciando sesión…' : 'Iniciar sesión',
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          '¿Necesitas acceso o recuperar tu contraseña? Contacta al administrador de tu organización.',
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+            child: _CatalogLoginWindow(
+              child: Form(
+                key: form,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Bienvenido de nuevo',
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Inicia sesión para gestionar tus campañas y tu organización.',
+                    ),
+                    const SizedBox(height: 28),
+                    TextFormField(
+                      controller: email,
+                      enabled: !auth.busy,
+                      validator: emailField,
+                      autofillHints: const [AutofillHints.username],
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      decoration: const InputDecoration(
+                        labelText: 'Correo electrónico',
+                        hintText: 'usuario@empresa.com',
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: password,
+                      enabled: !auth.busy,
+                      obscureText: obscure,
+                      validator: requiredField,
+                      autofillHints: const [AutofillHints.password],
+                      onFieldSubmitted: (_) => auth.busy ? null : submit(),
+                      decoration: InputDecoration(
+                        labelText: 'Contraseña',
+                        suffixIcon: IconButton(
+                          tooltip: obscure
+                              ? 'Mostrar contraseña'
+                              : 'Ocultar contraseña',
+                          onPressed: () => setState(() => obscure = !obscure),
+                          icon: Icon(
+                            obscure
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (auth.error != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text(
+                          const ErrorMapper().userMessage(auth.error!),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 24),
+                    FilledButton(
+                      onPressed: auth.busy ? null : submit,
+                      child: Text(
+                        auth.busy ? 'Iniciando sesión…' : 'Iniciar sesión',
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      '¿Necesitas acceso o recuperar tu contraseña? Contacta al administrador de tu organización.',
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _CatalogLoginWindow extends StatelessWidget {
+  const _CatalogLoginWindow({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ColoredBox(
+            color: CatalogPalette.cobalt,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              child: Row(
+                children: [
+                  const ExcludeSemantics(
+                    child: ColoredBox(
+                      color: CatalogPalette.lime,
+                      child: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Icon(
+                          Icons.grid_on,
+                          color: CatalogPalette.cobalt,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      'PROSPECTOR',
+                      style: text.labelLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(padding: const EdgeInsets.all(24), child: child),
+        ],
       ),
     );
   }
