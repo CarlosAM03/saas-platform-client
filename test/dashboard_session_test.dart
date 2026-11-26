@@ -23,7 +23,7 @@ class DeferredDashboard implements DashboardRepository {
   final previous = Completer<DashboardData>();
   int reads = 0;
   @override
-  Future<DashboardData> load() =>
+  Future<DashboardData> load({bool includeProspecting = true}) =>
       ++reads == 1 ? previous.future : Future.value(data(2));
 }
 

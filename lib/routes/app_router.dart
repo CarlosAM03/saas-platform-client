@@ -17,6 +17,8 @@ import '../features/prospects/presentation/prospects_page.dart';
 import '../features/prospects/presentation/prospect_import_page.dart';
 import '../features/prospecting_jobs/presentation/jobs_pages.dart';
 import '../features/prospecting_jobs/presentation/generate_page.dart';
+import '../features/prospecting_jobs/presentation/batch_pages.dart';
+import '../features/prospecting_jobs/state/batch_providers.dart';
 
 import '../features/dashboard/presentation/dashboard_page.dart';
 import '../features/tenant_registration/presentation/registration_pages.dart';
@@ -146,10 +148,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             (s) => ProspectFormPage(id: s.pathParameters['id']!),
           ),
           featureRoute('/generate', (s) => const GeneratePage()),
-          featureRoute('/jobs', (s) => const JobsPage()),
+          featureRoute(
+            '/jobs',
+            (s) => prospectingBatchEnabled
+                ? const BatchHistoryPage()
+                : const JobsPage(),
+          ),
           featureRoute(
             '/jobs/:id',
-            (s) => JobDetailPage(s.pathParameters['id']!),
+            (s) => prospectingBatchEnabled
+                ? BatchDetailPage(s.pathParameters['id']!)
+                : JobDetailPage(s.pathParameters['id']!),
           ),
           featureRoute('/profile', (s) => const ProfilePage()),
           featureRoute('/admin', (s) => const AdminPage()),
@@ -224,12 +233,21 @@ class AppShell extends ConsumerWidget {
   const AppShell({required this.child, super.key});
   final Widget child;
 
-  static const _destinations = [
-    (path: '/dashboard', label: 'Dashboard', icon: Icons.dashboard_outlined),
-    (path: '/campaigns', label: 'Campañas', icon: Icons.campaign_outlined),
-    (path: '/prospects', label: 'Prospectos', icon: Icons.people_outline),
-    (path: '/jobs', label: 'Trabajos', icon: Icons.work_outline),
-  ];
+  static const _dashboard = (
+    path: '/dashboard',
+    label: 'Dashboard',
+    icon: Icons.dashboard_outlined,
+  );
+  static const _campaigns = (
+    path: '/campaigns',
+    label: 'Campañas',
+    icon: Icons.campaign_outlined,
+  );
+  static const _prospects = (
+    path: '/prospects',
+    label: 'Prospectos',
+    icon: Icons.people_outline,
+  );
 
   static const _selectionShape = RoundedRectangleBorder(
     side: BorderSide(color: CatalogPalette.outlineStrong),
@@ -238,7 +256,23 @@ class AppShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.path;
-    final rawIndex = _destinations.indexWhere(
+    final canUseProspecting = ref
+        .watch(currentTenantPermissionsProvider)
+        .asData
+        ?.value
+        .canCreateProspects;
+    final destinations = [
+      _dashboard,
+      _campaigns,
+      _prospects,
+      if (!prospectingBatchEnabled || canUseProspecting == true)
+        (
+          path: '/jobs',
+          label: prospectingBatchEnabled ? 'Lotes' : 'Trabajos',
+          icon: Icons.work_outline,
+        ),
+    ];
+    final rawIndex = destinations.indexWhere(
       (destination) =>
           location == destination.path ||
           location.startsWith('${destination.path}/'),
@@ -254,7 +288,7 @@ class AppShell extends ConsumerWidget {
         : organization?.name ?? 'Organización seleccionada';
 
     void navigate(int destinationIndex) =>
-        context.go(_destinations[destinationIndex].path);
+        context.go(destinations[destinationIndex].path);
 
     return Scaffold(
       appBar: AppBar(
@@ -393,7 +427,7 @@ class AppShell extends ConsumerWidget {
                       fontWeight: FontWeight.w500,
                     ),
                     destinations: [
-                      for (final destination in _destinations)
+                      for (final destination in destinations)
                         NavigationRailDestination(
                           icon: Icon(destination.icon),
                           label: Text(destination.label),
@@ -425,11 +459,18 @@ class AppShell extends ConsumerWidget {
                 ),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.travel_explore),
-              title: const Text('Buscar prospectos'),
-              onTap: () => context.go('/generate'),
-            ),
+            if (canUseProspecting == true) ...[
+              ListTile(
+                leading: const Icon(Icons.travel_explore),
+                title: const Text('Buscar prospectos'),
+                onTap: () => context.go('/generate'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.work_outline),
+                title: Text(prospectingBatchEnabled ? 'Lotes' : 'Trabajos'),
+                onTap: () => context.go('/jobs'),
+              ),
+            ],
             ListTile(
               leading: const Icon(Icons.business_outlined),
               title: const Text('Organizaciones'),
@@ -490,7 +531,7 @@ class AppShell extends ConsumerWidget {
                   indicatorColor: CatalogPalette.lime,
                   indicatorShape: _selectionShape,
                   destinations: [
-                    for (final destination in _destinations)
+                    for (final destination in destinations)
                       NavigationDestination(
                         icon: Icon(destination.icon),
                         label: destination.label,

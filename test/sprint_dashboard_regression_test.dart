@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:saas_platform_client/core/errors/error_mapper.dart';
+import 'package:saas_platform_client/features/auth/state/auth_state.dart';
 import 'package:saas_platform_client/features/dashboard/presentation/dashboard_page.dart';
 import 'package:saas_platform_client/features/dashboard/state/dashboard_providers.dart';
+import 'package:saas_platform_client/app/app_providers.dart';
 import 'features/feature_fixtures.dart';
 
-class PartialDashboard extends ContractAdapter {
-  @override
+class PartialDashboard extends ContractAdapter {  @override
   Future<ResponseBody> fetch(
     RequestOptions options,
     Stream<Uint8List>? stream,
@@ -98,4 +99,67 @@ void main() {
     );
     expect(message.contains('secret-value-token'), isFalse);
   });
+
+  test('dashboard does not request prospecting when access is not granted', () async {
+    final adapter = _CountingDashboard();
+    final data = await ApiDashboardRepository(
+      testApi(adapter),
+    ).load(includeProspecting: false);
+
+    expect(adapter.paths, ['/api/v1/campaigns', '/api/v1/prospects']);
+    expect(data.jobs, isNull);
+    expect(data.jobsError, isNull);
+    expect(data.batches, isNull);
+    expect(data.batchesError, isNull);
+    expect(data.campaigns.meta.total, 1);
+    expect(data.prospects.meta.total, 1);
+  });
+
+  testWidgets('MEMBER dashboard hides the prospecting CTA', (tester) async {
+    const meta = PaginationMeta(page: 1, limit: 5, total: 1, totalPages: 1);
+    final data = DashboardData(
+      campaigns: const PaginatedResult<Campaign>(items: [], meta: meta),
+      prospects: const PaginatedResult<Prospect>(items: [], meta: meta),
+    );
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authControllerProvider.overrideWith(_MemberAuth.new),
+          dashboardProvider.overrideWith((ref) async => data),
+        ],
+        child: const MaterialApp(home: Scaffold(body: DashboardPage())),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Buscar prospectos'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+}
+
+class _MemberAuth extends FeatureAuthController {
+  @override
+  AuthState build() => AuthState(
+    status: AuthStatus.authenticated,
+    context: session(role: RoleName.MEMBER),
+  );
+}
+
+class _CountingDashboard extends ContractAdapter {
+  final paths = <String>[];
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? stream,
+    Future<void>? cancel,
+  ) {
+    paths.add(options.path);
+    response = {
+      'success': true,
+      'data': [],
+      'meta': {'page': 1, 'limit': 5, 'total': 1, 'totalPages': 1},
+    };
+    return super.fetch(options, stream, cancel);
+  }
 }

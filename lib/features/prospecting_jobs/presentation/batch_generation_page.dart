@@ -4,28 +4,18 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../app/app_providers.dart';
 import '../../../core/errors/api_exception.dart';
 import '../../../core/errors/error_mapper.dart';
 import '../../../platform_api/platform_api.dart';
-import '../../../shared/services/file_service.dart';
 import '../../../shared/widgets/campaign_picker.dart';
 import '../../../shared/widgets/feature_widgets.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../../campaigns/state/campaigns_providers.dart';
-
-final _batchApi = Provider.autoDispose<ProspectingBatchesApi>((ref) {
-  ref.watch(sessionScopeProvider);
-  return ref.watch(platformApiProvider).batches;
-});
-
-final _history = FutureProvider.autoDispose.family((ref, int page) {
-  final scope = ref.watch(sessionScopeProvider);
-  if (scope?.tenantId == null) {
-    throw StateError('Se requiere una organización activa');
-  }
-  return ref.watch(_batchApi).list(page);
-});
+import '../../dashboard/state/dashboard_providers.dart';
+import '../../prospects/state/prospects_providers.dart';
+import '../state/batch_providers.dart';
+import 'batch_detail_view.dart';
+import 'batch_labels.dart';
 
 class BatchGenerationPage extends ConsumerStatefulWidget {
   const BatchGenerationPage({super.key});
@@ -57,9 +47,6 @@ class _BatchGenerationState extends ConsumerState<BatchGenerationPage> {
   final fields = [_QueryFields()];
   Campaign? campaign;
   BatchSummary? selected;
-  BatchReview? review;
-  BatchJobSummary? reviewJob;
-  BatchReviewReceipt? receipt;
   String? error;
   String? requestKey;
   String? signature;
@@ -88,7 +75,7 @@ class _BatchGenerationState extends ConsumerState<BatchGenerationPage> {
       error = null;
     });
     try {
-      final value = await action(ref.read(_batchApi));
+      final value = await action(ref.read(batchApiProvider));
       if (sameSession()) setState(() => apply(value));
     } catch (problem) {
       if (!sameSession()) return;
@@ -130,31 +117,16 @@ class _BatchGenerationState extends ConsumerState<BatchGenerationPage> {
     }
     await run((api) => api.create(campaignId, queries, requestKey!), (batch) {
       uncertain = false;
-      select(batch);
-      ref.invalidate(_history(page));
+      selected = batch;
+      ref.invalidate(batchHistoryProvider);
     }, admission: true);
   }
 
-  void select(BatchSummary batch) {
-    selected = batch;
-    review = null;
-    reviewJob = null;
-    receipt = null;
-  }
-
-  Future<void> download(
-    BatchSummary batch,
-    BatchJobSummary job,
-    BatchExportFormat format,
-  ) {
-    return run((api) async {
-      final scope = ref.read(sessionScopeProvider);
-      final bytes = await api.export(batch.id, job.id, format);
-      if (!mounted || scope != ref.read(sessionScopeProvider)) return false;
-      return ref
-          .read(fileServiceProvider)
-          .save('prospectos.${format.name}', bytes.bytes);
-    }, (_) {});
+  void invalidateAfterMutation() {
+    ref.invalidate(batchHistoryProvider);
+    ref.invalidate(dashboardProvider);
+    ref.invalidate(prospectsListProvider);
+    ref.invalidate(campaignProspectsProvider);
   }
 
   @override
@@ -183,11 +155,11 @@ class _BatchGenerationState extends ConsumerState<BatchGenerationPage> {
             const Divider(),
             Text('Mis lotes', style: Theme.of(context).textTheme.titleMedium),
             ref
-                .watch(_history(page))
+                .watch(batchHistoryProvider(page))
                 .when(
                   loading: () => const LinearProgressIndicator(),
                   error: (problem, _) => TextButton(
-                    onPressed: () => ref.invalidate(_history(page)),
+                    onPressed: () => ref.invalidate(batchHistoryProvider(page)),
                     child: Text(
                       'Reintentar · ${const ErrorMapper().userMessage(problem)}',
                     ),
@@ -199,10 +171,10 @@ class _BatchGenerationState extends ConsumerState<BatchGenerationPage> {
                       for (final batch in history.items)
                         ListTile(
                           title: Text(batch.createdAt.toLocal().toString()),
-                          subtitle: Text(_admissionLabel(batch.admission)),
+                          subtitle: Text(batchAdmissionLabel(batch.admission)),
                           onTap: busy
                               ? null
-                              : () => setState(() => select(batch)),
+                              : () => setState(() => selected = batch),
                         ),
                       if (page > 1 || page < history.meta.totalPages)
                         Wrap(
@@ -323,314 +295,33 @@ class _BatchGenerationState extends ConsumerState<BatchGenerationPage> {
   Widget _detail(BatchSummary batch) => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      Text(
-        _admissionLabel(batch.admission),
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
-      Text(
-        ref
-                .watch(campaignsDetailProvider(batch.campaignId))
-                .asData
-                ?.value
-                .name ??
-            'Campaña ${batch.campaignId}',
-      ),
-      if (batch.remoteObserved == false)
-        const Text('Service aún no confirma la existencia del lote.'),
-      Wrap(
-        children: [
-          TextButton(
-            onPressed: busy
-                ? null
-                : () => run((api) => api.reconcile(batch.id), select),
-            child: const Text('Consultar estado'),
-          ),
-          TextButton(
-            onPressed: busy
-                ? null
-                : () => setState(() {
-                    selected = null;
-                    review = null;
-                    receipt = null;
-                    if (!uncertain) {
-                      signature = null;
-                      requestKey = null;
-                      for (final query in fields) {
-                        query.keyword.clear();
-                        query.location.clear();
-                      }
-                    }
-                  }),
-            child: Text(
-              uncertain ? 'Volver a la solicitud pendiente' : 'Nueva solicitud',
-            ),
-          ),
-        ],
-      ),
-      for (final job in batch.jobs) _jobCard(batch, job),
-      if (review case final value?)
-        _ReviewPanel(
-          key: ValueKey(value.snapshotId),
-          review: value,
-          busy: busy,
-          confirm: (decisions) => run(
-            (api) => api.confirm(
-              batch.id,
-              reviewJob!.id,
-              value.snapshotId,
-              decisions,
-            ),
-            (confirmation) {
-              receipt = confirmation;
-              review = null;
-              ref.invalidate(_history(page));
-            },
-          ),
-        ),
-    ],
-  );
-
-  Widget _jobCard(BatchSummary batch, BatchJobSummary job) {
-    final currentReceipt =
-        (reviewJob?.id == job.id ? receipt : null) ?? job.confirmation;
-    return Card(
-      child: ListTile(
-        title: Text('Consulta ${job.position + 1} · ${_jobLabel(job.state)}'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (job.availability case final availability?)
-              Text(_availabilityLabel(availability)),
-            if (job.progress case final progress?)
-              Text(
-                progress['stage'] is String
-                    ? 'Etapa observada · ${progress['stage']}'
-                    : '${progress['name']} · ${progress['value']}',
-              ),
-            if (currentReceipt case final confirmed?)
-              _receipt(confirmed, batch.id, job.id),
-            if (job.availability == BatchAvailability.AVAILABLE &&
-                currentReceipt == null)
-              Wrap(
-                children: [
-                  TextButton(
-                    onPressed: busy
-                        ? null
-                        : () => run((api) => api.preview(batch.id, job.id), (
-                            value,
-                          ) {
-                            reviewJob = job;
-                            review = value;
-                            receipt = null;
-                          }),
-                    child: const Text('Revisar resultados'),
-                  ),
-                  for (final format in BatchExportFormat.values)
-                    TextButton(
-                      onPressed: busy
-                          ? null
-                          : () => download(batch, job, format),
-                      child: Text('Exportar ${format.name.toUpperCase()}'),
-                    ),
-                ],
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _receipt(
-    BatchReviewReceipt confirmed,
-    String batch,
-    String job,
-  ) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        '${confirmed.processedCount} incorporados · ${confirmed.omittedCount} omitidos',
-      ),
-      Text(confirmed.ackAt == null ? 'ACK pendiente' : 'ACK confirmado'),
-      Text(confirmed.purgedAt == null ? 'Purga pendiente' : 'Purga confirmada'),
-      if (confirmed.purgedAt == null)
-        TextButton(
+      Align(
+        alignment: Alignment.centerLeft,
+        child: TextButton(
           onPressed: busy
               ? null
-              : () => run(
-                  (api) => api.settle(batch, job, confirmed.snapshotId),
-                  (value) {
-                    receipt = value;
-                    reviewJob = selected?.jobs.firstWhere(
-                      (item) => item.id == job,
-                    );
-                    ref.invalidate(_history(page));
-                  },
-                ),
-          child: const Text('Reconciliar ACK y purga'),
-        ),
-    ],
-  );
-}
-
-class _ReviewPanel extends StatefulWidget {
-  const _ReviewPanel({
-    required this.review,
-    required this.busy,
-    required this.confirm,
-    super.key,
-  });
-  final BatchReview review;
-  final bool busy;
-  final Future<void> Function(List<BatchRowDecision> choices) confirm;
-
-  @override
-  State<_ReviewPanel> createState() => _ReviewPanelState();
-}
-
-class _ReviewPanelState extends State<_ReviewPanel> {
-  final decisions = <int, BatchRowDecision>{};
-
-  @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Text(
-        'Revisión de resultados',
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
-      if (widget.review.quality == BatchQuality.PARTIAL)
-        const Text(
-          'Resultado parcial. Solo se muestran registros disponibles.',
-        ),
-      if (widget.review.quality == BatchQuality.SUCCESS_WITH_ISSUES)
-        const Text('El resultado se obtuvo con incidencias.'),
-      Text('Vence el ${widget.review.expiresAt.toLocal()}'),
-      for (final row in widget.review.rows)
-        Card(
-          child: ListTile(
-            title: Text(row.name),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (row.address != null) Text(row.address!),
-                if (row.phone != null) Text(row.phone!),
-                if (row.website != null) Text(row.website!),
-                if (row.blocked)
-                  const Text('Identidad en conflicto. Solo se puede omitir.'),
-                if (row.strongProspect != null)
-                  const Text('Identidad fuerte verificada.'),
-                DropdownButtonFormField<String>(
-                  isExpanded: true,
-                  initialValue: null,
-                  decoration: const InputDecoration(
-                    labelText: 'Acción de incorporación',
-                  ),
-                  items: [
-                    const DropdownMenuItem(
-                      value: 'SKIP',
-                      child: Text('Omitir'),
-                    ),
-                    if (!row.blocked && row.strongProspect == null)
-                      const DropdownMenuItem(
-                        value: 'CREATE',
-                        child: Text('Crear distinto'),
-                      ),
-                    if (!row.blocked)
-                      for (final candidate
-                          in row.strongProspect == null
-                              ? row.candidates
-                              : [row.strongProspect!]) ...[
-                        DropdownMenuItem(
-                          value: 'LINK_EXISTING|${candidate.id}',
-                          child: Text('Vincular · ${candidate.name}'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'UPDATE_EXISTING|${candidate.id}',
-                          child: Text('Actualizar maestro · ${candidate.name}'),
-                        ),
-                      ],
-                  ],
-                  onChanged: widget.busy
-                      ? null
-                      : (value) {
-                          if (value == null) return;
-                          final tokens = value.split('|');
-                          setState(
-                            () => decisions[row.index] = BatchRowDecision(
-                              row.index,
-                              BatchReviewAction.values.byName(tokens.first),
-                              candidateId: tokens.length == 2
-                                  ? tokens[1]
-                                  : null,
-                            ),
-                          );
-                        },
-                ),
-              ],
-            ),
+              : () => setState(() {
+                  selected = null;
+                  if (!uncertain) {
+                    signature = null;
+                    requestKey = null;
+                    for (final query in fields) {
+                      query.keyword.clear();
+                      query.location.clear();
+                    }
+                  }
+                }),
+          child: Text(
+            uncertain ? 'Volver a la solicitud pendiente' : 'Nueva solicitud',
           ),
         ),
-      FilledButton(
-        onPressed: widget.busy || decisions.length != widget.review.rows.length
-            ? null
-            : () async {
-                final shared = decisions.values.any(
-                  (value) => value.action == BatchReviewAction.UPDATE_EXISTING,
-                );
-                final accepted = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Confirmar incorporación'),
-                    content: Text(
-                      shared
-                          ? 'Los cambios del maestro se verán en las demás campañas vinculadas. ¿Confirmas las acciones seleccionadas?'
-                          : '¿Confirmas incorporar los registros seleccionados a esta campaña?',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text('Volver'),
-                      ),
-                      FilledButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Confirmar'),
-                      ),
-                    ],
-                  ),
-                );
-                if (mounted && accepted == true) {
-                  await widget.confirm(
-                    decisions.values.toList(growable: false),
-                  );
-                }
-              },
-        child: const Text('Confirmar incorporación'),
+      ),
+      BatchDetailView(
+        key: ValueKey(batch.id),
+        batch: batch,
+        onUpdated: (value) => setState(() => selected = value),
+        onMutated: invalidateAfterMutation,
       ),
     ],
   );
 }
-
-String _admissionLabel(BatchAdmission status) => switch (status) {
-  BatchAdmission.PENDING => 'Solicitud registrada, admisión pendiente',
-  BatchAdmission.UNCERTAIN => 'Admisión sin confirmar',
-  BatchAdmission.ACCEPTED => 'Lote admitido',
-  BatchAdmission.REJECTED => 'Lote rechazado',
-};
-
-String _jobLabel(BatchJobState? state) => switch (state) {
-  null => 'Sin estado confirmado',
-  BatchJobState.QUEUED => 'En cola',
-  BatchJobState.RUNNING => 'En ejecución',
-  BatchJobState.AWAITING_RESULTS => 'Esperando resultados',
-  BatchJobState.COMPLETED => 'Completada',
-  BatchJobState.FAILED => 'Fallida',
-  BatchJobState.INTERRUPTED => 'Interrumpida',
-  BatchJobState.SKIPPED => 'Omitida',
-};
-
-String _availabilityLabel(BatchAvailability status) => switch (status) {
-  BatchAvailability.AVAILABLE => 'Resultados disponibles',
-  BatchAvailability.EXPIRED => 'Resultados vencidos',
-  BatchAvailability.PURGED => 'Resultados purgados',
-  BatchAvailability.UNAVAILABLE => 'Resultados no disponibles',
-};

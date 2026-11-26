@@ -6,6 +6,8 @@ import '../../../core/theme/catalog_palette.dart';
 import '../../../shared/widgets/feature_widgets.dart';
 import '../../auth/state/tenant_permissions.dart';
 import '../../campaigns/widgets/campaign_status_badge.dart';
+import '../../prospecting_jobs/presentation/batch_labels.dart';
+import '../../prospecting_jobs/state/batch_providers.dart';
 import '../state/dashboard_providers.dart';
 import 'catalog_dashboard_hero.dart';
 
@@ -15,6 +17,11 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     void refresh() => ref.invalidate(dashboardProvider);
+    final canProspect = ref
+        .watch(currentTenantPermissionsProvider)
+        .asData
+        ?.value
+        .canCreateProspects;
 
     return FeaturePage(
       title: 'Dashboard',
@@ -24,11 +31,12 @@ class DashboardPage extends ConsumerWidget {
           onPressed: refresh,
           icon: const Icon(Icons.refresh),
         ),
-        OutlinedButton.icon(
-          onPressed: () => context.go('/generate'),
-          icon: const Icon(Icons.travel_explore),
-          label: const Text('Buscar prospectos'),
-        ),
+        if (canProspect == true)
+          OutlinedButton.icon(
+            onPressed: () => context.go('/generate'),
+            icon: const Icon(Icons.travel_explore),
+            label: const Text('Buscar prospectos'),
+          ),
       ],
       child: AsyncPanel(
         value: ref.watch(dashboardProvider),
@@ -52,7 +60,19 @@ class _DashboardContent extends ConsumerWidget {
         .asData
         ?.value
         .canManageCampaigns;
+    final canProspect = ref
+        .watch(currentTenantPermissionsProvider)
+        .asData
+        ?.value
+        .canCreateProspects;
     final jobs = data.jobs;
+    final batches = data.batches;
+    final prospectingTotal = prospectingBatchEnabled
+        ? batches?.meta.total
+        : jobs?.meta.total;
+    final prospectingError = prospectingBatchEnabled
+        ? data.batchesError
+        : data.jobsError;
 
     final campaignsPanel = _RecentWindow(
       title: 'Campañas recientes',
@@ -112,7 +132,13 @@ class _DashboardContent extends ConsumerWidget {
               items: [
                 ('Campañas', data.campaigns.meta.total, '/campaigns'),
                 ('Prospectos', data.prospects.meta.total, '/prospects'),
-                if (jobs != null) ('Trabajos', jobs.meta.total, '/jobs'),
+                if (prospectingTotal != null &&
+                    (!prospectingBatchEnabled || canProspect == true))
+                  (
+                    prospectingBatchEnabled ? 'Lotes' : 'Trabajos',
+                    prospectingTotal,
+                    '/jobs',
+                  ),
               ],
             ),
             const SizedBox(height: 13),
@@ -131,38 +157,55 @@ class _DashboardContent extends ConsumerWidget {
               prospectsPanel,
             ],
             const SizedBox(height: 13),
-            _RecentWindow(
-              title: 'Trabajos recientes',
-              action: 'Ver trabajos',
-              onAction: () => context.go('/jobs'),
-              empty: jobs == null
-                  ? null
-                  : 'Aún no hay trabajos de prospección.',
-              rows: [
-                if (data.jobsError case final error?)
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ErrorView(error),
-                        TextButton(
-                          onPressed: refresh,
-                          child: const Text('Reintentar trabajos'),
-                        ),
-                      ],
+            if (!prospectingBatchEnabled || canProspect == true)
+              _RecentWindow(
+                title: prospectingBatchEnabled
+                    ? 'Lotes recientes'
+                    : 'Trabajos recientes',
+                action: prospectingBatchEnabled ? 'Ver lotes' : 'Ver trabajos',
+                onAction: () => context.go('/jobs'),
+                empty: prospectingTotal == null
+                    ? null
+                    : prospectingBatchEnabled
+                    ? 'Aún no hay lotes de prospección.'
+                    : 'Aún no hay trabajos de prospección.',
+                rows: [
+                  if (prospectingError case final error?)
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ErrorView(error),
+                          TextButton(
+                            onPressed: refresh,
+                            child: Text(
+                              prospectingBatchEnabled
+                                  ? 'Reintentar lotes'
+                                  : 'Reintentar trabajos',
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                if (jobs != null)
-                  for (final job in jobs.items)
-                    _RecentRow(
-                      title: 'Trabajo ${job.id}',
-                      subtitle: job.createdAt.toLocal().toString(),
-                      trailing: Text(job.status.name),
-                      onTap: () => context.go('/jobs/${job.id}'),
-                    ),
-              ],
-            ),
+                  if (prospectingBatchEnabled && batches != null)
+                    for (final batch in batches.items.take(5))
+                      _RecentRow(
+                        title: 'Lote ${batch.id}',
+                        subtitle: batch.createdAt.toLocal().toString(),
+                        trailing: Text(batchAdmissionLabel(batch.admission)),
+                        onTap: () => context.go('/jobs/${batch.id}'),
+                      ),
+                  if (!prospectingBatchEnabled && jobs != null)
+                    for (final job in jobs.items)
+                      _RecentRow(
+                        title: 'Trabajo ${job.id}',
+                        subtitle: job.createdAt.toLocal().toString(),
+                        trailing: Text(job.status.name),
+                        onTap: () => context.go('/jobs/${job.id}'),
+                      ),
+                ],
+              ),
           ],
         ),
       ),
