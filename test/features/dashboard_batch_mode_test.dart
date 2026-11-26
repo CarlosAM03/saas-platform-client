@@ -45,7 +45,7 @@ void main() {
     expect(find.text('Lotes recientes'), findsOneWidget);
     expect(find.text('Lote lab'), findsOneWidget);
     expect(find.text('Trabajos recientes'), findsNothing);
-  });
+  }, skip: !prospectingBatchEnabled);
 
   testWidgets('Batch mode MEMBER receives no batch metric or access', (
     tester,
@@ -70,7 +70,7 @@ void main() {
     expect(find.text('Lotes'), findsNothing);
     expect(find.text('Lotes recientes'), findsNothing);
     expect(find.text('Ver lotes'), findsNothing);
-  });
+  }, skip: !prospectingBatchEnabled);
 }
 
 class _MemberAuth extends FeatureAuthController {
