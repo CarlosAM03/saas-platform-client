@@ -6,6 +6,7 @@ import 'users_api.dart';
 import 'campaigns_api.dart';
 import 'prospects_api.dart';
 import 'prospecting_jobs_api.dart';
+import 'prospecting_batches_api.dart';
 import 'tenant_registration_api.dart';
 export 'tenant_registration_api.dart';
 export 'tenant_registration_models.dart';
@@ -16,6 +17,7 @@ export 'users_api.dart';
 export 'campaigns_api.dart';
 export 'prospects_api.dart';
 export 'prospecting_jobs_api.dart';
+export 'prospecting_batches_api.dart';
 export 'models.dart';
 export 'requests.dart';
 export 'prospect_import_models.dart';
@@ -32,6 +34,7 @@ class PlatformApi {
       campaigns = CampaignsApi(client),
       prospects = ProspectsApi(client),
       prospectingJobs = ProspectingJobsApi(client),
+      batches = ProspectingBatchesApi(client),
       tenantRegistration = TenantRegistrationApi(client);
   final HealthApi health;
   final AuthApi auth;
@@ -40,5 +43,6 @@ class PlatformApi {
   final CampaignsApi campaigns;
   final ProspectsApi prospects;
   final ProspectingJobsApi prospectingJobs;
+  final ProspectingBatchesApi batches;
   final TenantRegistrationApi tenantRegistration;
 }
