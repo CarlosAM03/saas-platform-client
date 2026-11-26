@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-27T23:43:40.326Z",
+  "method": "PUT",
+  "path": "/repos/CarlosAM03/saas-platform-backend/pulls/8/merge",
+  "status": 200,
+  "value": {
+    "sha": "09593bb715cd83270821d34126a4344c8ef97cb0",
+    "merged": true,
+    "message": "Pull Request successfully merged"
+  }
+}

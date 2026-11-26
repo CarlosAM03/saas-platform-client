@@ -1,0 +1,144 @@
+{
+  "recordedAt": "2026-10-27T19:44:52.039Z",
+  "method": "Public GitHub REST GET; no authentication, writes or workflows triggered",
+  "repositories": [
+    {
+      "repo": "saas-platform-backend",
+      "openPRs": [
+        {
+          "number": 6,
+          "url": "https://github.com/CarlosAM03/saas-platform-backend/pull/6",
+          "title": "feat: Prospector opcional y hardening multi-tenant del MVP",
+          "author": "CarlosAM03",
+          "draft": true,
+          "base": "dev",
+          "baseSha": "967044e2dc7d10ea91d7d78a86e1ea6fe2accd1a",
+          "head": "feat/prospector-service-mvp-integration",
+          "headSha": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+          "updatedAt": "2026-10-27T09:58:57Z"
+        }
+      ]
+    },
+    {
+      "repo": "saas-platform-client",
+      "openPRs": [
+        {
+          "number": 8,
+          "url": "https://github.com/CarlosAM03/saas-platform-client/pull/8",
+          "title": "feat: paridad Prospector y validación del MVP sin Service",
+          "author": "CarlosAM03",
+          "draft": true,
+          "base": "fix/f5-foundation",
+          "baseSha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+          "head": "feat/flutter-prospector-mvp-parity",
+          "headSha": "97ad02a621007e4139e5207511ecca2376754ed8",
+          "updatedAt": "2026-10-27T09:59:00Z"
+        },
+        {
+          "number": 7,
+          "url": "https://github.com/CarlosAM03/saas-platform-client/pull/7",
+          "title": "fix: reconciliar Flutter Foundation y aislar estado por sesión",
+          "author": "CarlosAM03",
+          "draft": true,
+          "base": "dev",
+          "baseSha": "c7dee664cbdda85d38d896ce3103d8fc6319f0af",
+          "head": "fix/f5-foundation",
+          "headSha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+          "updatedAt": "2026-10-27T09:58:58Z"
+        },
+        {
+          "number": 6,
+          "url": "https://github.com/CarlosAM03/saas-platform-client/pull/6",
+          "title": "feat: complete CSV import, live dashboard and prospecting jobs UIDev",
+          "author": "AndreGRS",
+          "draft": false,
+          "base": "main",
+          "baseSha": "a85a99678101b3f5562f66d7dd1c1c454b1d20cb",
+          "head": "dev",
+          "headSha": "c7dee664cbdda85d38d896ce3103d8fc6319f0af",
+          "updatedAt": "2026-10-27T02:31:44Z"
+        }
+      ]
+    },
+    {
+      "repo": "prospector-service",
+      "openPRs": []
+    },
+    {
+      "repo": "prospector-engine",
+      "openPRs": []
+    }
+  ],
+  "frontendDeployments": [
+    {
+      "id": 7355319298,
+      "sha": "97ad02a621007e4139e5207511ecca2376754ed8",
+      "ref": "97ad02a621007e4139e5207511ecca2376754ed8",
+      "environment": "Preview",
+      "createdAt": "2026-10-27T09:52:58Z",
+      "statuses": [
+        {
+          "state": "success",
+          "createdAt": "2026-10-27T09:52:59Z",
+          "environmentUrl": "https://saas-platform-client-f4iphxzwa-carlos-armentas-projects.vercel.app"
+        }
+      ]
+    },
+    {
+      "id": 7355155052,
+      "sha": "0465db25aaf3bd0522f412f21b67d1901aa44b81",
+      "ref": "0465db25aaf3bd0522f412f21b67d1901aa44b81",
+      "environment": "Preview",
+      "createdAt": "2026-10-27T09:44:42Z",
+      "statuses": [
+        {
+          "state": "success",
+          "createdAt": "2026-10-27T09:44:42Z",
+          "environmentUrl": "https://saas-platform-client-4tmsag79p-carlos-armentas-projects.vercel.app"
+        }
+      ]
+    },
+    {
+      "id": 7355054412,
+      "sha": "98ae8f57912485974afe3e9f31ee01d502062534",
+      "ref": "98ae8f57912485974afe3e9f31ee01d502062534",
+      "environment": "Preview",
+      "createdAt": "2026-10-27T09:39:36Z",
+      "statuses": [
+        {
+          "state": "success",
+          "createdAt": "2026-10-27T09:39:36Z",
+          "environmentUrl": "https://saas-platform-client-kdfhjpbhj-carlos-armentas-projects.vercel.app"
+        }
+      ]
+    },
+    {
+      "id": 7354942786,
+      "sha": "6533cb9915576e2e2672590c5e1cdc0216bcf563",
+      "ref": "6533cb9915576e2e2672590c5e1cdc0216bcf563",
+      "environment": "Preview",
+      "createdAt": "2026-10-27T09:33:41Z",
+      "statuses": [
+        {
+          "state": "success",
+          "createdAt": "2026-10-27T09:33:41Z",
+          "environmentUrl": "https://saas-platform-client-2zbwsjn93-carlos-armentas-projects.vercel.app"
+        }
+      ]
+    },
+    {
+      "id": 7354795574,
+      "sha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "ref": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "environment": "Preview",
+      "createdAt": "2026-10-27T09:26:04Z",
+      "statuses": [
+        {
+          "state": "success",
+          "createdAt": "2026-10-27T09:26:04Z",
+          "environmentUrl": "https://saas-platform-client-a29nyeoyn-carlos-armentas-projects.vercel.app"
+        }
+      ]
+    }
+  ]
+}

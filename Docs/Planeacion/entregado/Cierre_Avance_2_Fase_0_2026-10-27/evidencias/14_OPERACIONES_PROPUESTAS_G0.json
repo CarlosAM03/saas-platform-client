@@ -1,0 +1,45 @@
+{
+  "state": "NOT EXECUTED / OWNER G0 AUTHORIZATION PENDING",
+  "allowedNextScope": "Prepare two local branches and isolated worktrees only; then stop at G1 before edits/tests/commits/PRs",
+  "preconditions": [
+    "Recheck local/remote SHAs and worktree snapshots",
+    "Destination paths and branch names absent",
+    "No force, no protected branch updates, no hook execution before review"
+  ],
+  "operations": [
+    {
+      "repo": "Backend",
+      "sourceSha": "3a3309398458ab333d7b00f16e9c2df6a09ef734",
+      "branch": "fix/avance2-core-security",
+      "repoPath": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\Backend_Nestjs\\saas-platform-backend",
+      "worktree": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\backend-core",
+      "gitArguments": [
+        "-C",
+        "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\Backend_Nestjs\\saas-platform-backend",
+        "worktree",
+        "add",
+        "-b",
+        "fix/avance2-core-security",
+        "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\backend-core",
+        "3a3309398458ab333d7b00f16e9c2df6a09ef734"
+      ]
+    },
+    {
+      "repo": "Flutter",
+      "sourceSha": "095e899ace31acf17d97bbe945c118c1a5d88682",
+      "branch": "release/avance2-frontend-v1",
+      "repoPath": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client",
+      "worktree": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\flutter-core",
+      "gitArguments": [
+        "-C",
+        "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client",
+        "worktree",
+        "add",
+        "-b",
+        "release/avance2-frontend-v1",
+        "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\flutter-core",
+        "095e899ace31acf17d97bbe945c118c1a5d88682"
+      ]
+    }
+  ]
+}

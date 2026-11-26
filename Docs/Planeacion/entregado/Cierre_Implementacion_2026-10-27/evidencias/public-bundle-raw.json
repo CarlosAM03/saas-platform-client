@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28T00:25:20.341Z",
+  "url": "https://saas-platform-client-web.vercel.app/main.dart.js",
+  "status": 200,
+  "sha256": "3b5d2f49234e9a5486f235cb3a3b8d551befcb880e37854352ddf4dadb4c1578",
+  "bytes": 3137189,
+  "contentType": "application/javascript",
+  "etag": "W/\"6ae13fae-2fdea5\"",
+  "age": "0",
+  "vercelId": "sfo1::iad1::5h94z-1793147119054-b8f173822748",
+  "demoPanelPresent": true,
+  "renderOriginPresent": true,
+  "loopbackUrls": []
+}
