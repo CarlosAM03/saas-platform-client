@@ -459,11 +459,18 @@ class AppShell extends ConsumerWidget {
                 ),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.travel_explore),
-              title: const Text('Buscar prospectos'),
-              onTap: () => context.go('/generate'),
-            ),
+            if (canUseProspecting == true) ...[
+              ListTile(
+                leading: const Icon(Icons.travel_explore),
+                title: const Text('Buscar prospectos'),
+                onTap: () => context.go('/generate'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.work_outline),
+                title: Text(prospectingBatchEnabled ? 'Lotes' : 'Trabajos'),
+                onTap: () => context.go('/jobs'),
+              ),
+            ],
             ListTile(
               leading: const Icon(Icons.business_outlined),
               title: const Text('Organizaciones'),
