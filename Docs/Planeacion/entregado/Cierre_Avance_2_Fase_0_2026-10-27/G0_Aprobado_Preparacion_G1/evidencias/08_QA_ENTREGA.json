@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-10-27T20:45:00.174Z",
+  "allPass": true,
+  "qa": {
+    "files": [
+      {
+        "file": "ACTA_G0_WORKTREES.md",
+        "bytes": 8329,
+        "hasPending": true,
+        "hasStop": true,
+        "noPlaceholders": true
+      },
+      {
+        "file": "DETALLE_IMPLEMENTACION_G1.md",
+        "bytes": 18216,
+        "hasPending": true,
+        "hasStop": true,
+        "noPlaceholders": true
+      },
+      {
+        "file": "AMPLIACION_PROPUESTA_DEMO_COMPOSE_1_1.md",
+        "bytes": 17671,
+        "hasPending": true,
+        "hasStop": true,
+        "noPlaceholders": true
+      }
+    ],
+    "brokenLinks": [],
+    "invalidJson": [],
+    "secretPatterns": [],
+    "formatIssues": []
+  },
+  "G0": "APPROVED AND EXECUTED",
+  "G1": "PENDING - STOPPED BEFORE IMPLEMENTATION",
+  "B": "GOAL RECORDED; ARCHITECTURE AND PHASE7/G6 EXECUTION NOT APPROVED",
+  "functionalTestsExecuted": 0,
+  "sourceCodeDiff": "EMPTY IN BOTH CANDIDATE WORKTREES",
+  "originalDocumentsAndF0ReportsIntact": true
+}

@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-28T00:16:59.863Z",
+  "pass": false,
+  "error": "TypeError: fetch failed",
+  "evidence": [
+    {
+      "name": "ADMIN selected A",
+      "data": {
+        "url": "https://localhost:18443/#/campaigns",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Norte\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Campañas\n- checkbox \"Todas\" [checked]\n- checkbox \"ACTIVA\"\n- checkbox \"PAUSADA\"\n- checkbox \"COMPLETADA\"\n- checkbox \"ARCHIVADA\"\n- button \"Crear campaña\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - group \"Avance2 validación sintética Activa Comprobación MEMBER permitida por contrato Actualizada el 27/10/2026 Campaña 1 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Campaña 2 Demo Norte Activa Sin descripción Actualizada el 27/10/2026 Campaña 3 Demo Norte Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 4 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "ADMIN changed A to B; previous data cleared",
+      "data": {
+        "url": "https://localhost:18443/#/campaigns",
+        "aria": "- button \"Open navigation menu\"\n- heading \"PROSPECTOR Demo Sur\" [level=2]\n- button \"Cambiar organización\"\n- button \"Cerrar sesión\"\n- text: Campañas\n- checkbox \"Todas\" [checked]\n- checkbox \"ACTIVA\"\n- checkbox \"PAUSADA\"\n- checkbox \"COMPLETADA\"\n- checkbox \"ARCHIVADA\"\n- button \"Crear campaña\"\n- textbox \"Buscar\"\n- button \"Buscar\"\n- button \"name\"\n- button \"Cambiar orden\"\n- button \"Actualizar\"\n- group:\n  - group \"Campaña 1 Demo Sur Activa Sin descripción Actualizada el 27/10/2026 Campaña 2 Demo Sur Activa Sin descripción Actualizada el 27/10/2026 Campaña 3 Demo Sur Activa Sin descripción Actualizada el 27/10/2026\":\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n    - button \"Ver detalles\"\n- button \"Página anterior\" [disabled]\n- text: Página 1 · 3 registros\n- button \"Página siguiente\" [disabled]",
+        "errors": []
+      }
+    },
+    {
+      "name": "real authenticated 401 clears session",
+      "data": {
+        "url": "https://localhost:18443/#/session-expired",
+        "aria": "- 'button \"Sesión expirada: volver a entrar\"'",
+        "errors": []
+      }
+    }
+  ]
+}

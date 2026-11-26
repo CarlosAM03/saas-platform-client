@@ -1,0 +1,489 @@
+{
+  "date": "2026-10-28T00:14:55.242Z",
+  "repositories": [
+    {
+      "name": "original-backend",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\Backend_Nestjs\\saas-platform-backend",
+      "head": "a80871b6c5ebf39b4fca69eaf5f6352ab342da96",
+      "branch": "feat/prospector-service-mvp-integration",
+      "status": ""
+    },
+    {
+      "name": "original-flutter",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client",
+      "head": "97ad02a621007e4139e5207511ecca2376754ed8",
+      "branch": "feat/flutter-prospector-mvp-parity",
+      "status": "D \"Plan de Trabajo.md\"\n?? Docs/Planeacion/entregado/\n?? \"Plan de TrabajoAvance2.md\""
+    },
+    {
+      "name": "original-service",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\ProspectorDocs\\PROSPECTOR_SERVICE",
+      "head": "69c54a15601d238638610d0a5c08af46e3da7f14",
+      "branch": "feat/fastapi-service-foundation",
+      "status": ""
+    },
+    {
+      "name": "original-engine",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\ProspectorDocs\\PROSPECTOR_ENGINE",
+      "head": "70f6081688db5c5bc5ea612f5fabd5724aab0b20",
+      "branch": "main",
+      "status": ""
+    },
+    {
+      "name": "backend-core",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\backend-core",
+      "head": "69c73365f0547e994f57cad7fb83269023db4b8e",
+      "branch": "fix/avance2-core-security",
+      "status": ""
+    },
+    {
+      "name": "flutter-core",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\flutter-core",
+      "head": "41a16dd462c2bbe6c892bf2c5669975ca70cb752",
+      "branch": "release/avance2-frontend-v1",
+      "status": ""
+    },
+    {
+      "name": "backend-dev",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\backend-dev-validated",
+      "head": "09593bb715cd83270821d34126a4344c8ef97cb0",
+      "branch": "",
+      "status": ""
+    },
+    {
+      "name": "flutter-dev",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\flutter-dev-validated",
+      "head": "cd527ef12bc7c1327ed9a8520e1a07f0fc8be39f",
+      "branch": "",
+      "status": ""
+    },
+    {
+      "name": "backend-experimental",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\backend-experimental",
+      "head": "45df09aebae4ad0a8ec32334894b4d21f81f9272",
+      "branch": "demo/avance2-controlled-110",
+      "status": ""
+    },
+    {
+      "name": "flutter-experimental",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\flutter-experimental",
+      "head": "67d90451fccfa7dccfb88ca0547cca015da51d47",
+      "branch": "demo/avance2-controlled-110",
+      "status": ""
+    },
+    {
+      "name": "service-experimental",
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\WorktreesAvance2\\service-experimental",
+      "head": "ad7bec3d7a1212f1bb2e0a808ffea3c42d5aed30",
+      "branch": "demo/avance2-controlled-110",
+      "status": ""
+    }
+  ],
+  "images": [
+    {
+      "tags": [
+        "prospector-avance2-backend:core"
+      ],
+      "id": "sha256:3ed1d27996e32a0b98f0af0b5864fd51bbe8b800c240461e8d50e60c38111972",
+      "repoDigests": [
+        "prospector-avance2-backend@sha256:3ed1d27996e32a0b98f0af0b5864fd51bbe8b800c240461e8d50e60c38111972"
+      ],
+      "user": "node",
+      "created": "2026-10-27T23:47:21.44779236Z",
+      "architecture": "amd64"
+    },
+    {
+      "tags": [
+        "prospector-avance2-flutter:core-local"
+      ],
+      "id": "sha256:d6deecc8c29c3128bbb67d18bc7be295c3ed0910aeb4f0510d4c636a806135d0",
+      "repoDigests": [
+        "prospector-avance2-flutter@sha256:d6deecc8c29c3128bbb67d18bc7be295c3ed0910aeb4f0510d4c636a806135d0"
+      ],
+      "user": "",
+      "created": "2026-10-27T23:47:41.516986111Z",
+      "architecture": "amd64"
+    },
+    {
+      "tags": [
+        "prospector-avance2-flutter:release-candidate"
+      ],
+      "id": "sha256:527c22d5a3c8fc04c6ef70ff846416b8d5c8d68a7a24212bd2c8c074e792189b",
+      "repoDigests": [
+        "prospector-avance2-flutter@sha256:527c22d5a3c8fc04c6ef70ff846416b8d5c8d68a7a24212bd2c8c074e792189b"
+      ],
+      "user": "",
+      "created": "2026-10-27T23:47:41.558419928Z",
+      "architecture": "amd64"
+    },
+    {
+      "tags": [
+        "prospector-avance2-backend:experimental"
+      ],
+      "id": "sha256:f95d9b119308a711f00c8408c4bd961c38b8925c0e0267ade1e33aafc9b30918",
+      "repoDigests": [
+        "prospector-avance2-backend@sha256:f95d9b119308a711f00c8408c4bd961c38b8925c0e0267ade1e33aafc9b30918"
+      ],
+      "user": "node",
+      "created": "2026-10-27T23:04:09.428144444Z",
+      "architecture": "amd64"
+    },
+    {
+      "tags": [
+        "prospector-avance2-flutter:experimental"
+      ],
+      "id": "sha256:2e3f13d12f1e0c1a0dea501ab03aebe598750cc210e17ef8afccfb39e1e52ed5",
+      "repoDigests": [
+        "prospector-avance2-flutter@sha256:2e3f13d12f1e0c1a0dea501ab03aebe598750cc210e17ef8afccfb39e1e52ed5"
+      ],
+      "user": "",
+      "created": "2026-10-27T23:38:32.591093551Z",
+      "architecture": "amd64"
+    },
+    {
+      "tags": [
+        "prospector-avance2-service:controlled"
+      ],
+      "id": "sha256:dc243f98f97b833457f181cab8b47d7bdf0d6c0a23fbd256a3e79f81d9d7b79f",
+      "repoDigests": [
+        "prospector-avance2-service@sha256:dc243f98f97b833457f181cab8b47d7bdf0d6c0a23fbd256a3e79f81d9d7b79f"
+      ],
+      "user": "10001:10001",
+      "created": "2026-10-27T23:50:17.510110919Z",
+      "architecture": "amd64"
+    },
+    {
+      "tags": [
+        "prospector-avance2-browser:trusted-local"
+      ],
+      "id": "sha256:1131160054b2f04c0788e65ef1b24594776a7c21f65b1dea109501524deb46db",
+      "repoDigests": [
+        "prospector-avance2-browser@sha256:1131160054b2f04c0788e65ef1b24594776a7c21f65b1dea109501524deb46db"
+      ],
+      "user": "",
+      "created": "2026-10-28T00:05:19.564533953Z",
+      "architecture": "amd64"
+    },
+    {
+      "tags": [
+        "postgres:16"
+      ],
+      "id": "sha256:ca0bd484cb98bf4b24eb1010e73fb3fcbd6714d240fbc1a10eea5b7dbecb641d",
+      "repoDigests": [
+        "postgres@sha256:ca0bd484cb98bf4b24eb1010e73fb3fcbd6714d240fbc1a10eea5b7dbecb641d"
+      ],
+      "user": "",
+      "created": "2026-10-06T01:33:18.890712895Z",
+      "architecture": "amd64"
+    },
+    {
+      "tags": [
+        "nginx:1.28.0-alpine"
+      ],
+      "id": "sha256:30f1c0d78e0ad60901648be663a710bdadf19e4c10ac6782c235200619158284",
+      "repoDigests": [
+        "nginx@sha256:30f1c0d78e0ad60901648be663a710bdadf19e4c10ac6782c235200619158284"
+      ],
+      "user": "",
+      "created": "2025-04-23T18:00:49Z",
+      "architecture": "amd64"
+    }
+  ],
+  "containers": [
+    {
+      "project": "prospector-avance2-core",
+      "name": "prospector-avance2-core-browser-1",
+      "id": "b14eddfbb4af66a6c40a73d07eafdb1592015a8c21d6f00dc243fc1dd44a8154",
+      "image": "prospector-avance2-browser:trusted-local",
+      "imageId": "sha256:1131160054b2f04c0788e65ef1b24594776a7c21f65b1dea109501524deb46db",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "",
+      "privileged": false,
+      "networkMode": "container:d4c4ad39db73023baea4f1cbeea0c5cfa5dbd46532e1a284ab1cecfb389229b5",
+      "ports": {},
+      "volumes": [
+        "prospector-avance2-core_core-tls"
+      ]
+    },
+    {
+      "project": "prospector-avance2-core",
+      "name": "prospector-avance2-core-gateway-1",
+      "id": "d4c4ad39db73023baea4f1cbeea0c5cfa5dbd46532e1a284ab1cecfb389229b5",
+      "image": "nginx:1.28.0-alpine",
+      "imageId": "sha256:30f1c0d78e0ad60901648be663a710bdadf19e4c10ac6782c235200619158284",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "",
+      "privileged": false,
+      "networkMode": "prospector-avance2-core_default",
+      "ports": {
+        "18443/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18443"
+          }
+        ],
+        "6080/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18450"
+          }
+        ]
+      },
+      "volumes": [
+        "prospector-avance2-core_core-tls"
+      ]
+    },
+    {
+      "project": "prospector-avance2-core",
+      "name": "prospector-avance2-core-api-1",
+      "id": "a68e2c5e45b3171542777ce7d0e5779820e9c4b598897c4fedebe4f518969cf7",
+      "image": "prospector-avance2-backend:core",
+      "imageId": "sha256:cf181f48e438b2ddd5aeca90d9d9e150c870b52faff4e9c82c92213a665427d1",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "node",
+      "privileged": false,
+      "networkMode": "prospector-avance2-core_default",
+      "ports": {
+        "3000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18441"
+          }
+        ]
+      },
+      "volumes": []
+    },
+    {
+      "project": "prospector-avance2-core",
+      "name": "prospector-avance2-core-tls-init-1",
+      "id": "075d2ab4e5bd1ad6722ec158169679337692f312f604ead456a482a5258d765c",
+      "image": "prospector-avance2-backend:core",
+      "imageId": "sha256:cf181f48e438b2ddd5aeca90d9d9e150c870b52faff4e9c82c92213a665427d1",
+      "status": "exited",
+      "exitCode": 0,
+      "health": null,
+      "user": "root",
+      "privileged": false,
+      "networkMode": "prospector-avance2-core_default",
+      "ports": {},
+      "volumes": [
+        "prospector-avance2-core_core-tls"
+      ]
+    },
+    {
+      "project": "prospector-avance2-core",
+      "name": "prospector-avance2-core-init-1",
+      "id": "78ae53271097584d215495e7000824ff2397f4f6287de61cb537e187052cc866",
+      "image": "prospector-avance2-backend:core",
+      "imageId": "sha256:cf181f48e438b2ddd5aeca90d9d9e150c870b52faff4e9c82c92213a665427d1",
+      "status": "exited",
+      "exitCode": 0,
+      "health": null,
+      "user": "node",
+      "privileged": false,
+      "networkMode": "prospector-avance2-core_default",
+      "ports": {},
+      "volumes": []
+    },
+    {
+      "project": "prospector-avance2-core",
+      "name": "prospector-avance2-core-web-1",
+      "id": "ce24ea71cc8a71518388c47c9f5fea03db118a27646c5e4767e6f2c69c5bbe41",
+      "image": "prospector-avance2-flutter:core-local",
+      "imageId": "sha256:dff2ac071c54b1500675fa7c6b885c106e4e96a8b40411761acb28ae7522f107",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "",
+      "privileged": false,
+      "networkMode": "prospector-avance2-core_default",
+      "ports": {
+        "80/tcp": null
+      },
+      "volumes": []
+    },
+    {
+      "project": "prospector-avance2-core",
+      "name": "prospector-avance2-core-db-1",
+      "id": "75369f65da6423786551365c9e522048072f2fbe09007f6bcc4d0efc73df459a",
+      "image": "postgres:16",
+      "imageId": "sha256:ca0bd484cb98bf4b24eb1010e73fb3fcbd6714d240fbc1a10eea5b7dbecb641d",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "",
+      "privileged": false,
+      "networkMode": "prospector-avance2-core_default",
+      "ports": {
+        "5432/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "55447"
+          }
+        ]
+      },
+      "volumes": [
+        "prospector-avance2-core_core-pg"
+      ]
+    },
+    {
+      "project": "prospector-demo-110",
+      "name": "prospector-demo-110-browser-1",
+      "id": "68e30d7dd548cc76f53a1f1c7908686f369657c0cb304d786b279c79feeb87c5",
+      "image": "prospector-avance2-browser:trusted-local",
+      "imageId": "sha256:29492399c3b6ed03eaee970131e7790eaf177c2017fdc17faa1f82fa2e05ccba",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "",
+      "privileged": false,
+      "networkMode": "container:1e564dfd7a0381c013627f4c42d1acd04aa004154cab94a343122a2ce8dd627e",
+      "ports": {},
+      "volumes": [
+        "prospector-demo-110_demo-tls"
+      ]
+    },
+    {
+      "project": "prospector-demo-110",
+      "name": "prospector-demo-110-web-1",
+      "id": "7190fc3778c558c8938823d004c598fc60476a914a7f1710d00df52823777ada",
+      "image": "prospector-avance2-flutter:experimental",
+      "imageId": "sha256:a6d3b7593cdf6d7eb4b7276b3b43e394a37fe39fac83ce9d3cc2811b7f71b893",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "",
+      "privileged": false,
+      "networkMode": "container:83fd2ac737f2b1fa9f4c03e350a4ec2509ee07a886cef920a9b08d4daf951891",
+      "ports": {},
+      "volumes": []
+    },
+    {
+      "project": "prospector-demo-110",
+      "name": "prospector-demo-110-service-1",
+      "id": "9eac09d8fb1d216524a1e2424fdafe3ef5d9a982c19b411635ad055176749c6b",
+      "image": "prospector-avance2-service:controlled",
+      "imageId": "sha256:19763836c6329cd19ce6f48a91ed3ed468884b8fcae52150b0f08eb8f10187d0",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "10001:10001",
+      "privileged": false,
+      "networkMode": "container:83fd2ac737f2b1fa9f4c03e350a4ec2509ee07a886cef920a9b08d4daf951891",
+      "ports": {},
+      "volumes": []
+    },
+    {
+      "project": "prospector-demo-110",
+      "name": "prospector-demo-110-api-1",
+      "id": "83fd2ac737f2b1fa9f4c03e350a4ec2509ee07a886cef920a9b08d4daf951891",
+      "image": "prospector-avance2-backend:experimental",
+      "imageId": "sha256:0fefc342ae61c19ca740e3025133cf284376637bcb1264c5cdf9c2a8d7641d07",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "node",
+      "privileged": false,
+      "networkMode": "prospector-demo-110_default",
+      "ports": {},
+      "volumes": []
+    },
+    {
+      "project": "prospector-demo-110",
+      "name": "prospector-demo-110-init-1",
+      "id": "e91ac6904cb57f1a3176c1c485715f82c95afc80903474f76382e1bb0948c751",
+      "image": "prospector-avance2-backend:experimental",
+      "imageId": "sha256:0fefc342ae61c19ca740e3025133cf284376637bcb1264c5cdf9c2a8d7641d07",
+      "status": "exited",
+      "exitCode": 0,
+      "health": null,
+      "user": "node",
+      "privileged": false,
+      "networkMode": "prospector-demo-110_default",
+      "ports": {},
+      "volumes": []
+    },
+    {
+      "project": "prospector-demo-110",
+      "name": "prospector-demo-110-gateway-1",
+      "id": "1e564dfd7a0381c013627f4c42d1acd04aa004154cab94a343122a2ce8dd627e",
+      "image": "nginx:1.28.0-alpine",
+      "imageId": "sha256:30f1c0d78e0ad60901648be663a710bdadf19e4c10ac6782c235200619158284",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "",
+      "privileged": false,
+      "networkMode": "prospector-demo-110_default",
+      "ports": {
+        "18463/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18463"
+          }
+        ],
+        "6080/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "18470"
+          }
+        ]
+      },
+      "volumes": [
+        "prospector-demo-110_demo-tls"
+      ]
+    },
+    {
+      "project": "prospector-demo-110",
+      "name": "prospector-demo-110-db-1",
+      "id": "403ab061423623879d9c2537513c389bc93f864d6047a501dde6a425aa16ad78",
+      "image": "postgres:16",
+      "imageId": "sha256:ca0bd484cb98bf4b24eb1010e73fb3fcbd6714d240fbc1a10eea5b7dbecb641d",
+      "status": "running",
+      "exitCode": 0,
+      "health": "healthy",
+      "user": "",
+      "privileged": false,
+      "networkMode": "prospector-demo-110_default",
+      "ports": {
+        "5432/tcp": null
+      },
+      "volumes": [
+        "prospector-demo-110_demo-pg"
+      ]
+    },
+    {
+      "project": "prospector-demo-110",
+      "name": "prospector-demo-110-tls-init-1",
+      "id": "91ecd74ad517c57db389b0035127848b20dd6f8b24ce2c3a53d526ceab3ac493",
+      "image": "prospector-avance2-backend:experimental",
+      "imageId": "sha256:0fefc342ae61c19ca740e3025133cf284376637bcb1264c5cdf9c2a8d7641d07",
+      "status": "exited",
+      "exitCode": 0,
+      "health": null,
+      "user": "root",
+      "privileged": false,
+      "networkMode": "prospector-demo-110_default",
+      "ports": {},
+      "volumes": [
+        "prospector-demo-110_demo-tls"
+      ]
+    }
+  ],
+  "preservedDocuments": [
+    {
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\Plan de TrabajoAvance2.md",
+      "sha256": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09"
+    },
+    {
+      "path": "C:\\Users\\Carl0\\Desktop\\ProyectosPersonales\\DesarrolloDeSoftwareConComputoEnLaNube\\PlataformaDeProspeccionAutomatizadaYGestionDeCampañasDeMarketing\\DocumentacionGlobal\\PlataformaFlutter\\saas-platform-client\\Docs\\Planeacion\\entregado\\Plan de TrabajoAvance1.md",
+      "sha256": "afdbf821b98f5040d569aec44662f8414f32e4f55eb9fe44a7ebdb8e4a4fdb00"
+    }
+  ]
+}

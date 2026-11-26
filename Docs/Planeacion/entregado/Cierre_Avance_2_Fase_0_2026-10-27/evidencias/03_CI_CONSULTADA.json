@@ -1,0 +1,147 @@
+{
+  "recordedAt": "2026-10-27T19:42:53.913Z",
+  "method": "Existing PR-triggered workflow runs only; empty result does not mean no push CI",
+  "data": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "Backend",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "workflow_runs": []
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "BackendFeature",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "workflow_runs": [
+              {
+                "id": 40484475130,
+                "name": "CI",
+                "status": "completed",
+                "conclusion": "success",
+                "run_number": 20,
+                "jobs_url": "https://api.github.com/repos/CarlosAM03/saas-platform-backend/actions/runs/40484475130/jobs",
+                "logs_url": "https://api.github.com/repos/CarlosAM03/saas-platform-backend/actions/runs/40484475130/logs",
+                "workflow_id": 379572275
+              }
+            ]
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "FlutterFoundation",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "workflow_runs": [
+              {
+                "id": 40480231249,
+                "name": "Flutter Foundation CI",
+                "status": "completed",
+                "conclusion": "success",
+                "run_number": 21,
+                "jobs_url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/actions/runs/40480231249/jobs",
+                "logs_url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/actions/runs/40480231249/logs",
+                "workflow_id": 380584827
+              }
+            ]
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "FlutterDev",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "workflow_runs": [
+              {
+                "id": 40438948365,
+                "name": "Flutter Foundation CI",
+                "status": "completed",
+                "conclusion": "failure",
+                "run_number": 19,
+                "jobs_url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/actions/runs/40438948365/jobs",
+                "logs_url": "https://api.github.com/repos/CarlosAM03/saas-platform-client/actions/runs/40438948365/logs",
+                "workflow_id": 380584827
+              }
+            ]
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "Service",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "workflow_runs": []
+          },
+          "isError": false
+        }
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "key": "Engine",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Action completed."
+            }
+          ],
+          "structuredContent": {
+            "workflow_runs": []
+          },
+          "isError": false
+        }
+      }
+    }
+  ]
+}

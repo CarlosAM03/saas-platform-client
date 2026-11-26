@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-27T23:53:58.364Z",
+  "sha": "cd527ef12bc7c1327ed9a8520e1a07f0fc8be39f",
+  "commands": [
+    "dart run build_runner build",
+    "dart run tool/check_merge_markers.dart",
+    "flutter analyze --no-pub",
+    "flutter test --no-pub --reporter expanded"
+  ],
+  "environment": "Linux Flutter 3.47.5 SDK from actual Dockerfile.vercel; exact dev sources mounted",
+  "markers": "PASS",
+  "analyze": "PASS no issues",
+  "tests": 256,
+  "failed": 0,
+  "exitCode": 0
+}

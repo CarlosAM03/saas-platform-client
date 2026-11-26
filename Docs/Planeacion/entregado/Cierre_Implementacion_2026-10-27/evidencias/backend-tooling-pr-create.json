@@ -1,0 +1,6 @@
+{
+  "base": "dev",
+  "head": "fix/avance2-core-security",
+  "title": "fix: bootstrap local reproducible y scripts LF para Windows/Linux",
+  "body": "Corrige dos fallos de reproducción detectados al verificar el checkout integrado: precedencia de arrays PowerShell al generar configuración nueva y conversión CRLF de scripts shell en Windows. Agrega validación de claves requeridas y registra la fuente Swagger de la comparación. Sin cambios de código funcional, contrato, Prisma ni JWT.\n\nVerificación: bootstrap nuevo genera 4 claves core y 7 experimentales sin imprimir secretos; configuración existente se conserva y se valida; scripts LF mediante .gitattributes. El core funcional del PR #7 pasó 41 unitarias, 78 HTTP, 20 PG y CI quality/postgres-integration/docker-build. Este HEAD necesita sus checks antes de G4. Sin cambios main ni infraestructura productiva."
+}

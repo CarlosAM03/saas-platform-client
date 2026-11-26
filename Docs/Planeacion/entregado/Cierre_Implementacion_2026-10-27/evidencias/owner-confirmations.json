@@ -1,0 +1,9 @@
+{
+  "ownerConfirmedMainMerges": true,
+  "ownerProvidedBackendCommit": "https://github.com/CarlosAM03/saas-platform-backend/commit/b51b265f1a545fa915f1dd1c57ef2f5858ec6492",
+  "ownerProvidedFlutterCommit": "https://github.com/CarlosAM03/saas-platform-client/commit/7731649a2c69b45cb9776d02de4a6105d6fd9886",
+  "ownerProvidedRenderOrigin": "https://saas-platform-backend-l55n.onrender.com",
+  "renderDeploymentIdProvided": false,
+  "manualScreenshot": "owner-production-dashboard.png",
+  "limitations": "Los enlaces acreditan GitHub/origen; no Deployment ID/SHA Live de Render"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "Captura aportada por el owner en este chat",
+  "visibleLocalTime": "2026-10-27 17:29 America/Tijuana",
+  "url": "https://saas-platform-client-web.vercel.app/#/dashboard",
+  "manualAuthenticatedDashboard": true,
+  "tenant": "ACME CORPORATION",
+  "visibleCounts": {
+    "campaigns": 1,
+    "prospects": 1,
+    "jobs": 0
+  },
+  "role": "No visible en la captura",
+  "limitations": [
+    "No acredita Deployment ID/SHA Live de Render",
+    "No demuestra CRUD/CSV ni matriz completa de roles en producción",
+    "No se utilizaron credenciales demo ni se ejecutaron escrituras productivas por Codex"
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "recordedAt": "2026-10-27T20:01:55.856Z",
+  "excludesItself": true,
+  "files": [
+    {
+      "file": "PLAN_EJECUCION_CIERRE_AVANCE_2.md",
+      "bytes": 15854,
+      "sha256": "3ad7de9e8274669bf7f342af002dba5aa2eb6b9cd067dec474120ecfa3073efa"
+    },
+    {
+      "file": "MATRIZ_CAMBIOS_AUTORIZADOS.md",
+      "bytes": 15366,
+      "sha256": "dd788d9cb66d78aa8530b61fa3ac3c8fa441ccbacba011fd9ace9a52e403510a"
+    },
+    {
+      "file": "BASELINES_Y_RAMAS.md",
+      "bytes": 19525,
+      "sha256": "191b11eeb5f32c8ebf3ff1856ebf37fd4411d44e5eea4e69babbd5d13562299d"
+    },
+    {
+      "file": "GATES_DE_ACEPTACION.md",
+      "bytes": 13023,
+      "sha256": "7d09ae37b503a80fc40853942c835e16023b4172fa50432352882bd0100f8bd7"
+    },
+    {
+      "file": "evidencias/01_GIT_INICIAL.json",
+      "bytes": 13413,
+      "sha256": "879d9c8db926fb11f2c3a2d249d7088a74b5b23bc7a88e817d36a00c01c2640c"
+    },
+    {
+      "file": "evidencias/02_PRS_GITHUB.json",
+      "bytes": 25365,
+      "sha256": "c1d95d6e93ec800936e8159094a323dbd0ab70475447504c39898a864dfdddc9"
+    },
+    {
+      "file": "evidencias/03_CI_CONSULTADA.json",
+      "bytes": 3927,
+      "sha256": "dee9cfbc121b64893a9b2d69dd3972bda1ec2fcf771cbd2839dc2a2acff69d09"
+    },
+    {
+      "file": "evidencias/04_REVIEWS.json",
+      "bytes": 1498,
+      "sha256": "b42455a6b6265492cd10bcf464c42b606d913b095e600c26d1592e5d8c7dd15a"
+    },
+    {
+      "file": "evidencias/05_PRESERVACION_DOCUMENTAL.json",
+      "bytes": 1408,
+      "sha256": "445a3b8df5b5be6bc10b8b36067c1e227115d9e283c1d9c888321207f7a1cf8f"
+    },
+    {
+      "file": "evidencias/06_FUENTES_CONSULTADAS.json",
+      "bytes": 24172,
+      "sha256": "5be7b5c3c621078472160759a7054ce537c8db378a893be3c00e647c88ae4c38"
+    },
+    {
+      "file": "evidencias/07_GIT_DIFERENCIAL.json",
+      "bytes": 21611,
+      "sha256": "52242cea0b391d8a518627f1ec555e71c7093f19b6ab40cb8b0a4254c50708ad"
+    },
+    {
+      "file": "evidencias/08_JOBS_CI_EXISTENTE.json",
+      "bytes": 64476,
+      "sha256": "d7cbdacdc9be5925ca05b722ffdfffc4fa43d580769de069e44b46fbe6a1fe98"
+    },
+    {
+      "file": "evidencias/09_METADATA_REMOTA_Y_DEPLOYMENTS.json",
+      "bytes": 4824,
+      "sha256": "e724bc5acd52640c3b0e8e693e3a5ed2215fe26067b45fecb35ef9bbfb19c271"
+    },
+    {
+      "file": "evidencias/10_CONTRATO_PUBLICO_Y_SONDEOS.json",
+      "bytes": 9417,
+      "sha256": "f2fd258207c2d6fa6ba4d7dae681614165100de532901aff494183fbbba9ed3b"
+    },
+    {
+      "file": "evidencias/11_YAML_FOUNDATION_VS_BASELINE.json",
+      "bytes": 18333,
+      "sha256": "217eba4918656685bc45ab9269daf3b9cfa03978f260d1c83b28d3107739f13f"
+    },
+    {
+      "file": "evidencias/12_PRESERVACION_PLAN_ANTERIOR.json",
+      "bytes": 423,
+      "sha256": "feb5fb4b16b20dfc32f34549a8fdf07f51f3ea3fccbdc585b0b644c11ff9e29c"
+    },
+    {
+      "file": "evidencias/13_PREFLIGHT_Y_DEPENDENCIAS.json",
+      "bytes": 9849,
+      "sha256": "e3ea1b2d3a3ecfcfbcac0a9f6fb82daf0834aaa5273e7ef378a92046d91d36ee"
+    },
+    {
+      "file": "evidencias/14_OPERACIONES_PROPUESTAS_G0.json",
+      "bytes": 2898,
+      "sha256": "66e3aeeefc08bc85b45dd4d8b05a487b43cfc2c402497e7c0233cef7a20aff92"
+    },
+    {
+      "file": "evidencias/15_INTEGRIDAD_GIT_FINAL.json",
+      "bytes": 10009,
+      "sha256": "e9c19660c3fb1ef021cc5897e46159ed35c71c0823ef7eba3a059e54f0dbadf8"
+    },
+    {
+      "file": "evidencias/16_QA_Y_FUENTES_INTACTAS.json",
+      "bytes": 5450,
+      "sha256": "335d47805b82081e344c1f1917daf2dc4daad38c9e13891f02cfc58f47005689"
+    },
+    {
+      "file": "evidencias/PLAN_ANTERIOR_TRACKED_HEAD_SNAPSHOT.md",
+      "bytes": 18826,
+      "sha256": "5f1ddfed25739662755687832da2e122f851033eb91b653781e2f1a4d30bd683"
+    },
+    {
+      "file": "evidencias/PLAN_AVANCE_1_SNAPSHOT.md",
+      "bytes": 19862,
+      "sha256": "afdbf821b98f5040d569aec44662f8414f32e4f55eb9fe44a7ebdb8e4a4fdb00"
+    },
+    {
+      "file": "evidencias/PLAN_RECTOR_SNAPSHOT.md",
+      "bytes": 19546,
+      "sha256": "df1552887869b3a79d87034b135022c2df265c399ce4c777a654601b5e445f09"
+    }
+  ]
+}
